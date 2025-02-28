@@ -25,14 +25,14 @@ Node parseSB(const std::string &str);
 
 enum class Branch { R, L };
 
-class PhiIter {
+class Sqrt2Iter {
 private:
   size_t pos;
   std::vector<Branch> current_chunk;
   std::vector<Branch> get_chunk() const;
 
 public:
-  PhiIter();
+  Sqrt2Iter();
   bool exhausted;
   std::optional<Branch> next();
 };
@@ -40,7 +40,7 @@ public:
 void qToSB(int64_t n, int64_t d, std::vector<Branch> &u);
 
 // Test functions
-void test_parseSB();
+void testParseSB();
 void test_phiIter();
 void test_qToSB();
 

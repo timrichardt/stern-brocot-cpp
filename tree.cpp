@@ -35,13 +35,13 @@ Node parseSB(const std::string &str) {
   return node;
 }
 
-PhiIter::PhiIter() : pos(0), current_chunk(get_chunk()) {}
+Sqrt2Iter::Sqrt2Iter() : pos(0), current_chunk(get_chunk()) {}
 
-std::vector<Branch> PhiIter::get_chunk() const {
-  return {Branch::R, Branch::L};
+std::vector<Branch> Sqrt2Iter::get_chunk() const {
+  return {Branch::R, Branch::R, Branch::L, Branch::L};
 }
 
-std::optional<Branch> PhiIter::next() {
+std::optional<Branch> Sqrt2Iter::next() {
   if (pos == current_chunk.size()) {
     pos = 1;
     current_chunk = get_chunk();
@@ -64,14 +64,14 @@ void qToSB(int64_t n, int64_t d, std::vector<Branch> &u) {
 }
 
 // Test functions
-void test_parseSB() {
+void testParseSB() {
   Node parsed = parseSB("RRRLRLLL");
   Node expected = {25, 7, 7, 2};
   assert(parsed == expected);
 }
 
 void test_phiIter() {
-  PhiIter s_iter;
+  Sqrt2Iter s_iter;
   for (int i = 0; i < 5; ++i) {
     auto branch = s_iter.next();
     if (i % 2 == 0) {

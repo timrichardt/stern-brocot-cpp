@@ -44,7 +44,7 @@ int homSgn(const Node &H, const std::vector<char> &u, size_t index = 0) {
   }
 }
 
-int homSgnInf(const Node &H, PhiIter &u) {
+int homSgnInf(const Node &H, Sqrt2Iter &u) {
   // if (index >= u.size()) {
   //   return sgn(H.a + H.b) * sgn(H.c + H.d);
   // }
@@ -81,16 +81,24 @@ void testHomSgnLarge() {
   std::cout << "Test passed: Homographic sign algorithm for large number\n";
 }
 
+void testHomSgnSqrt2() {
+  Sqrt2Iter phi;
+  Node node = {100000000000, -241421356238, 0, 1};
+  Node node2 = {100000000000, -241421356237, 0, 1};
+  std::cout << "Test passed: Homographic sign algorithm for sqrt(2)\n";
+  assert(homSgnInf(node, phi) == -1);
+  assert(homSgnInf(node2, phi) == 1);
+}
+
 int main() {
   testHomSgn();
   testHomSgnLarge();
-  test_parseSB();
+  testParseSB();
+  testHomSgnSqrt2();
 
-  PhiIter phi;
-
-  Node node = {22000, -50000, 0, 1};
+  // PhiIter phi;
   // std::vector<char> u(1'000'000, 'R');
-  std::cout << homSgnInf(node, phi) << "\n";
+  // std::cout << homSgnInf(node, phi) << "\n";
 
   return 0;
 }
