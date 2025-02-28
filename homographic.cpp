@@ -88,9 +88,9 @@ int main() {
 
   PhiIter phi;
 
-  // Node node = {1, -1'000'002, 0, 1};
+  Node node = {22000, -50000, 0, 1};
   // std::vector<char> u(1'000'000, 'R');
-  // std::cout << homSgnInf(node, phi) << "\n";
+  std::cout << homSgnInf(node, phi) << "\n";
 
   return 0;
 }

@@ -1,28 +1,21 @@
 #include <cassert>
 // #include <iostream>
+#include "tree.h"
 #include <optional>
 #include <stdexcept>
 #include <vector>
 
-struct Node {
-  int64_t a, b, c, d;
+Node Node::left() const { return {a + b, b, c + d, d}; }
+Node Node::right() const { return {a, a + b, c, c + d}; }
+double Node::toFraction() const {
+  return static_cast<double>(a + b) / static_cast<double>(c + d);
+}
 
-  Node left() const { return {a + b, b, c + d, d}; }
-
-  Node right() const { return {a, a + b, c, c + d}; }
-
-  double toFraction() const {
-    return static_cast<double>(a + b) / static_cast<double>(c + d);
-  }
-
-  int64_t toN() const { return (a + b) * (c + d); }
-
-  int64_t det() const { return a * d - b * c; }
-
-  bool operator==(const Node &other) const {
-    return a == other.a && b == other.b && c == other.c && d == other.d;
-  }
-};
+int64_t Node::toN() const { return (a + b) * (c + d); }
+int64_t Node::det() const { return a * d - b * c; }
+bool Node::operator==(const Node &other) const {
+  return a == other.a && b == other.b && c == other.c && d == other.d;
+}
 
 const Node I = {1, 0, 0, 1}; // Root node of the tree
 
@@ -42,27 +35,21 @@ Node parseSB(const std::string &str) {
   return node;
 }
 
-enum class Branch { R, L };
+PhiIter::PhiIter() : pos(0), current_chunk(get_chunk()) {}
 
-class PhiIter {
-  size_t pos;
-  std::vector<Branch> current_chunk;
+std::vector<Branch> PhiIter::get_chunk() const {
+  return {Branch::R, Branch::L};
+}
 
-  std::vector<Branch> get_chunk() const { return {Branch::R, Branch::L}; }
-
-public:
-  PhiIter() : pos(0), current_chunk(get_chunk()) {}
-
-  std::optional<Branch> next() {
-    if (pos == current_chunk.size()) {
-      pos = 1;
-      current_chunk = get_chunk();
-      return current_chunk[0];
-    } else {
-      return current_chunk[pos++];
-    }
+std::optional<Branch> PhiIter::next() {
+  if (pos == current_chunk.size()) {
+    pos = 1;
+    current_chunk = get_chunk();
+    return current_chunk[0];
+  } else {
+    return current_chunk[pos++];
   }
-};
+}
 
 void qToSB(int64_t n, int64_t d, std::vector<Branch> &u) {
   while (n != d) {
