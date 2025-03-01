@@ -67,6 +67,33 @@ int homSgnInf(const Node &H, Sqrt2Iter &u) {
   }
 }
 
+bool emitU(const Node &H) {
+  return (H.c <= H.a && H.d < H.b) || (H.c < H.a && H.d <= H.b);
+}
+
+bool emitD(const Node &H) {
+  return (H.a <= H.c && H.b < H.d) || (H.a < H.c && H.b <= H.d);
+}
+
+Node U(const Node &H) { return {H.a - H.c, H.b - H.d, H.c, H.d}; }
+
+Node D(const Node &H) { return {H.a, H.b, H.c - H.a, H.d - H.b}; }
+
+Node homEmit(const Node &H, Sqrt2Iter u) {
+  if (emitU(H)) {
+    return U(H);
+  } else if (emitD(H)) {
+    return D(H);
+  } else {
+    auto next = u.next();
+    if (next == Branch::R) {
+      return H.right();
+    } else {
+      return H.left();
+    }
+  }
+}
+
 void testHomSgn() {
   Node node = {-5, 7, 1, 2};
   std::vector<char> u = {'R', 'L', 'L', 'R', 'L', 'R'};
@@ -95,6 +122,11 @@ int main() {
   testHomSgnLarge();
   testParseSB();
   testHomSgnSqrt2();
+
+  Node node = {4, 2, 3, 4};
+
+  std::cout << "emittable? " << emitU(node) << "\n" << U(node).c << "\n";
+  std::cout << "emittable? " << emitD(node) << "\n" << D(node).c << "\n";
 
   // PhiIter phi;
   // std::vector<char> u(1'000'000, 'R');
