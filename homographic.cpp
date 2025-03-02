@@ -44,7 +44,7 @@ int homSgn(const Node &H, const std::vector<char> &u, size_t index = 0) {
   }
 }
 
-int homSgnInf(const Node &H, Sqrt2Iter &u) {
+int homSgnInf(const Node &H, ChunkedIterator &u) {
   // if (index >= u.size()) {
   //   return sgn(H.a + H.b) * sgn(H.c + H.d);
   // }
@@ -79,7 +79,7 @@ Node U(const Node &H) { return {H.a - H.c, H.b - H.d, H.c, H.d}; }
 
 Node D(const Node &H) { return {H.a, H.b, H.c - H.a, H.d - H.b}; }
 
-Node homEmit(const Node &H, Sqrt2Iter u) {
+Node homEmit(const Node &H, ChunkedIterator &u) {
   if (emitU(H)) {
     return U(H);
   } else if (emitD(H)) {
@@ -109,12 +109,27 @@ void testHomSgnLarge() {
 }
 
 void testHomSgnSqrt2() {
-  Sqrt2Iter phi;
+  ChunkedIterator phi(get_chunk_sqrt2);
+
   Node node = {100000000000, -241421356238, 0, 1};
   Node node2 = {100000000000, -241421356237, 0, 1};
+
   std::cout << "Test passed: Homographic sign algorithm for sqrt(2)\n";
   assert(homSgnInf(node, phi) == -1);
   assert(homSgnInf(node2, phi) == 1);
+}
+
+// main.cpp
+
+char branchToString(Branch b) {
+  switch (b) {
+  case Branch::R:
+    return 'R';
+  case Branch::L:
+    return 'L';
+  default:
+    throw std::runtime_error("Invalid sequence character");
+  }
 }
 
 int main() {
@@ -127,10 +142,6 @@ int main() {
 
   std::cout << "emittable? " << emitU(node) << "\n" << U(node).c << "\n";
   std::cout << "emittable? " << emitD(node) << "\n" << D(node).c << "\n";
-
-  // PhiIter phi;
-  // std::vector<char> u(1'000'000, 'R');
-  // std::cout << homSgnInf(node, phi) << "\n";
 
   return 0;
 }

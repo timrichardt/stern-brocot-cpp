@@ -2,6 +2,8 @@
 #define TREE_H
 
 #include <cstdint>
+#include <functional>
+#include <iostream>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -25,17 +27,34 @@ Node parseSB(const std::string &str);
 
 enum class Branch { R, L };
 
-class Sqrt2Iter {
-private:
-  size_t pos;
-  std::vector<Branch> current_chunk;
-  std::vector<Branch> get_chunk() const;
+// std::ostream &operator<<(std::ostream &os, Branch branch) {
+//   switch (branch) {
+//   case Branch::R:
+//     os << "R";
+//   case Branch::L:
+//     os << "L";
+//   default:
+//     os << "Unknown";
+//   }
+//   return os;
+// }
 
+class ChunkedIterator {
 public:
-  Sqrt2Iter();
-  bool exhausted;
-  std::optional<Branch> next();
+  using ChunkGenerator = std::function<std::vector<Branch>()>;
+
+  explicit ChunkedIterator(ChunkGenerator generator);
+  Branch next();
+
+private:
+  ChunkGenerator generator;
+  std::vector<Branch> chunk;
+  size_t chunkIndex;
+  void loadNextChunk();
 };
+
+std::vector<Branch> get_chunk_sqrt2();
+std::vector<Branch> get_chunk_phi();
 
 void qToSB(int64_t n, int64_t d, std::vector<Branch> &u);
 
