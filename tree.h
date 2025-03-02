@@ -46,6 +46,7 @@ private:
 
 std::vector<Branch> get_chunk_sqrt2();
 std::vector<Branch> get_chunk_phi();
+std::vector<Branch> get_chunk_e();
 
 void qToSB(int64_t n, int64_t d, std::vector<Branch> &u);
 
