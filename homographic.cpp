@@ -44,7 +44,7 @@ int homSgn(const Node &H, const std::vector<char> &u, size_t index = 0) {
   }
 }
 
-int homSgnInf(const Node &H, ChunkedIterator &u) {
+int homSgn(const Node &H, ChunkedIterator &u) {
   // if (index >= u.size()) {
   //   return sgn(H.a + H.b) * sgn(H.c + H.d);
   // }
@@ -59,9 +59,9 @@ int homSgnInf(const Node &H, ChunkedIterator &u) {
   auto next = u.next();
 
   if (next == Branch::R) {
-    __attribute__((musttail)) return homSgnInf(H.right(), u);
+    __attribute__((musttail)) return homSgn(H.right(), u);
   } else if (next == Branch::L) {
-    __attribute__((musttail)) return homSgnInf(H.left(), u);
+    __attribute__((musttail)) return homSgn(H.left(), u);
   } else {
     throw std::runtime_error("Invalid sequence character");
   }
@@ -115,8 +115,8 @@ void testHomSgnSqrt2() {
   Node node2 = {100000000000, -241421356237, 0, 1};
 
   std::cout << "Test passed: Homographic sign algorithm for sqrt(2)\n";
-  assert(homSgnInf(node, phi) == -1);
-  assert(homSgnInf(node2, phi) == 1);
+  assert(homSgn(node, phi) == -1);
+  assert(homSgn(node2, phi) == 1);
 }
 
 int main() {
