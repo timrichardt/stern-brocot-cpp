@@ -27,17 +27,8 @@ Node parseSB(const std::string &str);
 
 enum class Branch { R, L };
 
-// std::ostream &operator<<(std::ostream &os, Branch branch) {
-//   switch (branch) {
-//   case Branch::R:
-//     os << "R";
-//   case Branch::L:
-//     os << "L";
-//   default:
-//     os << "Unknown";
-//   }
-//   return os;
-// }
+std::ostream &operator<<(std::ostream &os, Branch branch);
+std::ostream &operator<<(std::ostream &os, std::vector<Branch> path);
 
 class ChunkedIterator {
 public:

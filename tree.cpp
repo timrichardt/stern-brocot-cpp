@@ -5,6 +5,24 @@
 #include <stdexcept>
 #include <vector>
 
+std::ostream &operator<<(std::ostream &os, Branch branch) {
+  switch (branch) {
+  case Branch::R:
+    return os << "R";
+  case Branch::L:
+    return os << "L";
+  }
+}
+
+std::ostream &operator<<(std::ostream &os, std::vector<Branch> path) {
+  os << "[";
+  for (const auto &branch : path) {
+    os << branch;
+  }
+  os << "]";
+  return os;
+}
+
 Node Node::left() const { return {a + b, b, c + d, d}; }
 
 Node Node::right() const { return {a, a + b, c, c + d}; }

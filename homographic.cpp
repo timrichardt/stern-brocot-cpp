@@ -119,19 +119,6 @@ void testHomSgnSqrt2() {
   assert(homSgnInf(node2, phi) == 1);
 }
 
-// main.cpp
-
-char branchToString(Branch b) {
-  switch (b) {
-  case Branch::R:
-    return 'R';
-  case Branch::L:
-    return 'L';
-  default:
-    throw std::runtime_error("Invalid sequence character");
-  }
-}
-
 int main() {
   testHomSgn();
   testHomSgnLarge();
@@ -139,6 +126,7 @@ int main() {
   testHomSgnSqrt2();
 
   Node node = {4, 2, 3, 4};
+  const std::vector<Branch> x = {Branch::L, Branch::R, Branch::R};
 
   std::cout << "emittable? " << emitU(node) << "\n" << U(node).c << "\n";
   std::cout << "emittable? " << emitD(node) << "\n" << D(node).c << "\n";
