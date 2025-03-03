@@ -120,31 +120,22 @@ void testHomSgnSqrt2() {
 }
 
 void testHomSgnE() {
-  int n = 0;
-  auto get_chunk_e = [&n]() -> std::vector<Branch> {
-    std::vector<Branch> result;
+  auto e1 = make_e();
+  auto e2 = make_e();
 
-    if (n % 2 == 0) { // If n is even
-      result.push_back(Branch::R);
-      result.insert(result.end(), 2 * n, Branch::L);
-      result.push_back(Branch::R);
-    } else { // If n is odd
-      result.push_back(Branch::L);
-      result.insert(result.end(), 2 * n, Branch::R);
-      result.push_back(Branch::L);
-    }
-    n++;
-    return result;
-  };
+  // std::vector<Branch> u1 = take(20, e1);
+  // std::cout << SBtoFloat(u1) << std::endl;
+  // std::vector<Branch> u2 = take(20, e2);
+  // std::cout << SBtoFloat(u2) << std::endl;
 
-  ChunkedIterator e(get_chunk_e);
+  // 2.7182818
+  Node node = {100000, -271829, 0, 1};
+  Node node2 = {100000, -271828, 0, 1};
 
-  Node node = {100000000000, -241421356238, 0, 1};
-  Node node2 = {100000000000, -241421356237, 0, 1};
+  assert(homSgn(node, e1) == -1);
+  assert(homSgn(node2, e2) == 1);
 
-  std::cout << "Test passed: Homographic sign algorithm for sqrt(2)\n";
-  assert(homSgn(node, e) == -1);
-  assert(homSgn(node2, e) == 1);
+  std::cout << "Test passed: Homographic sign algorithm for e\n";
 }
 
 int main() {
@@ -152,6 +143,7 @@ int main() {
   testHomSgnLarge();
   testParseSB();
   testHomSgnSqrt2();
+  testHomSgnE();
 
   Node node = {4, 2, 3, 4};
   const std::vector<Branch> x = {Branch::L, Branch::R, Branch::R, Branch::L};

@@ -87,6 +87,53 @@ std::vector<Branch> get_chunk_sqrt2() {
 
 std::vector<Branch> get_chunk_phi() { return {Branch::R, Branch::L}; }
 
+std::vector<Branch> take(uint64_t n, ChunkedIterator &u) {
+  std::vector<Branch> r;
+
+  for (uint i = 0; i < n; i++) {
+    r.push_back(u.next());
+  }
+
+  return r;
+}
+
+auto make_e_generator() {
+  return [n = 0]() mutable -> std::vector<Branch> {
+    std::vector<Branch> result;
+
+    if (n % 2 == 0) {
+      result.push_back(Branch::R);
+      result.insert(result.end(), 2 * n, Branch::L);
+      result.push_back(Branch::R);
+    } else {
+      result.push_back(Branch::L);
+      result.insert(result.end(), 2 * n, Branch::R);
+      result.push_back(Branch::L);
+    }
+    n++;
+    return result;
+  };
+}
+
+ChunkedIterator make_e() {
+  auto e_gen = make_e_generator();
+  ChunkedIterator e(e_gen);
+  return e;
+}
+
+double SBtoFloat(std::vector<Branch> &u) {
+  Node node = I;
+
+  for (Branch b : u) {
+    if (b == Branch::R) {
+      node = node.right();
+    } else {
+      node = node.left();
+    }
+  }
+  return node.toFraction();
+}
+
 void qToSB(int64_t n, int64_t d, std::vector<Branch> &u) {
   while (n != d) {
     if (n < d) {
