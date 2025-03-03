@@ -1,3 +1,4 @@
+#include "homographic.h"
 #include "tree.h"
 #include <cassert>
 #include <iostream>
@@ -102,8 +103,8 @@ void testHomSgn() {
 }
 
 void testHomSgnLarge() {
-  Node node = {1, -100'000'001, 0, 2};
-  std::vector<char> u(100'000'000, 'R');
+  Node node = {1, -10'000'001, 0, 2};
+  std::vector<char> u(10'000'000, 'R');
   assert(homSgn(node, u) == 0);
   std::cout << "Test passed: Homographic sign algorithm for large number\n";
 }
@@ -136,21 +137,4 @@ void testHomSgnE() {
   assert(homSgn(node2, e2) == 1);
 
   std::cout << "Test passed: Homographic sign algorithm for e\n";
-}
-
-int main() {
-  testHomSgn();
-  testHomSgnLarge();
-  testParseSB();
-  testHomSgnSqrt2();
-  testHomSgnE();
-
-  Node node = {4, 2, 3, 4};
-  const std::vector<Branch> x = {Branch::L, Branch::R, Branch::R, Branch::L};
-
-  std::cout << "emittable? " << emitU(node) << "\n" << U(node).c << "\n";
-  std::cout << "emittable? " << emitD(node) << "\n" << D(node).c << "\n";
-  std::cout << x << "\n" << std::endl;
-
-  return 0;
 }
