@@ -45,7 +45,7 @@ int hom_sign(const Node &H, const std::vector<char> &u, size_t index = 0) {
   }
 }
 
-int hom_sign(const Node &H, ChunkedIterator &u) {
+int hom_sign(const Node &H, Iterator &u) {
   // if (index >= u.size()) {
   //   return sgn(H.a + H.b) * sgn(H.c + H.d);
   // }
@@ -80,7 +80,7 @@ Node emit_R(const Node &H) { return {H.a - H.c, H.b - H.d, H.c, H.d}; }
 
 Node emit_L(const Node &H) { return {H.a, H.b, H.c - H.a, H.d - H.b}; }
 
-Node hom_emit(const Node &H, ChunkedIterator &u) {
+Node hom_emit(const Node &H, Iterator &u) {
   if (is_R_emittable(H)) {
     return emit_R(H);
   } else if (is_L_emittable(H)) {
@@ -95,12 +95,25 @@ Node hom_emit(const Node &H, ChunkedIterator &u) {
   }
 }
 
-Rational Q_to_SSB(int n, int d) {}
+Number Q_to_SSB(int n, int d) {
+  Number res = {};
 
-Irrational hom_sb(const Node &H, ChunkedIterator &u) {
+  return res;
+}
+
+int hom_sb(const Node &H, Iterator &u) {
   if (H.det() == 0) {
     Q_to_SSB(H.a + H.b, H.c + H.d);
   } else {
+    int sign = hom_sign(H, u);
+    switch (sign) {
+    case 0:
+      return 0;
+    case 1:
+      return 1;
+    case -1:
+      return -1;
+    };
   }
 }
 

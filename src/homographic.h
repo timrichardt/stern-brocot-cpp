@@ -20,9 +20,9 @@ Node emit_R(const Node &H);
 Node emit_L(const Node &H);
 
 int hom_sign(const Node &H, const std::vector<char> &u, size_t index);
-int hom_sign(const Node &H, ChunkedIterator &u);
+int hom_sign(const Node &H, Iterator &u);
 
-Node hom_emit(const Node &H, ChunkedIterator &u);
+Node hom_emit(const Node &H, Iterator &u);
 
 void test_hom_sign();
 void test_hom_sign_large();

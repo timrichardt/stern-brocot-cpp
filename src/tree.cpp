@@ -4,6 +4,11 @@
 #include <stdexcept>
 #include <vector>
 
+Branch Iterator::next() {
+  throw std::runtime_error(
+      "Iterator::next() should be overridden by derived class");
+}
+
 std::ostream &operator<<(std::ostream &os, Branch branch) {
   switch (branch) {
   case Branch::R:

@@ -30,12 +30,19 @@ enum class Branch { R, L };
 std::ostream &operator<<(std::ostream &os, Branch branch);
 std::ostream &operator<<(std::ostream &os, std::vector<Branch> path);
 
-class ChunkedIterator {
+class Iterator {
+public:
+  virtual ~Iterator() = default;
+  Iterator() = default;
+  virtual Branch next();
+};
+
+class ChunkedIterator : public Iterator {
 public:
   using ChunkGenerator = std::function<std::vector<Branch>()>;
 
   explicit ChunkedIterator(ChunkGenerator generator);
-  Branch next();
+  Branch next() override;
 
 private:
   ChunkGenerator generator;
@@ -48,7 +55,7 @@ std::vector<Branch> get_chunk_sqrt2();
 std::vector<Branch> get_chunk_phi();
 std::vector<Branch> get_chunk_e();
 
-std::vector<Branch> take(uint64_t n, ChunkedIterator &u);
+std::vector<Branch> take(uint64_t n, Iterator &u);
 
 ChunkedIterator make_e();
 
@@ -56,14 +63,10 @@ double SB_to_double(std::vector<Branch> &u);
 
 void Q_to_SB(int64_t n, int64_t d, std::vector<Branch> &u);
 
-struct Rational {
-	int sign;
-	std::vector<Branch> seq;
-};
-
-struct Irrational {
-	int sign;
-	ChunkedIterator seq;
+struct Number {
+  int sign;
+  std::optional<std::vector<Branch>> vec;
+  std::optional<Iterator> seq;
 };
 
 // Test functions
