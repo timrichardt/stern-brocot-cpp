@@ -2,6 +2,7 @@
 // #include <iostream>
 #include "tree.h"
 #include <stdexcept>
+#include <variant>
 #include <vector>
 
 int sign(int64_t a) {
@@ -30,6 +31,16 @@ std::ostream &operator<<(std::ostream &os, std::vector<Branch> path) {
     os << branch;
   }
   os << "]";
+  return os;
+}
+
+std::ostream &operator<<(std::ostream &os, Number &num) {
+  char sign_sym = (num.sign == 1) ? '+' : (num.sign == -1) ? '-' : '0';
+  if (num.vec) {
+    os << sign_sym << *num.vec;
+  } else {
+    os << sign_sym << take(20, *num.seq) << "…]";
+  }
   return os;
 }
 
@@ -107,20 +118,40 @@ std::vector<Branch> get_chunk_sqrt2() {
 
 std::vector<Branch> get_chunk_phi() { return {Branch::R, Branch::L}; }
 
-std::vector<Branch> take(uint64_t n, Iterator &u) {
+template <class... Fs> struct Overload : Fs... {
+  using Fs::operator()...;
+};
+template <class... Fs> Overload(Fs...) -> Overload<Fs...>;
+
+std::vector<Branch>
+take(uint64_t n, std::variant<SingleChunkIterator, ChunkedIterator> &u) {
   std::vector<Branch> r;
 
   uint i = 0;
 
   while (i < n) {
-    std::optional<Branch> next_branch = u.next();
-    if (next_branch) {
-      Branch b = *next_branch;
-      r.push_back(b);
-      i = i + 1;
-    } else {
-      break;
-    }
+    std::optional<Branch> next_branch;
+    std::visit(Overload{[&r, &i, &n](ChunkedIterator &k) {
+                          std::optional<Branch> next_branch = k.next();
+                          if (next_branch) {
+                            Branch b = *next_branch;
+                            r.push_back(b);
+                            i = i + 1;
+                          } else {
+                            i = n;
+                          }
+                        },
+                        [&r, &i, &n](SingleChunkIterator &k) {
+                          std::optional<Branch> next_branch = k.next();
+                          if (next_branch) {
+                            Branch b = *next_branch;
+                            r.push_back(b);
+                            i = i + 1;
+                          } else {
+                            i = n;
+                          }
+                        }},
+               u);
   }
   return r;
 }
@@ -194,11 +225,15 @@ void Q_to_SB(int64_t n, int64_t d, std::vector<Branch> &u) {
 
 void Q_to_SB(int64_t n, int64_t d) {};
 
+// Number::Number(int sign, std::optional<std::vector<Branch>> vec,
+//                std::optional<Iterator> seq)
+//     : sign(sign), vec(vec), seq(seq) {}
+
 Number Q_to_SSB(int n, int d) {
   int s = sign(n) * sign(d);
-  Number res = {s};
+  // Number res = {s};
 
-  return res;
+  // return res;
 }
 
 // Number Q_to_SSB(int64_t n, int64_t d) {

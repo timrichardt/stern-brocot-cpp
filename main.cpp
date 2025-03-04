@@ -23,11 +23,26 @@ int main() {
 
   auto e = make_e();
 
-  std::cout << take(100, e) << std::endl;
+  // std::cout << take(100, e) << std::endl;
 
   SingleChunkIterator y({Branch::L, Branch::R});
 
-  std::cout << take(100, y) << std::endl;
+  // std::cout << take(100, y) << std::endl;
+
+  int s = 1;
+  std::vector<Branch> p = {Branch::L, Branch::R, Branch::L};
+
+  Number numb = {1, p};
+
+  ChunkedIterator e2 = make_e();
+
+  Number numb2 = {-1, std::nullopt, e2};
+
+  Number numb3 = {1, std::nullopt, y};
+
+  std::cout << numb << std::endl;
+  std::cout << numb2 << std::endl;
+  std::cout << numb3 << std::endl;
 
   return 0;
 }

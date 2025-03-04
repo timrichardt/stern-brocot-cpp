@@ -7,6 +7,7 @@
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <variant>
 #include <vector>
 
 int sign(int64_t a);
@@ -67,8 +68,6 @@ std::vector<Branch> get_chunk_sqrt2();
 std::vector<Branch> get_chunk_phi();
 std::vector<Branch> get_chunk_e();
 
-std::vector<Branch> take(uint64_t n, Iterator &u);
-
 ChunkedIterator make_e();
 
 double SB_to_double(std::vector<Branch> &u);
@@ -76,8 +75,15 @@ double SB_to_double(std::vector<Branch> &u);
 struct Number {
   int sign;
   std::optional<std::vector<Branch>> vec;
-  std::optional<Iterator> seq;
+  std::optional<std::variant<SingleChunkIterator, ChunkedIterator>> seq;
 };
+
+std::ostream &operator<<(std::ostream &os, Number &num);
+
+// std::vector<Branch> take(uint64_t n, Iterator &u);
+std::vector<Branch> take(uint64_t n, Number &u);
+std::vector<Branch> take(uint64_t n,
+                         std::variant<SingleChunkIterator, ChunkedIterator> &u);
 
 void Q_to_SB(int64_t n, int64_t d, std::vector<Branch> &u);
 void Q_to_SB(int64_t n, int64_t d);
