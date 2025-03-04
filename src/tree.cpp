@@ -67,6 +67,16 @@ Node parseSB(const std::string &str) {
   return node;
 }
 
+SingleChunkIterator::SingleChunkIterator(const std::vector<Branch> &chunk)
+    : chunk(chunk), index(0) {}
+
+std::optional<Branch> SingleChunkIterator::next() {
+  if (index >= chunk.size()) {
+    return std::nullopt;
+  }
+  return chunk[index++];
+}
+
 ChunkedIterator::ChunkedIterator(ChunkGenerator generator)
     : generator(generator), chunkIndex(0) {
   loadNextChunk();
@@ -137,6 +147,24 @@ ChunkedIterator make_e() {
   auto e_gen = make_e_generator();
   ChunkedIterator e(e_gen);
   return e;
+}
+
+auto make_rational_generator(std::vector<Branch> rat) {
+  return [n = 0]() mutable -> std::vector<Branch> {
+    std::vector<Branch> result;
+
+    if (n % 2 == 0) {
+      result.push_back(Branch::R);
+      result.insert(result.end(), 2 * n, Branch::L);
+      result.push_back(Branch::R);
+    } else {
+      result.push_back(Branch::L);
+      result.insert(result.end(), 2 * n, Branch::R);
+      result.push_back(Branch::L);
+    }
+    n++;
+    return result;
+  };
 }
 
 double SB_to_double(std::vector<Branch> &u) {

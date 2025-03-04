@@ -39,6 +39,16 @@ public:
   virtual std::optional<Branch> next();
 };
 
+class SingleChunkIterator : public Iterator {
+public:
+  explicit SingleChunkIterator(const std::vector<Branch> &chunk);
+  std::optional<Branch> next() override;
+
+private:
+  std::vector<Branch> chunk;
+  size_t index;
+};
+
 class ChunkedIterator : public Iterator {
 public:
   using ChunkGenerator = std::function<std::vector<Branch>()>;

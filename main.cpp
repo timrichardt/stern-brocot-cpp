@@ -25,5 +25,9 @@ int main() {
 
   std::cout << take(100, e) << std::endl;
 
+  SingleChunkIterator y({Branch::L, Branch::R});
+
+  std::cout << take(100, y) << std::endl;
+
   return 0;
 }
