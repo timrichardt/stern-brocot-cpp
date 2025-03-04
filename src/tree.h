@@ -59,8 +59,8 @@ public:
 private:
   ChunkGenerator generator;
   std::vector<Branch> chunk;
-  size_t chunkIndex;
-  void loadNextChunk();
+  size_t chunk_index;
+  void load_next_chunk();
 };
 
 std::vector<Branch> get_chunk_sqrt2();

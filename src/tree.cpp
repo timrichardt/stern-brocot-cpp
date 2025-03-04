@@ -78,8 +78,8 @@ std::optional<Branch> SingleChunkIterator::next() {
 }
 
 ChunkedIterator::ChunkedIterator(ChunkGenerator generator)
-    : generator(generator), chunkIndex(0) {
-  loadNextChunk();
+    : generator(generator), chunk_index(0) {
+  load_next_chunk();
 }
 
 std::optional<Branch> ChunkedIterator::next() {
@@ -87,18 +87,18 @@ std::optional<Branch> ChunkedIterator::next() {
     return std::nullopt;
   }
 
-  Branch value = chunk[chunkIndex++];
+  Branch value = chunk[chunk_index++];
 
-  if (chunkIndex >= chunk.size()) {
-    loadNextChunk();
+  if (chunk_index >= chunk.size()) {
+    load_next_chunk();
   }
 
   return value;
 }
 
-void ChunkedIterator::loadNextChunk() {
+void ChunkedIterator::load_next_chunk() {
   chunk = generator();
-  chunkIndex = 0;
+  chunk_index = 0;
 }
 
 std::vector<Branch> get_chunk_sqrt2() {
