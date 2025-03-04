@@ -15,15 +15,15 @@ struct Node {
 
   Node left() const;
   Node right() const;
-  double toFraction() const;
-  int64_t toN() const;
+  double to_fraction() const;
+  int64_t to_N() const;
   int64_t det() const;
   bool operator==(const Node &other) const;
 };
 
 extern const Node I; // Root node of the tree
 
-Node parseSB(const std::string &str);
+Node parse_SB(const std::string &str);
 
 enum class Branch { R, L };
 
@@ -52,13 +52,22 @@ std::vector<Branch> take(uint64_t n, ChunkedIterator &u);
 
 ChunkedIterator make_e();
 
-double SBtoFloat(std::vector<Branch> &u);
+double SB_to_double(std::vector<Branch> &u);
 
-void qToSB(int64_t n, int64_t d, std::vector<Branch> &u);
+void Q_to_SB(int64_t n, int64_t d, std::vector<Branch> &u);
+
+struct Rational {
+	int sign;
+	std::vector<Branch> seq;
+};
+
+struct Irrational {
+	int sign;
+	ChunkedIterator seq;
+};
 
 // Test functions
-void testParseSB();
-void test_phiIter();
-void test_qToSB();
+void test_parse_SB();
+void test_q_to_SB();
 
 #endif

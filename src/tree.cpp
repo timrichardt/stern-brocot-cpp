@@ -1,7 +1,6 @@
 #include <cassert>
 // #include <iostream>
 #include "tree.h"
-#include <optional>
 #include <stdexcept>
 #include <vector>
 
@@ -27,11 +26,11 @@ Node Node::left() const { return {a + b, b, c + d, d}; }
 
 Node Node::right() const { return {a, a + b, c, c + d}; }
 
-double Node::toFraction() const {
+double Node::to_fraction() const {
   return static_cast<double>(a + b) / static_cast<double>(c + d);
 }
 
-int64_t Node::toN() const { return (a + b) * (c + d); }
+int64_t Node::to_N() const { return (a + b) * (c + d); }
 
 int64_t Node::det() const { return a * d - b * c; }
 
@@ -121,7 +120,7 @@ ChunkedIterator make_e() {
   return e;
 }
 
-double SBtoFloat(std::vector<Branch> &u) {
+double SB_to_double(std::vector<Branch> &u) {
   Node node = I;
 
   for (Branch b : u) {
@@ -131,10 +130,10 @@ double SBtoFloat(std::vector<Branch> &u) {
       node = node.left();
     }
   }
-  return node.toFraction();
+  return node.to_fraction();
 }
 
-void qToSB(int64_t n, int64_t d, std::vector<Branch> &u) {
+void Q_to_SB(int64_t n, int64_t d, std::vector<Branch> &u) {
   while (n != d) {
     if (n < d) {
       u.push_back(Branch::L);
@@ -147,15 +146,15 @@ void qToSB(int64_t n, int64_t d, std::vector<Branch> &u) {
 }
 
 // Test functions
-void testParseSB() {
+void test_parse_SB() {
   Node parsed = parseSB("RRRLRLLL");
   Node expected = {25, 7, 7, 2};
   assert(parsed == expected);
 }
 
-void test_qToSB() {
+void test_Q_to_SB() {
   std::vector<Branch> u;
-  qToSB(4, 3, u);
+  Q_to_SB(4, 3, u);
   std::vector<Branch> expected = {Branch::R, Branch::L, Branch::L};
   assert(u == expected);
 }

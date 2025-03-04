@@ -6,17 +6,17 @@
 #include <vector>
 
 int main() {
-  testHomSgn();
-  testHomSgnLarge();
-  testParseSB();
-  testHomSgnSqrt2();
-  testHomSgnE();
+  test_hom_sign();
+  test_hom_sign_large();
+  test_parse_SB();
+  test_hom_sign_sqrt2();
+  test_hom_sign_e();
 
   Node node = {4, 2, 3, 4};
   const std::vector<Branch> x = {Branch::L, Branch::R, Branch::R, Branch::L};
 
-  std::cout << "emittable? " << emitU(node) << "\n" << U(node).c << "\n";
-  std::cout << "emittable? " << emitD(node) << "\n" << D(node).c << "\n";
+  std::cout << "emittable? " << is_R_emittable(node) << "\n" << emit_R(node).c << "\n";
+  std::cout << "emittable? " << is_L_emittable(node) << "\n" << emit_L(node).c << "\n";
   std::cout << x << "\n" << std::endl;
 
   return 0;

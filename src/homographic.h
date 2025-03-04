@@ -12,22 +12,22 @@
 
 int sgn(int64_t a);
 
-std::optional<int64_t> linSgn(int64_t a, int64_t b);
+std::optional<int64_t> lin_sign(int64_t a, int64_t b);
 
-bool emitU(const Node &H);
-bool emitD(const Node &H);
-Node U(const Node &H);
-Node D(const Node &H);
+bool is_R_emittable(const Node &H);
+bool is_L_emittable(const Node &H);
+Node emit_R(const Node &H);
+Node emit_L(const Node &H);
 
-int homSgn(const Node &H, const std::vector<char> &u, size_t index);
-int homSgn(const Node &H, ChunkedIterator &u);
+int hom_sign(const Node &H, const std::vector<char> &u, size_t index);
+int hom_sign(const Node &H, ChunkedIterator &u);
 
-Node homEmit(const Node &H, ChunkedIterator &u);
+Node hom_emit(const Node &H, ChunkedIterator &u);
 
-void testHomSgn();
-void testHomSgnLarge();
-void testHomSgnSqrt2();
-void testHomSgnE();
-void testParseSB();
+void test_hom_sign();
+void test_hom_sign_large();
+void test_hom_sign_sqrt2();
+void test_hom_sign_e();
+void test_parse_SB();
 
 #endif
