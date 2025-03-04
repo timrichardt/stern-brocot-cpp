@@ -33,6 +33,16 @@ std::ostream &operator<<(std::ostream &os, std::vector<Branch> path) {
   return os;
 }
 
+std::ostream &operator<<(std::ostream &os, Number num) {
+  char sign_sym = (num.sign == 1) ? '+' : (num.sign == -1) ? '-' : '0';
+  if (num.vec) {
+    os << sign_sym << *num.vec;
+  } else {
+    os << sign_sym << take(20, *num.seq) << "…]";
+  }
+  return os;
+}
+
 Node Node::left() const { return {a + b, b, c + d, d}; }
 
 Node Node::right() const { return {a, a + b, c, c + d}; }
@@ -194,11 +204,15 @@ void Q_to_SB(int64_t n, int64_t d, std::vector<Branch> &u) {
 
 void Q_to_SB(int64_t n, int64_t d) {};
 
+// Number::Number(int sign, std::optional<std::vector<Branch>> vec,
+//                std::optional<Iterator> seq)
+//     : sign(sign), vec(vec), seq(seq) {}
+
 Number Q_to_SSB(int n, int d) {
   int s = sign(n) * sign(d);
-  Number res = {s};
+  // Number res = {s};
 
-  return res;
+  // return res;
 }
 
 // Number Q_to_SSB(int64_t n, int64_t d) {

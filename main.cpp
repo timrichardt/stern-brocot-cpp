@@ -29,5 +29,17 @@ int main() {
 
   std::cout << take(100, y) << std::endl;
 
+  int s = 1;
+  std::vector<Branch> p = {Branch::L, Branch::R, Branch::L};
+
+  Number numb = {1, p};
+
+  ChunkedIterator e2 = make_e();
+
+  Number numb2 = {-1, std::nullopt, e2};
+
+  std::cout << numb << std::endl;
+  std::cout << numb2 << std::endl;
+
   return 0;
 }
