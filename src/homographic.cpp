@@ -5,17 +5,11 @@
 #include <optional>
 #include <vector>
 
-int sgn(int64_t a) {
-  if (a == 0)
-    return 0;
-  return (a > 0) ? 1 : -1;
-}
-
 std::optional<int64_t> lin_sign(int64_t a, int64_t b) {
   if (a == 0 && b == 0)
     return 0;
 
-  int sum_of_signs = sgn(a) + sgn(b);
+  int sum_of_signs = sign(a) + sign(b);
   if (sum_of_signs > 0)
     return 1;
   if (sum_of_signs < 0)
@@ -26,7 +20,7 @@ std::optional<int64_t> lin_sign(int64_t a, int64_t b) {
 
 int hom_sign(const Node &H, const std::vector<char> &u, size_t index = 0) {
   if (index >= u.size()) {
-    return sgn(H.a + H.b) * sgn(H.c + H.d);
+    return sign(H.a + H.b) * sign(H.c + H.d);
   }
 
   auto nom_sign = lin_sign(H.a, H.b);
@@ -47,7 +41,7 @@ int hom_sign(const Node &H, const std::vector<char> &u, size_t index = 0) {
 
 int hom_sign(const Node &H, Iterator &u) {
   // if (index >= u.size()) {
-  //   return sgn(H.a + H.b) * sgn(H.c + H.d);
+  //   return sign(H.a + H.b) * sign(H.c + H.d);
   // }
 
   auto nom_sign = lin_sign(H.a, H.b);

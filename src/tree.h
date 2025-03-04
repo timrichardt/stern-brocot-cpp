@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 
+int sign(int64_t a);
+
 // Struct representing a node in the tree
 struct Node {
   int64_t a, b, c, d;

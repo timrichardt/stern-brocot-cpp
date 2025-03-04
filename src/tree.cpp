@@ -150,6 +150,21 @@ void Q_to_SB(int64_t n, int64_t d, std::vector<Branch> &u) {
   }
 }
 
+void Q_to_SB(int64_t n, int64_t d) {};
+
+Number Q_to_SSB(int n, int d) {
+  int s = sign(n) * sign(d);
+  Number res = {s};
+
+  return res;
+}
+
+// Number Q_to_SSB(int64_t n, int64_t d) {
+//   int sign = sign(n) * sign(d);
+//   Number result(sign);
+//   return result;
+// }
+
 // Test functions
 void test_parse_SB() {
   Node parsed = parseSB("RRRLRLLL");

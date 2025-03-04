@@ -10,8 +10,6 @@
 #include <vector>
 #include "tree.h"
 
-int sgn(int64_t a);
-
 std::optional<int64_t> lin_sign(int64_t a, int64_t b);
 
 bool is_R_emittable(const Node &H);
