@@ -36,7 +36,7 @@ class Iterator {
 public:
   virtual ~Iterator() = default;
   Iterator() = default;
-  virtual Branch next();
+  virtual std::optional<Branch> next();
 };
 
 class ChunkedIterator : public Iterator {
@@ -44,7 +44,7 @@ public:
   using ChunkGenerator = std::function<std::vector<Branch>()>;
 
   explicit ChunkedIterator(ChunkGenerator generator);
-  Branch next() override;
+  std::optional<Branch> next() override;
 
 private:
   ChunkGenerator generator;
@@ -63,13 +63,17 @@ ChunkedIterator make_e();
 
 double SB_to_double(std::vector<Branch> &u);
 
-void Q_to_SB(int64_t n, int64_t d, std::vector<Branch> &u);
-
 struct Number {
   int sign;
   std::optional<std::vector<Branch>> vec;
   std::optional<Iterator> seq;
 };
+
+void Q_to_SB(int64_t n, int64_t d, std::vector<Branch> &u);
+void Q_to_SB(int64_t n, int64_t d);
+void Q_to_SB(int64_t n, int64_t d);
+
+Number Q_to_SSB(int64_t n, int64_t d);
 
 // Test functions
 void test_parse_SB();

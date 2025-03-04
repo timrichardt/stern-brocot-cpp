@@ -4,7 +4,13 @@
 #include <stdexcept>
 #include <vector>
 
-Branch Iterator::next() {
+int sign(int64_t a) {
+  if (a == 0)
+    return 0;
+  return (a > 0) ? 1 : -1;
+}
+
+std::optional<Branch> Iterator::next() {
   throw std::runtime_error(
       "Iterator::next() should be overridden by derived class");
 }
@@ -66,9 +72,9 @@ ChunkedIterator::ChunkedIterator(ChunkGenerator generator)
   loadNextChunk();
 }
 
-Branch ChunkedIterator::next() {
+std::optional<Branch> ChunkedIterator::next() {
   if (chunk.empty()) {
-    throw std::out_of_range("No more elements available");
+    return std::nullopt;
   }
 
   Branch value = chunk[chunkIndex++];
@@ -91,13 +97,21 @@ std::vector<Branch> get_chunk_sqrt2() {
 
 std::vector<Branch> get_chunk_phi() { return {Branch::R, Branch::L}; }
 
-std::vector<Branch> take(uint64_t n, ChunkedIterator &u) {
+std::vector<Branch> take(uint64_t n, Iterator &u) {
   std::vector<Branch> r;
 
-  for (uint i = 0; i < n; i++) {
-    r.push_back(u.next());
-  }
+  uint i = 0;
 
+  while (i < n) {
+    std::optional<Branch> next_branch = u.next();
+    if (next_branch) {
+      Branch b = *next_branch;
+      r.push_back(b);
+      i = i + 1;
+    } else {
+      break;
+    }
+  }
   return r;
 }
 

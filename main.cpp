@@ -1,5 +1,5 @@
-#include "src/tree.h"
 #include "src/homographic.h"
+#include "src/tree.h"
 #include <cassert>
 #include <iostream>
 #include <optional>
@@ -15,9 +15,15 @@ int main() {
   Node node = {4, 2, 3, 4};
   const std::vector<Branch> x = {Branch::L, Branch::R, Branch::R, Branch::L};
 
-  std::cout << "emittable? " << is_R_emittable(node) << "\n" << emit_R(node).c << "\n";
-  std::cout << "emittable? " << is_L_emittable(node) << "\n" << emit_L(node).c << "\n";
+  std::cout << "emittable? " << is_R_emittable(node) << "\n"
+            << emit_R(node).c << "\n";
+  std::cout << "emittable? " << is_L_emittable(node) << "\n"
+            << emit_L(node).c << "\n";
   std::cout << x << "\n" << std::endl;
+
+  auto e = make_e();
+
+  std::cout << take(100, e) << std::endl;
 
   return 0;
 }

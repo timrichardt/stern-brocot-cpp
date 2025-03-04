@@ -89,15 +89,9 @@ Node hom_emit(const Node &H, Iterator &u) {
   }
 }
 
-Number Q_to_SSB(int n, int d) {
-  Number res = {};
-
-  return res;
-}
-
 int hom_sb(const Node &H, Iterator &u) {
   if (H.det() == 0) {
-    Q_to_SSB(H.a + H.b, H.c + H.d);
+    Q_to_SB((int64_t)(H.a + H.b), (int64_t)(H.c + H.d));
   } else {
     int sign = hom_sign(H, u);
     switch (sign) {
