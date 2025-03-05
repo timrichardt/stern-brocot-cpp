@@ -31,6 +31,7 @@ int main() {
 
   int s = 1;
   std::vector<Branch> p = {Branch::L, Branch::R, Branch::L};
+  std::vector<Branch> q = {};
 
   Number numb = {1, p};
 
@@ -40,9 +41,12 @@ int main() {
 
   Number numb3 = {1, std::nullopt, y};
 
+  Number numb4 = {1, q};
+
   std::cout << numb << std::endl;
   std::cout << numb2 << std::endl;
   std::cout << numb3 << std::endl;
+  std::cout << numb4 << std::endl;
 
   return 0;
 }

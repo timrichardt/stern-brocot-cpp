@@ -103,6 +103,7 @@ int hom_sb(const Node &H, Iterator &u) {
       return -1;
     };
   }
+  return 0;
 }
 
 void test_hom_sign() {

@@ -137,6 +137,17 @@ std::vector<Branch> get_chunk_sqrt2() {
 
 std::vector<Branch> get_chunk_phi() { return {Branch::R, Branch::L}; }
 
+inline void absorb(std::vector<Branch> &r, uint &i, uint64_t &n,
+                   std::optional<Branch> next_branch) {
+  if (next_branch) {
+    Branch b = *next_branch;
+    r.push_back(b);
+    i = i + 1;
+  } else {
+    i = n;
+  }
+}
+
 std::vector<Branch>
 take(uint64_t n, std::variant<SingleChunkIterator, ChunkedIterator> &u) {
   std::vector<Branch> r;
@@ -147,23 +158,11 @@ take(uint64_t n, std::variant<SingleChunkIterator, ChunkedIterator> &u) {
     std::optional<Branch> next_branch;
     std::visit(Overload{[&r, &i, &n](ChunkedIterator &k) {
                           std::optional<Branch> next_branch = k.next();
-                          if (next_branch) {
-                            Branch b = *next_branch;
-                            r.push_back(b);
-                            i = i + 1;
-                          } else {
-                            i = n;
-                          }
+                          absorb(r, i, n, next_branch);
                         },
                         [&r, &i, &n](SingleChunkIterator &k) {
                           std::optional<Branch> next_branch = k.next();
-                          if (next_branch) {
-                            Branch b = *next_branch;
-                            r.push_back(b);
-                            i = i + 1;
-                          } else {
-                            i = n;
-                          }
+                          absorb(r, i, n, next_branch);
                         }},
                u);
   }
