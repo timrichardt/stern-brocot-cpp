@@ -5,6 +5,11 @@
 #include <variant>
 #include <vector>
 
+template <class... Fs> struct Overload : Fs... {
+  using Fs::operator()...;
+};
+template <class... Fs> Overload(Fs...) -> Overload<Fs...>;
+
 int sign(int64_t a) {
   if (a == 0)
     return 0;
@@ -26,20 +31,34 @@ std::ostream &operator<<(std::ostream &os, Branch branch) {
 }
 
 std::ostream &operator<<(std::ostream &os, std::vector<Branch> path) {
-  os << "[";
   for (const auto &branch : path) {
     os << branch;
   }
-  os << "]";
   return os;
 }
 
 std::ostream &operator<<(std::ostream &os, Number &num) {
+  std::optional<Branch> next_branch;
   char sign_sym = (num.sign == 1) ? '+' : (num.sign == -1) ? '-' : '0';
   if (num.vec) {
     os << sign_sym << *num.vec;
   } else {
-    os << sign_sym << take(20, *num.seq) << "…]";
+    auto k = *num.seq;
+    auto r = take(20, k);
+    os << sign_sym << r;
+    std::visit(Overload{[&os](ChunkedIterator &k) {
+                          std::optional<Branch> next_branch = k.next();
+                          if (next_branch) {
+                            os << "…";
+                          }
+                        },
+                        [&os](SingleChunkIterator &k) {
+                          std::optional<Branch> next_branch = k.next();
+                          if (next_branch) {
+                            os << "…";
+                          }
+                        }},
+               k);
   }
   return os;
 }
@@ -117,11 +136,6 @@ std::vector<Branch> get_chunk_sqrt2() {
 }
 
 std::vector<Branch> get_chunk_phi() { return {Branch::R, Branch::L}; }
-
-template <class... Fs> struct Overload : Fs... {
-  using Fs::operator()...;
-};
-template <class... Fs> Overload(Fs...) -> Overload<Fs...>;
 
 std::vector<Branch>
 take(uint64_t n, std::variant<SingleChunkIterator, ChunkedIterator> &u) {
