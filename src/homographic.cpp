@@ -5,6 +5,11 @@
 #include <optional>
 #include <vector>
 
+template <class... Fs> struct Overload : Fs... {
+  using Fs::operator()...;
+};
+template <class... Fs> Overload(Fs...) -> Overload<Fs...>;
+
 std::optional<int64_t> lin_sign(int64_t a, int64_t b) {
   if (a == 0 && b == 0)
     return 0;
@@ -122,7 +127,32 @@ Number hom(Hom &H, Number &x) {
   Number y;
   // HomIterator v(I, x);
 
+  Hom Hc = H;
+  Number xc = x;
+
   // calculate sign
+  switch (xc.sign) {
+  case -1: {
+    Hc.a = -Hc.a;
+    Hc.c = -Hc.c;
+  }
+  case 0: {
+    Hc.a = 0;
+    Hc.c = 0;
+  }
+  }
+
+  int s = -100;
+
+  int xs = xc.sign;
+
+  if (xc.seq) {
+    std::visit(
+        Overload{[&Hc, &s](ChunkedIterator &k) { s = hom_sign(Hc, k); },
+                 [&Hc, &s](SingleChunkIterator &k) { s = hom_sign(Hc, k); }},
+        *xc.seq);
+  }
+  // end of calculating sign
 
   return y;
 }
@@ -132,7 +162,6 @@ void test_hom_sign() {
   std::vector<char> u = {'R', 'L', 'L', 'R', 'L', 'R'};
   assert(hom_sign(node, u) == 1);
   std::cout << "Test passed: Homographic sign algorithm\n";
-  std::cout << node.a << std::endl;
 }
 
 void test_hom_sign_large() {

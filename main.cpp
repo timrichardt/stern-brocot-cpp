@@ -48,5 +48,12 @@ int main() {
   std::cout << numb3 << std::endl;
   std::cout << numb4 << std::endl;
 
+	Hom hh = {1, 3, 0, 1};
+
+  ChunkedIterator gg = make_e();
+
+	Number numb5 = {-1, std::nullopt, gg};
+	hom(hh, numb5);
+
   return 0;
 }
