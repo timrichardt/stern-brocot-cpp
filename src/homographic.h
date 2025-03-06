@@ -27,8 +27,8 @@ private:
 bool is_R_emittable(const Hom &H);
 bool is_L_emittable(const Hom &H);
 
-int hom_sign(const Hom &H, const std::vector<char> &u, size_t index);
-int hom_sign(const Hom &H, Iterator &u);
+int hom_sign(Hom &H, const std::vector<char> &u, size_t index);
+int hom_sign(Hom &H, Iterator &u);
 
 void hom_emit(const Hom &H, Iterator &u);
 

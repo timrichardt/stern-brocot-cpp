@@ -18,7 +18,7 @@ std::optional<int64_t> lin_sign(int64_t a, int64_t b) {
   return std::nullopt;
 }
 
-int hom_sign(const Hom &H, const std::vector<char> &u, size_t index = 0) {
+int hom_sign(Hom &H, const std::vector<char> &u, size_t index = 0) {
   if (index >= u.size()) {
     return sign(H.a + H.b) * sign(H.c + H.d);
   }
@@ -31,15 +31,17 @@ int hom_sign(const Hom &H, const std::vector<char> &u, size_t index = 0) {
   }
 
   if (u[index] == 'R') {
-    __attribute__((musttail)) return hom_sign(H.right(), u, index + 1);
+    H.right();
+    __attribute__((musttail)) return hom_sign(H, u, index + 1);
   } else if (u[index] == 'L') {
-    __attribute__((musttail)) return hom_sign(H.left(), u, index + 1);
+    H.left();
+    __attribute__((musttail)) return hom_sign(H, u, index + 1);
   } else {
     throw std::runtime_error("Invalid sequence character");
   }
 }
 
-int hom_sign(const Hom &H, Iterator &u) {
+int hom_sign(Hom &H, Iterator &u) {
   // if (index >= u.size()) {
   //   return sign(H.a + H.b) * sign(H.c + H.d);
   // }
@@ -54,9 +56,11 @@ int hom_sign(const Hom &H, Iterator &u) {
   auto next = u.next();
 
   if (next == Branch::R) {
-    __attribute__((musttail)) return hom_sign(H.right(), u);
+    H.right();
+    __attribute__((musttail)) return hom_sign(H, u);
   } else if (next == Branch::L) {
-    __attribute__((musttail)) return hom_sign(H.left(), u);
+    H.left();
+    __attribute__((musttail)) return hom_sign(H, u);
   } else {
     throw std::runtime_error("Invalid sequence character");
   }
@@ -87,7 +91,7 @@ void hom_emit(Hom &H, Iterator &u) {
   }
 }
 
-Iterator hom_sb(const Hom &H, Iterator &u) {
+Iterator hom_sb(Hom &H, Iterator &u) {
   Iterator r;
   if (H.det() == 0) {
     Q_to_SB((int64_t)(H.a + H.b), (int64_t)(H.c + H.d));
@@ -128,6 +132,7 @@ void test_hom_sign() {
   std::vector<char> u = {'R', 'L', 'L', 'R', 'L', 'R'};
   assert(hom_sign(node, u) == 1);
   std::cout << "Test passed: Homographic sign algorithm\n";
+  std::cout << node.a << std::endl;
 }
 
 void test_hom_sign_large() {

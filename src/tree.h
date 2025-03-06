@@ -16,8 +16,8 @@ int sign(int64_t a);
 struct Hom {
   int64_t a, b, c, d;
 
-  Hom left() const;
-  Hom right() const;
+  void left();
+  void right();
   double to_fraction() const;
   int64_t to_N() const;
   int64_t det() const;

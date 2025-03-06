@@ -63,9 +63,15 @@ std::ostream &operator<<(std::ostream &os, Number &num) {
   return os;
 }
 
-Hom Hom::left() const { return {a + b, b, c + d, d}; }
+void Hom::left() {
+	a = a + b;
+	c = c + d;
+}
 
-Hom Hom::right() const { return {a, a + b, c, c + d}; }
+void Hom::right() {
+	b = b + a;
+	d = d + c;
+}
 
 double Hom::to_fraction() const {
   return static_cast<double>(a + b) / static_cast<double>(c + d);
@@ -86,9 +92,9 @@ Hom parseSB(const std::string &str) {
 
   for (char ch : str) {
     if (ch == 'L') {
-      node = node.left();
+      node.left();
     } else if (ch == 'R') {
-      node = node.right();
+       node.right();
     } else {
       throw std::invalid_argument("Invalid character");
     }
@@ -155,7 +161,6 @@ take(uint64_t n, std::variant<SingleChunkIterator, ChunkedIterator> &u) {
   uint i = 0;
 
   while (i < n) {
-    std::optional<Branch> next_branch;
     std::visit(Overload{[&r, &i, &n](ChunkedIterator &k) {
                           std::optional<Branch> next_branch = k.next();
                           absorb(r, i, n, next_branch);
@@ -171,12 +176,14 @@ take(uint64_t n, std::variant<SingleChunkIterator, ChunkedIterator> &u) {
 
 std::optional<Branch>
 take_one(std::variant<SingleChunkIterator, ChunkedIterator> &u) {
-  std::optional<Branch> next_branch;
-  std::visit(Overload{[](ChunkedIterator &k) {
+	std::optional<Branch> next_branch = 
+	std::visit(Overload{[](ChunkedIterator &k) {
                         std::optional<Branch> next_branch = k.next();
+												return next_branch;
                       },
                       [](SingleChunkIterator &k) {
                         std::optional<Branch> next_branch = k.next();
+												return next_branch;
                       }},
              u);
   if (next_branch) {
@@ -233,9 +240,9 @@ double SB_to_double(std::vector<Branch> &u) {
 
   for (Branch b : u) {
     if (b == Branch::R) {
-      node = node.right();
+      node.right();
     } else {
-      node = node.left();
+      node.left();
     }
   }
   return node.to_fraction();
