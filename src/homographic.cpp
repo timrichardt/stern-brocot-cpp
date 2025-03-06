@@ -70,21 +70,19 @@ bool is_L_emittable(const Hom &H) {
   return (H.a <= H.c && H.b < H.d) || (H.a < H.c && H.b <= H.d);
 }
 
-Hom emit_R(const Hom &H) { return {H.a - H.c, H.b - H.d, H.c, H.d}; }
-
-Hom emit_L(const Hom &H) { return {H.a, H.b, H.c - H.a, H.d - H.b}; }
-
-Hom hom_emit(const Hom &H, Iterator &u) {
+void hom_emit(Hom &H, Iterator &u) {
   if (is_R_emittable(H)) {
-    return emit_R(H);
+    H.a = H.a - H.c;
+    H.b = H.b - H.d;
   } else if (is_L_emittable(H)) {
-    return emit_L(H);
+    H.c = H.c - H.a;
+    H.d = H.d - H.b;
   } else {
     auto next = u.next();
     if (next == Branch::R) {
-      return H.right();
+      H.right();
     } else {
-      return H.left();
+      H.left();
     }
   }
 }
@@ -105,6 +103,24 @@ Iterator hom_sb(const Hom &H, Iterator &u) {
     };
   }
   return r;
+}
+
+HomIterator::HomIterator(Hom &H, Number &x) : H(H), x(x) {
+  u_sign = x.sign;
+  if (x.seq) {
+    u = *x.seq;
+  }
+}
+
+std::optional<Branch> HomIterator::next() {}
+
+Number hom(Hom &H, Number &x) {
+  Number y;
+  // HomIterator v(I, x);
+
+  // calculate sign
+
+  return y;
 }
 
 void test_hom_sign() {

@@ -15,11 +15,11 @@ int main() {
   Hom node = {4, 2, 3, 4};
   const std::vector<Branch> x = {Branch::L, Branch::R, Branch::R, Branch::L};
 
-  std::cout << "emittable? " << is_R_emittable(node) << "\n"
-            << emit_R(node).c << "\n";
-  std::cout << "emittable? " << is_L_emittable(node) << "\n"
-            << emit_L(node).c << "\n";
-  std::cout << x << "\n" << std::endl;
+  // std::cout << "emittable? " << is_R_emittable(node) << "\n"
+  //           << emit_R(node).c << "\n";
+  // std::cout << "emittable? " << is_L_emittable(node) << "\n"
+  //           << emit_L(node).c << "\n";
+  // std::cout << x << "\n" << std::endl;
 
   auto e = make_e();
 

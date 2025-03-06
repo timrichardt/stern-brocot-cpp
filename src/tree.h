@@ -75,7 +75,7 @@ double SB_to_double(std::vector<Branch> &u);
 struct Number {
   int sign;
   std::optional<std::vector<Branch>> vec;
-  std::optional<std::variant<SingleChunkIterator, ChunkedIterator>> seq;
+	std::optional<std::variant<SingleChunkIterator, ChunkedIterator>> seq;
 };
 
 std::ostream &operator<<(std::ostream &os, Number &num);
