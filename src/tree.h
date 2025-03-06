@@ -13,20 +13,20 @@
 int sign(int64_t a);
 
 // Struct representing a node in the tree
-struct Node {
+struct Hom {
   int64_t a, b, c, d;
 
-  Node left() const;
-  Node right() const;
+  Hom left() const;
+  Hom right() const;
   double to_fraction() const;
   int64_t to_N() const;
   int64_t det() const;
-  bool operator==(const Node &other) const;
+  bool operator==(const Hom &other) const;
 };
 
-extern const Node I; // Root node of the tree
+extern const Hom I; // Root node of the tree
 
-Node parse_SB(const std::string &str);
+Hom parse_SB(const std::string &str);
 
 enum class Branch { R, L };
 
@@ -84,6 +84,8 @@ std::ostream &operator<<(std::ostream &os, Number &num);
 std::vector<Branch> take(uint64_t n, Number &u);
 std::vector<Branch> take(uint64_t n,
                          std::variant<SingleChunkIterator, ChunkedIterator> &u);
+std::optional<Branch>
+take_one(std::variant<SingleChunkIterator, ChunkedIterator> &u);
 
 void Q_to_SB(int64_t n, int64_t d, std::vector<Branch> &u);
 void Q_to_SB(int64_t n, int64_t d);

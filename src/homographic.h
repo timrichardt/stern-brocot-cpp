@@ -12,15 +12,17 @@
 
 std::optional<int64_t> lin_sign(int64_t a, int64_t b);
 
-bool is_R_emittable(const Node &H);
-bool is_L_emittable(const Node &H);
-Node emit_R(const Node &H);
-Node emit_L(const Node &H);
+bool is_R_emittable(const Hom &H);
+bool is_L_emittable(const Hom &H);
+Hom emit_R(const Hom &H);
+Hom emit_L(const Hom &H);
 
-int hom_sign(const Node &H, const std::vector<char> &u, size_t index);
-int hom_sign(const Node &H, Iterator &u);
+int hom_sign(const Hom &H, const std::vector<char> &u, size_t index);
+int hom_sign(const Hom &H, Iterator &u);
 
-Node hom_emit(const Node &H, Iterator &u);
+Hom hom_emit(const Hom &H, Iterator &u);
+
+Iterator hom(const Hom& H, Number &r);
 
 void test_hom_sign();
 void test_hom_sign_large();

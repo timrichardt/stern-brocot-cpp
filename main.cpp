@@ -12,7 +12,7 @@ int main() {
   test_hom_sign_sqrt2();
   test_hom_sign_e();
 
-  Node node = {4, 2, 3, 4};
+  Hom node = {4, 2, 3, 4};
   const std::vector<Branch> x = {Branch::L, Branch::R, Branch::R, Branch::L};
 
   std::cout << "emittable? " << is_R_emittable(node) << "\n"

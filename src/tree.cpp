@@ -63,26 +63,26 @@ std::ostream &operator<<(std::ostream &os, Number &num) {
   return os;
 }
 
-Node Node::left() const { return {a + b, b, c + d, d}; }
+Hom Hom::left() const { return {a + b, b, c + d, d}; }
 
-Node Node::right() const { return {a, a + b, c, c + d}; }
+Hom Hom::right() const { return {a, a + b, c, c + d}; }
 
-double Node::to_fraction() const {
+double Hom::to_fraction() const {
   return static_cast<double>(a + b) / static_cast<double>(c + d);
 }
 
-int64_t Node::to_N() const { return (a + b) * (c + d); }
+int64_t Hom::to_N() const { return (a + b) * (c + d); }
 
-int64_t Node::det() const { return a * d - b * c; }
+int64_t Hom::det() const { return a * d - b * c; }
 
-bool Node::operator==(const Node &other) const {
+bool Hom::operator==(const Hom &other) const {
   return a == other.a && b == other.b && c == other.c && d == other.d;
 }
 
-const Node I = {1, 0, 0, 1}; // Root node of the tree
+const Hom I = {1, 0, 0, 1}; // Root node of the tree
 
-Node parseSB(const std::string &str) {
-  Node node = I;
+Hom parseSB(const std::string &str) {
+  Hom node = I;
 
   for (char ch : str) {
     if (ch == 'L') {
@@ -169,6 +169,23 @@ take(uint64_t n, std::variant<SingleChunkIterator, ChunkedIterator> &u) {
   return r;
 }
 
+std::optional<Branch>
+take_one(std::variant<SingleChunkIterator, ChunkedIterator> &u) {
+  std::optional<Branch> next_branch;
+  std::visit(Overload{[](ChunkedIterator &k) {
+                        std::optional<Branch> next_branch = k.next();
+                      },
+                      [](SingleChunkIterator &k) {
+                        std::optional<Branch> next_branch = k.next();
+                      }},
+             u);
+  if (next_branch) {
+    return *next_branch;
+  } else {
+    return std::nullopt;
+  }
+}
+
 auto make_e_generator() {
   return [n = 0]() mutable -> std::vector<Branch> {
     std::vector<Branch> result;
@@ -212,7 +229,7 @@ auto make_rational_generator(std::vector<Branch> rat) {
 }
 
 double SB_to_double(std::vector<Branch> &u) {
-  Node node = I;
+  Hom node = I;
 
   for (Branch b : u) {
     if (b == Branch::R) {
@@ -257,8 +274,8 @@ Number Q_to_SSB(int n, int d) {
 
 // Test functions
 void test_parse_SB() {
-  Node parsed = parseSB("RRRLRLLL");
-  Node expected = {25, 7, 7, 2};
+  Hom parsed = parseSB("RRRLRLLL");
+  Hom expected = {25, 7, 7, 2};
   assert(parsed == expected);
 }
 
