@@ -3,14 +3,11 @@
 
 #include <cstdint>
 #include <functional>
-#include <iostream>
 #include <optional>
-#include <stdexcept>
 #include <string>
-#include <variant>
 #include <vector>
 
-int sign(int64_t a);
+int8_t sign(int64_t a);
 
 // Struct representing a node in the tree
 struct Hom {
@@ -18,15 +15,17 @@ struct Hom {
 
   void left();
   void right();
+  void up();
+  void down();
   double to_fraction() const;
   int64_t to_N() const;
   int64_t det() const;
   bool operator==(const Hom &other) const;
 };
 
-extern const Hom I; // Root node of the tree
+extern const Hom I;
 
-Hom parse_SB(const std::string &str);
+std::ostream &operator<<(std::ostream &os, Hom H);
 
 enum class Branch { R, L };
 
@@ -70,26 +69,21 @@ std::vector<Branch> get_chunk_e();
 
 ChunkedIterator make_e();
 
-double SB_to_double(std::vector<Branch> &u);
-
 struct Number {
   int sign;
-  std::optional<std::vector<Branch>> vec;
-	std::optional<std::variant<SingleChunkIterator, ChunkedIterator>> seq;
+  Iterator &seq;
+
+  bool operator==(const Number &other) const;
 };
 
 std::ostream &operator<<(std::ostream &os, Number &num);
 
-// std::vector<Branch> take(uint64_t n, Iterator &u);
-std::vector<Branch> take(uint64_t n, Number &u);
-std::vector<Branch> take(uint64_t n,
-                         std::variant<SingleChunkIterator, ChunkedIterator> &u);
-std::optional<Branch>
-take_one(std::variant<SingleChunkIterator, ChunkedIterator> &u);
+Number parse_SB(const std::string &str);
 
-void Q_to_SB(int64_t n, int64_t d, std::vector<Branch> &u);
-void Q_to_SB(int64_t n, int64_t d);
-void Q_to_SB(int64_t n, int64_t d);
+int8_t sign(Number &x);
+
+Number take(uint64_t n, Number &x);
+std::optional<Branch> take_one(Number &x);
 
 Number Q_to_SSB(int64_t n, int64_t d);
 
