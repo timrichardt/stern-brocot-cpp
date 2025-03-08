@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <functional>
+#include <memory>
 #include <optional>
 #include <string>
 #include <vector>
@@ -71,7 +72,7 @@ ChunkedIterator make_e();
 
 struct Number {
   int sign;
-  Iterator &seq;
+  std::unique_ptr<Iterator> seq;
 
   bool operator==(const Number &other) const;
 };

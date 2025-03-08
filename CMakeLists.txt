@@ -9,6 +9,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Force Clang++ as the compiler
 set(CMAKE_CXX_COMPILER clang++)
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "clang++")
+    add_compile_options(-Wall -Wextra -pedantic)
+endif()
+
 # Add the source directory
 include_directories(src)
 

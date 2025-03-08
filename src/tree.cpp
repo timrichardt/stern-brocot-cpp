@@ -2,6 +2,7 @@
 #include <cassert>
 #include <cstdint>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <vector>
 
@@ -20,31 +21,6 @@ std::ostream &operator<<(std::ostream &os, std::vector<Branch> path) {
   }
   return os;
 }
-
-// std::ostream &operator<<(std::ostream &os, Number &num) {
-//   char sign_sym = (num.sign == 1) ? '+' : (num.sign == -1) ? '-' : '0';
-//   if (num.vec) {
-//     os << sign_sym << *num.vec;
-//   } else {
-//     auto k = *num.seq;
-//     auto r = take(50, k);
-//     os << sign_sym << r;
-//     std::visit(Overload{[&os](ChunkedIterator &k) {
-//                           std::optional<Branch> next_branch = k.next();
-//                           if (next_branch) {
-//                             os << "…";
-//                           }
-//                         },
-//                         [&os](SingleChunkIterator &k) {
-//                           std::optional<Branch> next_branch = k.next();
-//                           if (next_branch) {
-//                             os << "…";
-//                           }
-//                         }},
-//                k);
-//   }
-//   return os;
-// }
 
 std::ostream &operator<<(std::ostream &os, Hom H) {
   os << H.a << " " << H.b << " " << H.c << " " << H.d << std::endl;
@@ -107,35 +83,34 @@ std::optional<Branch> SingleChunkIterator::next() {
 }
 
 bool Number::operator==(const Number &other) const {
-  std::cout << "HERE I AM";
-
   if (sign != other.sign)
     return false;
 
   std::optional<Branch> a, b;
 
-  while (true) {
-    a = seq.next();
-    b = other.seq.next();
+// goto considered harmful my ass
+get_branch:
+  a = seq->next();
+  b = other.seq->next();
 
-    std::cout << "a: " << *a << std::endl;
-    std::cout << "b: " << *b << std::endl;
-
-    if (a) {
-      if (b) {
-        if (*a != *b)
-          return false;
-      } else {
+  if (a) {
+    if (b) {
+      if (*a != *b) {
         return false;
+      } else {
+        goto get_branch;
       }
     } else {
-      if (b) {
-        return false;
-      } else {
-        return true;
-      }
+      return false;
+    }
+  } else {
+    if (b) {
+      return false;
+    } else {
+      return true;
     }
   }
+  return true;
 }
 
 Number parse_SB(const std::string &str) {
@@ -165,17 +140,13 @@ Number parse_SB(const std::string &str) {
     }
   }
 
-  SingleChunkIterator ci(u);
-  Number ret = {s, ci};
-
-  return ret;
+  return {s, std::make_unique<SingleChunkIterator>(u)};
 }
 
 void test_parse_SB() {
   Number parsed_1 = parse_SB("RLR");
-  SingleChunkIterator u({Branch::R, Branch::L, Branch::R});
-  std::cout << *u.next() << *u.next() << *u.next();
-  Number expected_1 = {1, u};
+  std::vector<Branch> u = {Branch::R, Branch::L, Branch::R};
+  Number expected_1({1, std::make_unique<SingleChunkIterator>(u)});
   assert(parsed_1 == expected_1);
   std::cout << "Test passed: parse SB sequence" << std::endl;
 }
