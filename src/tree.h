@@ -58,6 +58,7 @@ public:
 
   explicit ChunkedIterator(ChunkGenerator generator);
   std::optional<Branch> next() override;
+  std::unique_ptr<Iterator> clone() override;
 
 private:
   ChunkGenerator generator;
@@ -78,6 +79,11 @@ struct Number {
   std::unique_ptr<Iterator> seq;
 
   bool operator==(const Number &other) const;
+  bool operator!=(const Number &other) const;
+  bool operator<(const Number &other) const;
+  bool operator<=(const Number &other) const;
+  bool operator>(const Number &other) const;
+  bool operator>=(const Number &other) const;
 };
 
 std::ostream &operator<<(std::ostream &os, Number &num);

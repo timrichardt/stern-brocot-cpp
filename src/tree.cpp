@@ -27,6 +27,8 @@ std::ostream &operator<<(std::ostream &os, Hom H) {
   return os;
 }
 
+std::ostream &operator<<(std::ostream &os, Number n) { return os; }
+
 int8_t sign(int64_t a) {
   if (a == 0)
     return 0;
@@ -88,9 +90,6 @@ std::optional<Branch> SingleChunkIterator::next() {
 }
 
 std::unique_ptr<Iterator> SingleChunkIterator::clone() {
-  // SingleChunkIterator sci = SingleChunkIterator(chunk);
-  // size_t sci_index = index;
-
   return std::make_unique<SingleChunkIterator>(chunk);
 }
 
@@ -100,29 +99,143 @@ bool Number::operator==(const Number &other) const {
 
   std::optional<Branch> a, b;
 
-// goto considered harmful my ass
-get_branch:
   a = seq->next();
   b = other.seq->next();
 
-  if (a) {
-    if (b) {
-      if (*a != *b) {
-        return false;
-      } else {
-        goto get_branch;
-      }
-    } else {
+  do {
+    if (*a != *b)
       return false;
-    }
-  } else {
-    if (b) {
-      return false;
-    } else {
-      return true;
-    }
-  }
+    a = seq->next();
+    b = other.seq->next();
+  } while (a && b);
+
+  if (a || b)
+    return false;
+
   return true;
+}
+
+bool Number::operator!=(const Number &other) const {
+  if (sign != other.sign)
+    return true;
+
+  std::optional<Branch> a, b;
+
+  a = seq->next();
+  b = other.seq->next();
+
+  do {
+    if (*a != *b)
+      return true;
+    a = seq->next();
+    b = other.seq->next();
+  } while (a && b);
+
+  if (a || b)
+    return true;
+
+  return false;
+}
+
+bool Number::operator<(const Number &other) const {
+  if (sign < other.sign)
+    return true;
+
+  if (sign == other.sign) {
+    std::optional<Branch> a, b;
+
+    a = seq->next();
+    b = other.seq->next();
+
+    do {
+      if ((*a == Branch::R) && (*b == Branch::L))
+        return false;
+      a = seq->next();
+      b = other.seq->next();
+    } while (a && b);
+
+    if (a)
+      if (*a == Branch::L)
+        return true;
+
+    if (b)
+      if (*b == Branch::R)
+        return true;
+  }
+
+  return false;
+}
+
+bool Number::operator<=(const Number &other) const {
+  if (sign != other.sign)
+    return true;
+
+  std::optional<Branch> a, b;
+
+  a = seq->next();
+  b = other.seq->next();
+
+  do {
+    if ((*a == Branch::L) && (*b == Branch::R))
+      return false;
+    a = seq->next();
+    b = other.seq->next();
+  } while (a && b);
+
+  if (a)
+    return (*a == Branch::L);
+  if (b)
+    return (*b == Branch::R);
+
+  return false;
+}
+
+bool Number::operator>(const Number &other) const {
+  if (sign > other.sign)
+    return true;
+
+  if (sign == other.sign) {
+    std::optional<Branch> a, b;
+
+    a = seq->next();
+    b = other.seq->next();
+
+    do {
+      if (*a > *b)
+        return true;
+      a = seq->next();
+      b = other.seq->next();
+    } while (a && b);
+
+    if (a)
+      if (*a == Branch::R)
+        return true;
+
+    if (b)
+      if (*b == Branch::L)
+        return true;
+  }
+
+  return false;
+}
+
+bool Number::operator>=(const Number &other) const {
+  if (sign != other.sign)
+    return true;
+
+  std::optional<Branch> a, b;
+
+  a = seq->next();
+  b = other.seq->next();
+
+  do {
+    if (*a <= *b)
+      return true;
+    a = seq->next();
+    b = other.seq->next();
+  } while (a && b);
+
+  return false;
 }
 
 Number parse_SB(const std::string &str) {
@@ -156,27 +269,42 @@ Number parse_SB(const std::string &str) {
 }
 
 void test_parse_SB() {
+
+  // ==
   Number parsed_1 = parse_SB("RLR");
   std::vector<Branch> u_1 = {Branch::R, Branch::L, Branch::R};
   Number expected_1({1, std::make_unique<SingleChunkIterator>(u_1)});
   assert(parsed_1 == expected_1);
 
-  // Number parsed_2 = parse_SB("RLR");
-  // std::vector<Branch> u_2 = {Branch::R, Branch::L, Branch::R};
-  // Number expected_2({-1, std::make_unique<SingleChunkIterator>(u_1)});
-  // assert(parsed_2 != expected_2);
+  // !=
+  Number parsed_2 = parse_SB("RLL");
+  std::vector<Branch> u_2 = {Branch::R, Branch::L, Branch::R};
+  Number expected_2({1, std::make_unique<SingleChunkIterator>(u_2)});
+  assert(parsed_2 != expected_2);
 
-  // Number parsed_3 = parse_SB("RLRLLL");
-  // std::vector<Branch> u_3 = {Branch::R, Branch::L, Branch::R};
-  // Number expected_3({1, std::make_unique<SingleChunkIterator>(u_1)});
-  // assert(parsed_3 != expected_3);
+  // <
+  Number parsed_3 = parse_SB("RLRL");
+  std::vector<Branch> u_3 = {Branch::R, Branch::L, Branch::R};
+  Number expected_3({1, std::make_unique<SingleChunkIterator>(u_3)});
+  assert(parsed_3 < expected_3);
+
+  // <=
+  Number parsed_4 = parse_SB("RLRL");
+  std::vector<Branch> u_4 = {Branch::R, Branch::L, Branch::R};
+  Number expected_4({1, std::make_unique<SingleChunkIterator>(u_4)});
+  assert(parsed_4 < expected_4);
+
+  // >
+  Number parsed_5 = parse_SB("RLRR");
+  std::vector<Branch> u_5 = {Branch::R, Branch::L, Branch::R};
+  Number expected_5({1, std::make_unique<SingleChunkIterator>(u_5)});
+  assert(parsed_5 > expected_5);
+
+  // >=
+  Number parsed_6 = parse_SB("RLRR");
+  std::vector<Branch> u_6 = {Branch::R, Branch::L, Branch::R};
+  Number expected_6({1, std::make_unique<SingleChunkIterator>(u_6)});
+  assert(parsed_6 >= expected_6);
 
   std::cout << "Test passed: parse SB sequence" << std::endl;
 }
-
-HomIterator::HomIterator(Hom H, const Number &n)
-    : G(H), m({n.sign, n.seq->clone()}) {}
-
-std::optional<Branch> HomIterator::next() {}
-
-std::unique_ptr<Iterator> HomIterator::clone() {}
