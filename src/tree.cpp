@@ -72,6 +72,11 @@ std::optional<Branch> Iterator::next() {
       "Iterator::next() should be overridden by derived class");
 }
 
+std::unique_ptr<Iterator> Iterator::clone() {
+  throw std::runtime_error(
+      "Iterator::clone() should be overridden by derived class");
+}
+
 SingleChunkIterator::SingleChunkIterator(const std::vector<Branch> &chunk)
     : chunk(chunk), index(0) {}
 
@@ -80,6 +85,13 @@ std::optional<Branch> SingleChunkIterator::next() {
     return std::nullopt;
   }
   return chunk[index++];
+}
+
+std::unique_ptr<Iterator> SingleChunkIterator::clone() {
+  // SingleChunkIterator sci = SingleChunkIterator(chunk);
+  // size_t sci_index = index;
+
+  return std::make_unique<SingleChunkIterator>(chunk);
 }
 
 bool Number::operator==(const Number &other) const {
@@ -140,13 +152,31 @@ Number parse_SB(const std::string &str) {
     }
   }
 
-  return {s, std::make_unique<SingleChunkIterator>(u)};
+  return Number{s, std::make_unique<SingleChunkIterator>(u)};
 }
 
 void test_parse_SB() {
   Number parsed_1 = parse_SB("RLR");
-  std::vector<Branch> u = {Branch::R, Branch::L, Branch::R};
-  Number expected_1({1, std::make_unique<SingleChunkIterator>(u)});
+  std::vector<Branch> u_1 = {Branch::R, Branch::L, Branch::R};
+  Number expected_1({1, std::make_unique<SingleChunkIterator>(u_1)});
   assert(parsed_1 == expected_1);
+
+  // Number parsed_2 = parse_SB("RLR");
+  // std::vector<Branch> u_2 = {Branch::R, Branch::L, Branch::R};
+  // Number expected_2({-1, std::make_unique<SingleChunkIterator>(u_1)});
+  // assert(parsed_2 != expected_2);
+
+  // Number parsed_3 = parse_SB("RLRLLL");
+  // std::vector<Branch> u_3 = {Branch::R, Branch::L, Branch::R};
+  // Number expected_3({1, std::make_unique<SingleChunkIterator>(u_1)});
+  // assert(parsed_3 != expected_3);
+
   std::cout << "Test passed: parse SB sequence" << std::endl;
 }
+
+HomIterator::HomIterator(Hom H, const Number &n)
+    : G(H), m({n.sign, n.seq->clone()}) {}
+
+std::optional<Branch> HomIterator::next() {}
+
+std::unique_ptr<Iterator> HomIterator::clone() {}

@@ -38,12 +38,14 @@ public:
   virtual ~Iterator() = default;
   Iterator() = default;
   virtual std::optional<Branch> next();
+  virtual std::unique_ptr<Iterator> clone();
 };
 
 class SingleChunkIterator : public Iterator {
 public:
   explicit SingleChunkIterator(const std::vector<Branch> &chunk);
   std::optional<Branch> next() override;
+  std::unique_ptr<Iterator> clone() override;
 
 private:
   std::vector<Branch> chunk;
@@ -72,12 +74,24 @@ ChunkedIterator make_e();
 
 struct Number {
   int sign;
+  // std::weak_ptr ?
   std::unique_ptr<Iterator> seq;
 
   bool operator==(const Number &other) const;
 };
 
 std::ostream &operator<<(std::ostream &os, Number &num);
+
+class HomIterator : public Iterator {
+public:
+  explicit HomIterator(Hom H, const Number &n);
+  std::optional<Branch> next() override;
+  std::unique_ptr<Iterator> clone() override;
+
+private:
+  Hom G;
+  Number m;
+};
 
 Number parse_SB(const std::string &str);
 
