@@ -354,6 +354,8 @@ Number parse_SSB(const std::string &str) {
   return Number{s, std::make_unique<SingleChunkIterator>(u)};
 }
 
+Number fraction_to_SSB(int64_t n, int64_t d) {}
+
 auto make_e_generator() {
   return [n = 0]() mutable -> std::vector<Branch> {
     std::vector<Branch> result;
@@ -375,15 +377,37 @@ auto make_e_generator() {
 std::unique_ptr<Iterator> make_e() {
   auto e_gen = make_e_generator();
   return std::make_unique<ChunkedIterator>(e_gen);
-  ;
+}
+
+std::vector<Branch> sqrt2_generator() {
+  return {Branch::R, Branch::L, Branch::L, Branch::R};
 }
 
 std::unique_ptr<Iterator> make_sqrt2() {
-  std::vector<Branch> chunk = {Branch::R, Branch::L, Branch::L, Branch::R};
-  return std::make_unique<SingleChunkIterator>(chunk);
+  return std::make_unique<ChunkedIterator>(sqrt2_generator);
 }
 
+std::vector<Branch> phi_generator() { return {Branch::R, Branch::L}; }
+
 std::unique_ptr<Iterator> make_phi() {
-  std::vector<Branch> chunk = {Branch::R, Branch::L};
-  return std::make_unique<SingleChunkIterator>(chunk);
+  return std::make_unique<ChunkedIterator>(phi_generator);
+}
+
+std::vector<Branch> take(uint64_t n, std::unique_ptr<Iterator> &u) {
+  std::unique_ptr<Iterator> v = u->clone();
+
+  std::vector<Branch> r;
+  uint64_t i = 0;
+
+  while (i < n) {
+    std::optional<Branch> next_branch = v->next();
+    if (next_branch) {
+      r.push_back(*next_branch);
+      i++;
+    } else {
+      break;
+    }
+  }
+
+  return r;
 }

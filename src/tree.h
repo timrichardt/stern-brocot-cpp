@@ -101,4 +101,6 @@ std::unique_ptr<Iterator> make_e();
 std::unique_ptr<Iterator> make_sqrt2();
 std::unique_ptr<Iterator> make_phi();
 
+std::vector<Branch> take(uint64_t n, std::unique_ptr<Iterator> &u);
+
 #endif

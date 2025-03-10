@@ -14,15 +14,18 @@ int main() {
 
   std::vector<Branch> v = {Branch::R, Branch::L, Branch::R};
 
-  std::unique_ptr<Iterator> a = std::make_unique<SingleChunkIterator>(v);
-
-  // std::cout << *a << std::endl;
+  std::unique_ptr<Iterator> e = make_e();
+  std::cout << take(50, e) << std::endl;
+  std::unique_ptr<Iterator> sqrt2 = make_sqrt2();
+  std::cout << take(50, sqrt2) << std::endl;
+  std::unique_ptr<Iterator> phi = make_phi();
+  std::cout << take(50, phi) << std::endl;
 
   SingleChunkIterator b = SingleChunkIterator(u);
   std::unique_ptr<SingleChunkIterator> c =
       std::make_unique<SingleChunkIterator>(b);
-  Number n = {-1, std::move(a)};
-  std::cout << std::move(n) << std::endl;
+  // Number n = {-1, std::move(e)};
+  // std::cout << std::move(n) << std::endl;
 
   return 0;
 }
