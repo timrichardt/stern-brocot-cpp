@@ -120,6 +120,34 @@ std::unique_ptr<Iterator> SingleChunkIterator::clone() {
   return std::make_unique<SingleChunkIterator>(chunk);
 }
 
+ChunkedIterator::ChunkedIterator(ChunkGenerator generator)
+    : generator(generator), chunk_index(0) {
+  load_next_chunk();
+}
+
+std::optional<Branch> ChunkedIterator::next() {
+  if (chunk.empty()) {
+    return std::nullopt;
+  }
+
+  Branch value = chunk[chunk_index++];
+
+  if (chunk_index >= chunk.size()) {
+    load_next_chunk();
+  }
+
+  return value;
+}
+
+std::unique_ptr<Iterator> ChunkedIterator::clone() {
+  return std::make_unique<ChunkedIterator>(generator);
+}
+
+void ChunkedIterator::load_next_chunk() {
+  chunk = generator();
+  chunk_index = 0;
+}
+
 bool Number::operator==(const Number &other) const {
   if (sign != other.sign)
     return false;
@@ -324,4 +352,38 @@ Number parse_SSB(const std::string &str) {
   }
 
   return Number{s, std::make_unique<SingleChunkIterator>(u)};
+}
+
+auto make_e_generator() {
+  return [n = 0]() mutable -> std::vector<Branch> {
+    std::vector<Branch> result;
+
+    if (n % 2 == 0) {
+      result.push_back(Branch::R);
+      result.insert(result.end(), 2 * n, Branch::L);
+      result.push_back(Branch::R);
+    } else {
+      result.push_back(Branch::L);
+      result.insert(result.end(), 2 * n, Branch::R);
+      result.push_back(Branch::L);
+    }
+    n++;
+    return result;
+  };
+}
+
+std::unique_ptr<Iterator> make_e() {
+  auto e_gen = make_e_generator();
+  return std::make_unique<ChunkedIterator>(e_gen);
+  ;
+}
+
+std::unique_ptr<Iterator> make_sqrt2() {
+  std::vector<Branch> chunk = {Branch::R, Branch::L, Branch::L, Branch::R};
+  return std::make_unique<SingleChunkIterator>(chunk);
+}
+
+std::unique_ptr<Iterator> make_phi() {
+  std::vector<Branch> chunk = {Branch::R, Branch::L};
+  return std::make_unique<SingleChunkIterator>(chunk);
 }

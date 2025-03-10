@@ -97,6 +97,8 @@ Number Q_to_SSB(int64_t n, int64_t d);
 Number take(uint64_t n, Number &x);
 std::optional<Branch> take_one(Number &x);
 
-ChunkedIterator make_e();
+std::unique_ptr<Iterator> make_e();
+std::unique_ptr<Iterator> make_sqrt2();
+std::unique_ptr<Iterator> make_phi();
 
 #endif
