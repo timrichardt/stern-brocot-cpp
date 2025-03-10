@@ -6,7 +6,7 @@ int main() {
   test_parse_SSB();
   test_number_comparators();
 
-  std::cout << "------------------------------" << std::endl;
+  std::cout << "-----------------------" << std::endl;
 
   std::vector<Branch> u = {Branch::R, Branch::L, Branch::L, Branch::R};
 
@@ -21,11 +21,14 @@ int main() {
   std::unique_ptr<Iterator> phi = make_phi();
   std::cout << take(50, phi) << std::endl;
 
-  SingleChunkIterator b = SingleChunkIterator(u);
-  std::unique_ptr<SingleChunkIterator> c =
-      std::make_unique<SingleChunkIterator>(b);
+  // SingleChunkIterator b = SingleChunkIterator(u);
+  // std::unique_ptr<SingleChunkIterator> c =
+  //     std::make_unique<SingleChunkIterator>(b);
   // Number n = {-1, std::move(e)};
   // std::cout << std::move(n) << std::endl;
+
+  Number m = fraction_to_SSB(-2, 1);
+  std::cout << std::move(m) << std::endl;
 
   return 0;
 }

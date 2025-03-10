@@ -63,6 +63,9 @@ struct Number {
   // std::weak_ptr ?
   std::unique_ptr<Iterator> seq;
 
+  double to_double();
+  int to_fraction;
+
   bool operator==(const Number &other) const;
   bool operator!=(const Number &other) const;
   bool operator<(const Number &other) const;
@@ -92,7 +95,7 @@ std::ostream &operator<<(std::ostream &os, Number &&n);
 
 int8_t sign(Number &x);
 Number parse_SSB(const std::string &str);
-Number Q_to_SSB(int64_t n, int64_t d);
+Number fraction_to_SSB(int64_t n, int64_t d);
 
 Number take(uint64_t n, Number &x);
 std::optional<Branch> take_one(Number &x);

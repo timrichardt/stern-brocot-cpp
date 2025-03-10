@@ -318,6 +318,25 @@ std::ostream &operator<<(std::ostream &os, Number &&n) {
   return os;
 }
 
+std::vector<Branch> take(uint64_t n, std::unique_ptr<Iterator> &u) {
+  std::unique_ptr<Iterator> v = u->clone();
+
+  std::vector<Branch> r;
+  uint64_t i = 0;
+
+  while (i < n) {
+    std::optional<Branch> next_branch = v->next();
+    if (next_branch) {
+      r.push_back(*next_branch);
+      i++;
+    } else {
+      break;
+    }
+  }
+
+  return r;
+}
+
 int8_t sign(int64_t a) {
   if (a == 0)
     return 0;
@@ -354,7 +373,26 @@ Number parse_SSB(const std::string &str) {
   return Number{s, std::make_unique<SingleChunkIterator>(u)};
 }
 
-Number fraction_to_SSB(int64_t n, int64_t d) {}
+Number fraction_to_SSB(int64_t n, int64_t d) {
+  std::vector<Branch> u;
+
+  int s = sign(n) * sign(d);
+
+  uint64_t an = sign(n) * n;
+  uint64_t ad = sign(d) * d;
+
+  while (an != ad) {
+    if (an < ad) {
+      u.push_back(Branch::L);
+      ad -= an;
+    } else {
+      u.push_back(Branch::R);
+      an -= ad;
+    }
+  }
+
+  return Number{s, std::make_unique<SingleChunkIterator>(u)};
+}
 
 auto make_e_generator() {
   return [n = 0]() mutable -> std::vector<Branch> {
@@ -391,23 +429,4 @@ std::vector<Branch> phi_generator() { return {Branch::R, Branch::L}; }
 
 std::unique_ptr<Iterator> make_phi() {
   return std::make_unique<ChunkedIterator>(phi_generator);
-}
-
-std::vector<Branch> take(uint64_t n, std::unique_ptr<Iterator> &u) {
-  std::unique_ptr<Iterator> v = u->clone();
-
-  std::vector<Branch> r;
-  uint64_t i = 0;
-
-  while (i < n) {
-    std::optional<Branch> next_branch = v->next();
-    if (next_branch) {
-      r.push_back(*next_branch);
-      i++;
-    } else {
-      break;
-    }
-  }
-
-  return r;
 }
