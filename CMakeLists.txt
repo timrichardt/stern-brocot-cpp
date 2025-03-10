@@ -18,4 +18,4 @@ include_directories(src)
 
 # Define the executable
 # add_executable(main main.cpp src/tree.cpp src/homographic.cpp)
-add_executable(main main.cpp src/tree.cpp)
+add_executable(main main.cpp src/tree.cpp src/tests.cpp)

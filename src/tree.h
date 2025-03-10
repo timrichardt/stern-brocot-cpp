@@ -8,8 +8,6 @@
 #include <string>
 #include <vector>
 
-int8_t sign(int64_t a);
-
 // Struct representing a node in the tree
 struct Hom {
   int64_t a, b, c, d;
@@ -24,14 +22,7 @@ struct Hom {
   bool operator==(const Hom &other) const;
 };
 
-extern const Hom I;
-
-std::ostream &operator<<(std::ostream &os, Hom H);
-
 enum class Branch { R, L };
-
-std::ostream &operator<<(std::ostream &os, Branch branch);
-std::ostream &operator<<(std::ostream &os, std::vector<Branch> path);
 
 class Iterator {
 public:
@@ -67,12 +58,6 @@ private:
   void load_next_chunk();
 };
 
-std::vector<Branch> get_chunk_sqrt2();
-std::vector<Branch> get_chunk_phi();
-std::vector<Branch> get_chunk_e();
-
-ChunkedIterator make_e();
-
 struct Number {
   int sign;
   // std::weak_ptr ?
@@ -86,8 +71,6 @@ struct Number {
   bool operator>=(const Number &other) const;
 };
 
-std::ostream &operator<<(std::ostream &os, Number &num);
-
 class HomIterator : public Iterator {
 public:
   explicit HomIterator(Hom H, const Number &n);
@@ -99,17 +82,21 @@ private:
   Number m;
 };
 
-Number parse_SB(const std::string &str);
+extern const Hom I;
+std::ostream &operator<<(std::ostream &os, Hom H);
+std::ostream &operator<<(std::ostream &os, Branch branch);
+std::ostream &operator<<(std::ostream &os, std::vector<Branch> path);
+std::ostream &operator<<(std::ostream &os, std::unique_ptr<Iterator> &u);
+std::ostream &operator<<(std::ostream &os, Iterator &u);
+std::ostream &operator<<(std::ostream &os, Number &&n);
 
 int8_t sign(Number &x);
+Number parse_SSB(const std::string &str);
+Number Q_to_SSB(int64_t n, int64_t d);
 
 Number take(uint64_t n, Number &x);
 std::optional<Branch> take_one(Number &x);
 
-Number Q_to_SSB(int64_t n, int64_t d);
-
-// Test functions
-void test_parse_SB();
-void test_q_to_SB();
+ChunkedIterator make_e();
 
 #endif
