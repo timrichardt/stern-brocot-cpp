@@ -6,62 +6,6 @@
 #include <stdexcept>
 #include <vector>
 
-std::ostream &operator<<(std::ostream &os, Branch branch) {
-  switch (branch) {
-  case Branch::R:
-    return os << "R";
-  case Branch::L:
-    return os << "L";
-  }
-}
-
-std::ostream &operator<<(std::ostream &os, std::vector<Branch> path) {
-  for (const auto &branch : path) {
-    os << branch;
-  }
-  return os;
-}
-
-std::ostream &operator<<(std::ostream &os, Hom H) {
-  os << H.a << " " << H.b << " " << H.c << " " << H.d << std::endl;
-  return os;
-}
-
-std::ostream &operator<<(std::ostream &os, std::unique_ptr<Iterator> u) {
-  std::optional<Branch> branch = u->next();
-
-  while (branch) {
-    os << *branch;
-    branch = u->next();
-  }
-
-  return os;
-}
-
-std::ostream &operator<<(std::ostream &os, Iterator &u) {
-  std::optional<Branch> branch = u.next();
-
-  while (branch) {
-    os << *branch;
-    branch = u.next();
-  }
-
-  return os;
-}
-
-std::ostream &operator<<(std::ostream &os, Number &&n) {
-  os << ((n.sign == 1) ? '+' : (n.sign == -1) ? '-' : '0');
-  os << *n.seq;
-
-  return os;
-}
-
-int8_t sign(int64_t a) {
-  if (a == 0)
-    return 0;
-  return (a > 0) ? 1 : -1;
-}
-
 void Hom::left() {
   a = a + b;
   c = c + d;
@@ -322,6 +266,62 @@ bool Number::operator>=(const Number &other) const {
   }
 
   return true;
+}
+
+std::ostream &operator<<(std::ostream &os, Branch branch) {
+  switch (branch) {
+  case Branch::R:
+    return os << "R";
+  case Branch::L:
+    return os << "L";
+  }
+}
+
+std::ostream &operator<<(std::ostream &os, std::vector<Branch> path) {
+  for (const auto &branch : path) {
+    os << branch;
+  }
+  return os;
+}
+
+std::ostream &operator<<(std::ostream &os, Hom H) {
+  os << H.a << " " << H.b << " " << H.c << " " << H.d << std::endl;
+  return os;
+}
+
+std::ostream &operator<<(std::ostream &os, std::unique_ptr<Iterator> u) {
+  std::optional<Branch> branch = u->next();
+
+  while (branch) {
+    os << *branch;
+    branch = u->next();
+  }
+
+  return os;
+}
+
+std::ostream &operator<<(std::ostream &os, Iterator &u) {
+  std::optional<Branch> branch = u.next();
+
+  while (branch) {
+    os << *branch;
+    branch = u.next();
+  }
+
+  return os;
+}
+
+std::ostream &operator<<(std::ostream &os, Number &&n) {
+  os << ((n.sign == 1) ? '+' : (n.sign == -1) ? '-' : '0');
+  os << *n.seq;
+
+  return os;
+}
+
+int8_t sign(int64_t a) {
+  if (a == 0)
+    return 0;
+  return (a > 0) ? 1 : -1;
 }
 
 Number parse_SSB(const std::string &str) {
