@@ -44,13 +44,14 @@ int main() {
   Hom h2 = {0, 1, -1, 0};
   Number n2 = hom(h2, q2);
 
-  Hom h3 = {0, 1, 1, 0};
+  Hom h3 = {1, 0, 0, 1};
   Number ee = {1, make_e()};
   Number n3 = hom(h3, ee);
 
   std::cout << "n2: " << std::move(n2) << std::endl;
   std::cout << "ee: " << std::move(take(50, ee)) << std::endl;
   std::cout << "n3: " << std::move(take(50, n3)) << std::endl;
+  std::cout << "n3: " << take(50, n3).to_double() << std::endl;
 
   return 0;
 }

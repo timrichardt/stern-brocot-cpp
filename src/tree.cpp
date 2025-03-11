@@ -152,6 +152,38 @@ get_branches:
   return true;
 }
 
+double Number::to_double() {
+  std::unique_ptr<Iterator> u = seq->clone();
+  Hom H = I;
+
+absorb:
+  std::optional<Branch> b = u->next();
+  if (b) {
+    if (b == Branch::R)
+      H.right();
+    if (b == Branch::L)
+      H.left();
+    goto absorb;
+  }
+  return static_cast<double>(H.a + H.b) / static_cast<double>(H.c + H.d);
+}
+
+std::pair<int64_t, int64_t> Number::to_fraction() {
+  std::unique_ptr<Iterator> u = seq->clone();
+  Hom H = I;
+
+absorb:
+  std::optional<Branch> b = u->next();
+  if (b) {
+    if (b == Branch::R)
+      H.right();
+    if (b == Branch::L)
+      H.left();
+    goto absorb;
+  }
+  return {H.a + H.b, H.c + H.d};
+}
+
 bool Number::operator!=(const Number &other) const {
   if (sign != other.sign)
     return true;

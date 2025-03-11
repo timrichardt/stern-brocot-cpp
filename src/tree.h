@@ -6,6 +6,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <utility>
 #include <vector>
 
 // Struct representing a node in the tree
@@ -78,7 +79,7 @@ struct Number {
   std::unique_ptr<Iterator> seq;
 
   double to_double();
-  int to_fraction;
+  std::pair<int64_t, int64_t> to_fraction();
 
   bool operator==(const Number &other) const;
   bool operator!=(const Number &other) const;
