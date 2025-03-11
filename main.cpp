@@ -5,6 +5,10 @@
 int main() {
   test_parse_SSB();
   test_number_comparators();
+  test_hom_sign();
+  test_hom_sign_large();
+  test_hom_sign_sqrt2();
+  test_hom_sign_e();
 
   std::cout << "-----------------------" << std::endl;
 
@@ -27,8 +31,12 @@ int main() {
   // Number n = {-1, std::move(e)};
   // std::cout << std::move(n) << std::endl;
 
-  Number m = fraction_to_SSB(-2, 1);
+  Number m = fraction_to_SSB(-3, 4);
   std::cout << std::move(m) << std::endl;
+
+  Number q = fraction_to_SSB(-4, 3);
+  Hom h = {-1, 0, 0, 1};
+  std::unique_ptr<Iterator> hi = std::make_unique<HomIterator>(h, q);
 
   return 0;
 }

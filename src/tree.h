@@ -22,6 +22,8 @@ struct Hom {
   bool operator==(const Hom &other) const;
 };
 
+extern const Hom I;
+
 enum class Branch { R, L };
 
 class Iterator {
@@ -46,7 +48,6 @@ private:
 class ChunkedIterator : public Iterator {
 public:
   using ChunkGenerator = std::function<std::vector<Branch>()>;
-
   explicit ChunkedIterator(ChunkGenerator generator);
   std::optional<Branch> next() override;
   std::unique_ptr<Iterator> clone() override;
@@ -74,18 +75,6 @@ struct Number {
   bool operator>=(const Number &other) const;
 };
 
-class HomIterator : public Iterator {
-public:
-  explicit HomIterator(Hom H, const Number &n);
-  std::optional<Branch> next() override;
-  std::unique_ptr<Iterator> clone() override;
-
-private:
-  Hom G;
-  Number m;
-};
-
-extern const Hom I;
 std::ostream &operator<<(std::ostream &os, Hom H);
 std::ostream &operator<<(std::ostream &os, Branch branch);
 std::ostream &operator<<(std::ostream &os, std::vector<Branch> path);
@@ -93,17 +82,18 @@ std::ostream &operator<<(std::ostream &os, std::unique_ptr<Iterator> &u);
 std::ostream &operator<<(std::ostream &os, Iterator &u);
 std::ostream &operator<<(std::ostream &os, Number &&n);
 
-int8_t sign(Number &x);
+int8_t sign(int64_t x);
+int sign(int x);
+
 Number parse_SSB(const std::string &str);
 Number fraction_to_SSB(int64_t n, int64_t d);
-
-Number take(uint64_t n, Number &x);
-std::optional<Branch> take_one(Number &x);
 
 std::unique_ptr<Iterator> make_e();
 std::unique_ptr<Iterator> make_sqrt2();
 std::unique_ptr<Iterator> make_phi();
 
 std::vector<Branch> take(uint64_t n, std::unique_ptr<Iterator> &u);
+Number take(uint64_t n, Number &x);
+std::optional<Branch> take_one(Number &x);
 
 #endif
