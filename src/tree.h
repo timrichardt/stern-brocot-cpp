@@ -59,6 +59,19 @@ private:
   void load_next_chunk();
 };
 
+class EulerIterator : public Iterator {
+public:
+  explicit EulerIterator();
+  std::optional<Branch> next() override;
+  std::unique_ptr<Iterator> clone() override;
+
+private:
+  uint n;
+  std::vector<Branch> chunk;
+  size_t chunk_index;
+  void load_next_chunk();
+};
+
 struct Number {
   int sign;
   // std::weak_ptr ?

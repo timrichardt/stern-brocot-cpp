@@ -8,7 +8,7 @@ int main() {
   test_hom_sign();
   test_hom_sign_large();
   test_hom_sign_sqrt2();
-  test_hom_sign_e();
+  //  test_hom_sign_e();
 
   std::cout << "-----------------------" << std::endl;
 
@@ -40,13 +40,16 @@ int main() {
 
   std::cout << "hi: " << *hi << std::endl;
 
-  Number q2 = fraction_to_SSB(4, 1);
-  Hom h2 = {2, 1, 0, 1};
-  Number n2 = hom(h2, q);
+  Number q2 = fraction_to_SSB(4, 3);
+  Hom h2 = {0, 1, -1, 0};
+  Number n2 = hom(h2, q2);
 
-  Number n3 = {1, make_e()};
+  Hom h3 = {0, 1, 1, 0};
+  Number ee = {1, make_e()};
+  Number n3 = hom(h3, ee);
 
   std::cout << "n2: " << std::move(n2) << std::endl;
+  std::cout << "ee: " << std::move(take(50, ee)) << std::endl;
   std::cout << "n3: " << std::move(take(50, n3)) << std::endl;
 
   return 0;
