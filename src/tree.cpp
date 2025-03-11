@@ -96,14 +96,14 @@ bool Number::operator==(const Number &other) const {
   if (sign != other.sign)
     return false;
 
-  std::unique_ptr<Iterator> seq_clone = seq->clone();
-  std::unique_ptr<Iterator> other_seq_clone = other.seq->clone();
+  std::unique_ptr<Iterator> seq_c = seq->clone();
+  std::unique_ptr<Iterator> other_seq_c = other.seq->clone();
 
   std::optional<Branch> a, b;
 
 get_branches:
-  a = seq_clone->next();
-  b = other_seq_clone->next();
+  a = seq_c->next();
+  b = other_seq_c->next();
 
   if (a && b) {
     if (*a != *b) {
@@ -122,14 +122,14 @@ bool Number::operator!=(const Number &other) const {
   if (sign != other.sign)
     return true;
 
-  std::unique_ptr<Iterator> seq_clone = seq->clone();
-  std::unique_ptr<Iterator> other_seq_clone = other.seq->clone();
+  std::unique_ptr<Iterator> seq_c = seq->clone();
+  std::unique_ptr<Iterator> other_seq_c = other.seq->clone();
 
   std::optional<Branch> a, b;
 
 get_branches:
-  a = seq_clone->next();
-  b = other_seq_clone->next();
+  a = seq_c->next();
+  b = other_seq_c->next();
 
   if (a && b) {
     if (*a != *b) {
@@ -149,15 +149,15 @@ bool Number::operator<(const Number &other) const {
   if (sign > other.sign)
     return false;
 
-  std::unique_ptr<Iterator> seq_clone = seq->clone();
-  std::unique_ptr<Iterator> other_seq_clone = other.seq->clone();
+  std::unique_ptr<Iterator> seq_c = seq->clone();
+  std::unique_ptr<Iterator> other_seq_c = other.seq->clone();
 
   if (sign == other.sign) {
     std::optional<Branch> a, b;
 
   get_branches:
-    a = seq_clone->next();
-    b = other_seq_clone->next();
+    a = seq_c->next();
+    b = other_seq_c->next();
 
     if (a && b) {
       if ((*a == Branch::R) && (*b == Branch::L))
@@ -181,8 +181,8 @@ bool Number::operator<=(const Number &other) const {
   if (sign != other.sign)
     return true;
 
-  std::unique_ptr<Iterator> seq_clone = seq->clone();
-  std::unique_ptr<Iterator> other_seq_clone = other.seq->clone();
+  std::unique_ptr<Iterator> seq_c = seq->clone();
+  std::unique_ptr<Iterator> other_seq_c = other.seq->clone();
 
   std::optional<Branch> a, b;
 
@@ -192,8 +192,8 @@ bool Number::operator<=(const Number &other) const {
   do {
     if ((*a == Branch::L) && (*b == Branch::R))
       return false;
-    a = seq_clone->next();
-    b = other_seq_clone->next();
+    a = seq_c->next();
+    b = other_seq_c->next();
   } while (a && b);
 
   if (a)
@@ -209,14 +209,14 @@ bool Number::operator>(const Number &other) const {
     return true;
 
   if (sign == other.sign) {
-    std::unique_ptr<Iterator> seq_clone = seq->clone();
-    std::unique_ptr<Iterator> other_seq_clone = other.seq->clone();
+    std::unique_ptr<Iterator> seq_c = seq->clone();
+    std::unique_ptr<Iterator> other_seq_c = other.seq->clone();
 
     std::optional<Branch> a, b;
 
   get_branches:
-    a = seq_clone->next();
-    b = other_seq_clone->next();
+    a = seq_c->next();
+    b = other_seq_c->next();
 
     if (a && b) {
       if ((a == Branch::L) && (b == Branch::R))
@@ -241,14 +241,14 @@ bool Number::operator>=(const Number &other) const {
     return false;
 
   if (sign == other.sign) {
-    std::unique_ptr<Iterator> seq_clone = seq->clone();
-    std::unique_ptr<Iterator> other_seq_clone = other.seq->clone();
+    std::unique_ptr<Iterator> seq_c = seq->clone();
+    std::unique_ptr<Iterator> other_seq_c = other.seq->clone();
 
     std::optional<Branch> a, b;
 
   get_branches:
-    a = seq_clone->next();
-    b = other_seq_clone->next();
+    a = seq_c->next();
+    b = other_seq_c->next();
 
     if (a && b) {
       if ((a == Branch::L) && (b == Branch::R))
