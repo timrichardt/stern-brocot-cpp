@@ -16,6 +16,7 @@ public:
   explicit HomIterator(Hom H, const Number &n);
   std::optional<Branch> next() override;
   std::unique_ptr<Iterator> clone() override;
+  int sign();
 
 private:
   Hom G;
@@ -25,11 +26,8 @@ private:
 bool is_R_emittable(const Hom &H);
 bool is_L_emittable(const Hom &H);
 
-// int hom_sign(Hom &H, const std::vector<char> &u, size_t index);
 int hom_sign(Hom &H, std::unique_ptr<Iterator> &u);
 
-void hom_emit(const Hom &H, Iterator &u);
-
-Number hom(Hom &H, Number &x);
+Number hom(Hom H, Number &x);
 
 #endif

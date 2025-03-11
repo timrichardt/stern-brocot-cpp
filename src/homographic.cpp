@@ -1,12 +1,10 @@
-#include "tree.h"
 #include "homographic.h"
+#include "tree.h"
 #include <cstdint>
-#include <functional>
 #include <memory>
 #include <optional>
-#include <string>
-#include <vector>
 #include <stdexcept>
+#include <vector>
 
 std::optional<int64_t> lin_sign(int64_t a, int64_t b) {
   if (a == 0 && b == 0)
@@ -52,21 +50,21 @@ int hom_sign(Hom &H, std::unique_ptr<Iterator> &u) {
     return (*nom_sign) * (*denom_sign);
   }
 
-	std::optional<Branch> next = u->next();
+  std::optional<Branch> next = u->next();
 
-	if (next) {
-		if (*next == Branch::R) {
-			H.right();
-			__attribute__((musttail)) return hom_sign(H, u);
-		}
+  if (next) {
+    if (*next == Branch::R) {
+      H.right();
+      __attribute__((musttail)) return hom_sign(H, u);
+    }
 
-		if (*next == Branch::L) {
-			H.left();
-			__attribute__((musttail)) return hom_sign(H, u);
-		}
+    if (*next == Branch::L) {
+      H.left();
+      __attribute__((musttail)) return hom_sign(H, u);
+    }
 
-		throw std::runtime_error("Unreachable code path reached.");
-	} else {
+    throw std::runtime_error("Unreachable code path reached.");
+  } else {
     return sign(H.a + H.b) * sign(H.c + H.d);
   }
 }
@@ -79,56 +77,83 @@ bool is_L_emittable(const Hom &H) {
   return (H.a <= H.c && H.b < H.d) || (H.a < H.c && H.b <= H.d);
 }
 
-void hom_emit(Hom &H, Iterator &u) {
-  if (is_R_emittable(H)) {
-    H.a = H.a - H.c;
-    H.b = H.b - H.d;
-  } else if (is_L_emittable(H)) {
-    H.c = H.c - H.a;
-    H.d = H.d - H.b;
-  } else {
-    auto next = u.next();
-    if (next == Branch::R) {
-      H.right();
+HomIterator::HomIterator(Hom H, const Number &n)
+    : G(H), m({n.sign, n.seq->clone()}) {
+
+  if (n.sign == -1) {
+    G.a = -G.a;
+    G.c = -G.c;
+  }
+
+  m.sign = hom_sign(G, m.seq);
+
+  if (m.sign == 1) {
+    if (G.a + G.b < 0) {
+      G.a = -G.a;
+      G.b = -G.b;
+      G.c = -G.c;
+      G.d = -G.d;
+    }
+  }
+
+  if (m.sign == -1) {
+    if (G.a + G.b > 0) {
+      G.c = -G.c;
+      G.d = -G.d;
     } else {
-      H.left();
+      G.a = -G.a;
+      G.b = -G.b;
     }
   }
 }
 
-// Iterator hom_sb(Hom &H, Iterator &u) {
-//   Iterator r;
-//   if (H.det() == 0) {
-//     fraction_to_SSB((int64_t)(H.a + H.b), (int64_t)(H.c + H.d));
-//   } else {
-//     int sign = hom_sign(H, u);
-//     switch (sign) {
-//     case 0:
-//       return r;
-//     case 1:
-//       return r;
-//     case -1:
-//       return r;
-//     };
-//   }
-//   return r;
-// }
-
-HomIterator::HomIterator(Hom H, const Number &n)
-	: G(H), m({n.sign, n.seq->clone()}) {
-
-	if (n.sign == -1) {
-		G.a = -G.a;
-		G.c = -G.c;
-	}
-
-	m.sign = hom_sign(G, m.seq);
-
-	std::cout << "sign: " << m.sign << std::endl;
-}
-
 std::optional<Branch> HomIterator::next() {
-	
+  if (m.sign == 0)
+    return std::nullopt;
+
+hom_emit:
+  if (is_R_emittable(G)) {
+    G.a = G.a - G.c;
+    G.b = G.b - G.d;
+    return Branch::R;
+  } else if (is_L_emittable(G)) {
+    G.c = G.c - G.a;
+    G.d = G.d - G.b;
+    return Branch::L;
+  } else {
+    std::optional<Branch> b = m.seq->next();
+    if (b) {
+      if (b == Branch::R) {
+        G.right();
+        goto hom_emit;
+      } else {
+        G.left();
+        goto hom_emit;
+      }
+    }
+    if (G.a + G.b < G.c + G.d) {
+      G.down();
+      return Branch::L;
+    }
+    if (G.a + G.b > G.c + G.d) {
+      G.up();
+      return Branch::R;
+    }
+    return std::nullopt;
+  }
 }
 
 std::unique_ptr<Iterator> HomIterator::clone() {}
+
+int HomIterator::sign() { return m.sign; }
+
+Number hom(Hom H, Number &n) {
+  Number res;
+
+  std::unique_ptr<HomIterator> hi = std::make_unique<HomIterator>(H, n);
+
+  res.sign = hi->sign();
+  res.seq = std::move(hi);
+
+  return res;
+}

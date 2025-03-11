@@ -34,9 +34,17 @@ int main() {
   Number m = fraction_to_SSB(-3, 4);
   std::cout << std::move(m) << std::endl;
 
-  Number q = fraction_to_SSB(-4, 3);
-  Hom h = {-1, 0, 0, 1};
+  Number q = fraction_to_SSB(4, 1);
+  Hom h = {1, 1, 0, 23};
   std::unique_ptr<Iterator> hi = std::make_unique<HomIterator>(h, q);
+
+  std::cout << "hi: " << *hi << std::endl;
+
+  Number q2 = fraction_to_SSB(4, 1);
+  Hom h2 = {2, 1, 0, 1};
+  Number n2 = hom(h2, q);
+
+  std::cout << "n2: " << std::move(n2) << std::endl;
 
   return 0;
 }
