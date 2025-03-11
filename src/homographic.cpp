@@ -69,11 +69,11 @@ int hom_sign(Hom &H, std::unique_ptr<Iterator> &u) {
   }
 }
 
-bool is_R_emittable(const Hom &H) {
+inline bool is_R_emittable(const Hom &H) {
   return (H.c <= H.a && H.d < H.b) || (H.c < H.a && H.d <= H.b);
 }
 
-bool is_L_emittable(const Hom &H) {
+inline bool is_L_emittable(const Hom &H) {
   return (H.a <= H.c && H.b < H.d) || (H.a < H.c && H.b <= H.d);
 }
 
@@ -113,12 +113,10 @@ std::optional<Branch> HomIterator::next() {
 
 hom_emit:
   if (is_R_emittable(G)) {
-    G.a = G.a - G.c;
-    G.b = G.b - G.d;
+    G.up();
     return Branch::R;
   } else if (is_L_emittable(G)) {
-    G.c = G.c - G.a;
-    G.d = G.d - G.b;
+    G.down();
     return Branch::L;
   } else {
     std::optional<Branch> b = m.seq->next();
