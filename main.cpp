@@ -1,3 +1,4 @@
+#include "src/bihomographic.h"
 #include "src/tests.h"
 #include "src/tree.h"
 #include <iostream>
@@ -8,7 +9,7 @@ int main() {
   test_hom_sign();
   test_hom_sign_large();
   test_hom_sign_sqrt2();
-  //  test_hom_sign_e();
+  test_hom_sign_e();
 
   std::cout << "-----------------------" << std::endl;
 
@@ -31,10 +32,10 @@ int main() {
   // Number n = {-1, std::move(e)};
   // std::cout << std::move(n) << std::endl;
 
-  Number m = fraction_to_SSB(-3, 4);
+  Number m = fraction_to_SSB(1, 5);
   std::cout << std::move(m) << std::endl;
 
-  Number q = fraction_to_SSB(4, 1);
+  Number q = fraction_to_SSB(1, 1);
   Hom h = {1, 1, 0, 23};
   std::unique_ptr<Iterator> hi = std::make_unique<HomIterator>(h, q);
 
@@ -53,5 +54,15 @@ int main() {
   std::cout << "n3: " << std::move(take(50, n3)) << std::endl;
   std::cout << "n3: " << take(50, n3).to_double() << std::endl;
 
+  Bihom B = {0, 1, 0, -10'000'000, 0, 0, 0, 1};
+  Hom h4 = {1, 0, 0, 1};
+  Hom h5 = {1, 0, 0, 1};
+  Number n4 = fraction_to_SSB(10'000'000, 1);
+  Number n5 = fraction_to_SSB(1, 1);
+  std::unique_ptr<Iterator> j = std::make_unique<HomIterator>(h4, n4);
+  std::unique_ptr<Iterator> k = std::make_unique<HomIterator>(h5, n5);
+  // std::unique_ptr<Iterator> k = std::make_unique<BihomIterator>(B, j, k);
+  std::cout << bihom_sign(B, j, k) << std::endl;
+  // BihomIterator(B, n4, n5);
   return 0;
 }

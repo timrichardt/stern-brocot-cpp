@@ -19,28 +19,28 @@ std::optional<int64_t> lin_sign(int64_t a, int64_t b) {
   return std::nullopt;
 }
 
-int hom_sign(Hom &H, const std::vector<char> &u, size_t index = 0) {
-  if (index >= u.size()) {
-    return sign(H.a + H.b) * sign(H.c + H.d);
-  }
+// int hom_sign(Hom &H, const std::vector<char> &u, size_t index = 0) {
+//   if (index >= u.size()) {
+//     return sign(H.a + H.b) * sign(H.c + H.d);
+//   }
 
-  auto nom_sign = lin_sign(H.a, H.b);
-  auto denom_sign = lin_sign(H.c, H.d);
+//   auto nom_sign = lin_sign(H.a, H.b);
+//   auto denom_sign = lin_sign(H.c, H.d);
 
-  if (nom_sign && denom_sign) {
-    return (*nom_sign) * (*denom_sign);
-  }
+//   if (nom_sign && denom_sign) {
+//     return (*nom_sign) * (*denom_sign);
+//   }
 
-  if (u[index] == 'R') {
-    H.right();
-    __attribute__((musttail)) return hom_sign(H, u, index + 1);
-  } else if (u[index] == 'L') {
-    H.left();
-    __attribute__((musttail)) return hom_sign(H, u, index + 1);
-  } else {
-    throw std::runtime_error("Invalid sequence character");
-  }
-}
+//   if (u[index] == 'R') {
+//     H.right();
+//     __attribute__((musttail)) return hom_sign(H, u, index + 1);
+//   } else if (u[index] == 'L') {
+//     H.left();
+//     __attribute__((musttail)) return hom_sign(H, u, index + 1);
+//   } else {
+//     throw std::runtime_error("Invalid sequence character");
+//   }
+// }
 
 int hom_sign(Hom &H, std::unique_ptr<Iterator> &u) {
   auto nom_sign = lin_sign(H.a, H.b);
