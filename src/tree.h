@@ -92,7 +92,7 @@ std::unique_ptr<Iterator> make_e();
 std::unique_ptr<Iterator> make_sqrt2();
 std::unique_ptr<Iterator> make_phi();
 
-std::vector<Branch> take(uint64_t n, std::unique_ptr<Iterator> &u);
+std::unique_ptr<Iterator> take(uint64_t n, std::unique_ptr<Iterator> &u);
 Number take(uint64_t n, Number &x);
 std::optional<Branch> take_one(Number &x);
 

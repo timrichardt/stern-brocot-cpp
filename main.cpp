@@ -19,11 +19,11 @@ int main() {
   std::vector<Branch> v = {Branch::R, Branch::L, Branch::R};
 
   std::unique_ptr<Iterator> e = make_e();
-  std::cout << take(50, e) << std::endl;
+  std::cout << *take(50, e) << std::endl;
   std::unique_ptr<Iterator> sqrt2 = make_sqrt2();
-  std::cout << take(50, sqrt2) << std::endl;
+  std::cout << *take(50, sqrt2) << std::endl;
   std::unique_ptr<Iterator> phi = make_phi();
-  std::cout << take(50, phi) << std::endl;
+  std::cout << *take(50, phi) << std::endl;
 
   // SingleChunkIterator b = SingleChunkIterator(u);
   // std::unique_ptr<SingleChunkIterator> c =
@@ -44,7 +44,10 @@ int main() {
   Hom h2 = {2, 1, 0, 1};
   Number n2 = hom(h2, q);
 
+  Number n3 = {1, make_e()};
+
   std::cout << "n2: " << std::move(n2) << std::endl;
+  std::cout << "n3: " << std::move(take(50, n3)) << std::endl;
 
   return 0;
 }

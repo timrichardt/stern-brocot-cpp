@@ -143,7 +143,9 @@ hom_emit:
   }
 }
 
-std::unique_ptr<Iterator> HomIterator::clone() {}
+std::unique_ptr<Iterator> HomIterator::clone() {
+  return std::make_unique<HomIterator>(G, m);
+}
 
 int HomIterator::sign() { return m.sign; }
 

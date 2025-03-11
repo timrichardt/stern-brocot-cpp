@@ -318,10 +318,10 @@ std::ostream &operator<<(std::ostream &os, Number &&n) {
   return os;
 }
 
-std::vector<Branch> take(uint64_t n, std::unique_ptr<Iterator> &u) {
+std::unique_ptr<Iterator> take(uint64_t n, std::unique_ptr<Iterator> &u) {
   std::unique_ptr<Iterator> v = u->clone();
 
-  std::vector<Branch> r;
+  std::vector<Branch> r = {};
   uint64_t i = 0;
 
   while (i < n) {
@@ -334,8 +334,10 @@ std::vector<Branch> take(uint64_t n, std::unique_ptr<Iterator> &u) {
     }
   }
 
-  return r;
+  return std::make_unique<SingleChunkIterator>(r);
 }
+
+Number take(uint64_t n, Number &x) { return Number{x.sign, take(n, x.seq)}; }
 
 int8_t sign(int64_t a) {
   if (a == 0)

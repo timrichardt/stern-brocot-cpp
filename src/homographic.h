@@ -9,8 +9,6 @@
 #include <string>
 #include <vector>
 
-std::optional<int64_t> lin_sign(int64_t a, int64_t b);
-
 class HomIterator : public Iterator {
 public:
   explicit HomIterator(Hom H, const Number &n);
@@ -22,9 +20,6 @@ private:
   Hom G;
   Number m;
 };
-
-bool is_R_emittable(const Hom &H);
-bool is_L_emittable(const Hom &H);
 
 int hom_sign(Hom &H, std::unique_ptr<Iterator> &u);
 
