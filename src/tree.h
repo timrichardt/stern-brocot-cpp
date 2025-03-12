@@ -80,6 +80,7 @@ struct Number {
 
   double to_double();
   std::pair<int64_t, int64_t> to_fraction();
+  Number clone() const;
 
   bool operator==(const Number &other) const;
   bool operator!=(const Number &other) const;

@@ -78,7 +78,7 @@ inline bool is_L_emittable(const Hom &H) {
 }
 
 HomIterator::HomIterator(Hom H, const Number &n)
-    : G(H), m({n.sign, n.seq->clone()}) {
+    : G(H), m(Number{n.sign, n.seq->clone()}) {
 
   if (n.sign == -1) {
     G.a = -G.a;

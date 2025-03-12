@@ -64,17 +64,20 @@ int main() {
   // // std::unique_ptr<Iterator> k = std::make_unique<BihomIterator>(B, j, k);
   // std::cout << bihom_sign(B, std::move(j), std::move(k)) << std::endl;
 
-  Bihom B2 = {0, 0, 0, 1, 1, 0, 0, 1};
-  Number n6 = fraction_to_SSB(1, 1);
-  Number n7 = fraction_to_SSB(3, 2);
+  Bihom B2 = {0, 1, 1, 0, 0, 0, 0, 1};
+  Number n6 = fraction_to_SSB(4, 1);
+  Number n7 = fraction_to_SSB(1, 1);
 
-  std::unique_ptr<Iterator> bi = std::make_unique<BihomIterator>(B2, n6, n7);
-  std::unique_ptr<Iterator> i2 = std::make_unique<BihomIterator>(B2, n6, n7);
-  Number ks = {1, std::make_unique<BihomIterator>(B2, n6, n7)};
+  // std::unique_ptr<Iterator> bi = std::make_unique<BihomIterator>(B2, n6, n7);
+  // std::unique_ptr<Iterator> i2 = std::make_unique<BihomIterator>(B2, n6, n7);
+  Number ks = {1, std::make_unique<BihomIterator>(B2, n6.clone(), n7.clone())};
+  Number ks1 = ks.clone();
+  Number ks2 = ks.clone();
+  // Number ks2 = {1, std::make_unique<BihomIterator>(B2, n6, n7)};
   // std::cout << "bi: " << bi << std::endl;
-  // std::cout << "ks: " << n6.to_double() << std::endl;
-  // std::cout << "ks: " << n7.to_double() << std::endl;
+  std::cout << "n6: " << n6.to_double() << std::endl;
+  std::cout << "n7: " << n7.to_double() << std::endl;
+  std::cout << std::endl << "ks: " << ks1.to_double() << std::endl;
   std::cout << "ks: " << std::move(ks) << std::endl;
-  std::cout << "ks: " << ks.to_double() << std::endl;
   return 0;
 }

@@ -281,7 +281,7 @@ std::optional<Branch> BihomIterator::next() {
   std::optional<Branch> b_m, b_n;
 
 absorb:
-  std::cout << std::endl << C << std::endl;
+  // std::cout << std::endl << C << std::endl;
 
   if (C.R_emittable()) {
     // std::cout << "R emittable" << std::endl;
@@ -327,9 +327,9 @@ absorb:
   }
 
   if (b_m) {
-    std::cout << "b exhausted" << std::endl;
+    // std::cout << "b exhausted" << std::endl;
 
-    std::cout << C << std::endl;
+    // std::cout << C << std::endl;
 
     if (*b_m == Branch::R)
       C.ar();
@@ -360,7 +360,7 @@ absorb:
 }
 
 std::unique_ptr<Iterator> BihomIterator::clone() {
-  return std::make_unique<BihomIterator>(C, m, n);
+  return std::make_unique<BihomIterator>(C, m.clone(), n.clone());
 };
 
 std::ostream &operator<<(std::ostream &os, Bihom B) {
