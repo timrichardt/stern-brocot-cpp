@@ -14,7 +14,7 @@ public:
   explicit HomIterator(Hom H, const Number &n);
   std::optional<Branch> next() override;
   std::unique_ptr<Iterator> clone() override;
-  int sign();
+  int s;
 
 private:
   Hom G;

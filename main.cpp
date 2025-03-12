@@ -54,7 +54,7 @@ int main() {
   std::cout << "n3: " << std::move(take(50, n3)) << std::endl;
   std::cout << "n3: " << take(50, n3).to_double() << std::endl;
 
-  Bihom B = {0, 1, 0, -10'000'000, 0, 0, 0, 1};
+  Bihom B = {0, 1, 0, -10'000'001, 0, 0, 0, 1};
   Hom h4 = {1, 0, 0, 1};
   Hom h5 = {1, 0, 0, 1};
   Number n4 = fraction_to_SSB(10'000'000, 1);

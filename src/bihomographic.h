@@ -34,7 +34,7 @@ public:
   explicit BihomIterator(Bihom B, const Number &a, const Number &b);
   std::optional<Branch> next() override;
   std::unique_ptr<Iterator> clone() override;
-  int sign();
+  int s;
 
 private:
   Bihom C;

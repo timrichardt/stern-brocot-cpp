@@ -184,9 +184,13 @@ BihomIterator::BihomIterator(Bihom B, const Number &a, const Number &b)
     C.e = -C.e;
   }
 
-  std::cout << bihom_sign(C, m.seq, n.seq);
+  s = bihom_sign(C, m.seq, n.seq);
 }
 
-std::optional<Branch> BihomIterator::next() {};
-std::unique_ptr<Iterator> BihomIterator::clone() {};
-int BihomIterator::sign() {};
+std::optional<Branch> BihomIterator::next() {
+
+};
+
+std::unique_ptr<Iterator> BihomIterator::clone() {
+  return std::make_unique<BihomIterator>(C, m, n);
+};

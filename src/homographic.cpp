@@ -85,9 +85,9 @@ HomIterator::HomIterator(Hom H, const Number &n)
     G.c = -G.c;
   }
 
-  m.sign = hom_sign(G, m.seq);
+  s = hom_sign(G, m.seq);
 
-  if (m.sign == 1) {
+  if (s == 1) {
     if (G.a + G.b < 0) {
       G.a = -G.a;
       G.b = -G.b;
@@ -96,7 +96,7 @@ HomIterator::HomIterator(Hom H, const Number &n)
     }
   }
 
-  if (m.sign == -1) {
+  if (s == -1) {
     if (G.a + G.b > 0) {
       G.c = -G.c;
       G.d = -G.d;
@@ -108,7 +108,7 @@ HomIterator::HomIterator(Hom H, const Number &n)
 }
 
 std::optional<Branch> HomIterator::next() {
-  if (m.sign == 0)
+  if (s == 0)
     return std::nullopt;
 
 hom_emit:
@@ -145,14 +145,12 @@ std::unique_ptr<Iterator> HomIterator::clone() {
   return std::make_unique<HomIterator>(G, m);
 }
 
-int HomIterator::sign() { return m.sign; }
-
 Number hom(Hom H, Number &n) {
   Number res;
 
   std::unique_ptr<HomIterator> hi = std::make_unique<HomIterator>(H, n);
 
-  res.sign = hi->sign();
+  res.sign = hi->s;
   res.seq = std::move(hi);
 
   return res;
