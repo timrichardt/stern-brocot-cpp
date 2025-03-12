@@ -20,5 +20,6 @@ void test_hom_sign_large();
 void test_hom_sign_sqrt2();
 void test_hom_sign_e();
 void test_parse_SB();
+void test_bihom_sign();
 
 #endif

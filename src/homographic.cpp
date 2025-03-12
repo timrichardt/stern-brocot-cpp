@@ -114,7 +114,7 @@ std::optional<Branch> HomIterator::next() {
     return std::nullopt;
 
 hom_emit:
-  std::cout << std::endl << G << std::endl;
+  // std::cout << std::endl << G << std::endl;
   if (is_R_emittable(G)) {
     G.up();
     return Branch::R;

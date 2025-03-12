@@ -337,7 +337,8 @@ absorb:
       C.al();
 
     hi = std::make_unique<HomIterator>(
-        Hom{C.a + C.b, C.c + C.d, C.e + C.f, C.g + C.h}, m);
+        Hom{C.a + C.b, C.c + C.d, C.e + C.f, C.g + C.h},
+        Number{m.sign, m.seq->clone()});
 
     return (*hi)->next();
   }

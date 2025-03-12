@@ -49,8 +49,8 @@ private:
   std::optional<std::unique_ptr<Iterator>> &hi;
 };
 
-int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &a,
-               std::unique_ptr<Iterator> &b);
+int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &&a,
+               std::unique_ptr<Iterator> &&b);
 
 Number bihom(Bihom H, Number &x, Number &y);
 

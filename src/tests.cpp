@@ -1,4 +1,5 @@
 #include "tests.h"
+#include "bihomographic.h"
 #include "homographic.h"
 #include "tree.h"
 #include <cassert>
@@ -114,4 +115,35 @@ void test_hom_sign_e() {
   assert(hom_sign(node2, e2) == 1);
 
   std::cout << "Test passed: Homographic sign algorithm for e\n";
+}
+
+void test_bihom_sign() {
+  Bihom B1 = {0, 1, 0, 0, 0, 0, 1, 0};
+  Hom h0 = {1, 0, 0, 1};
+  Hom h1 = {1, 0, 0, 1};
+  Number n0 = fraction_to_SSB(10'000'002, 1);
+  Number n1 = fraction_to_SSB(-1, 1);
+  std::unique_ptr<Iterator> j1 = std::make_unique<HomIterator>(h0, n0);
+  std::unique_ptr<Iterator> k1 = std::make_unique<HomIterator>(h1, n1);
+  assert(bihom_sign(B1, std::move(j1), std::move(k1)) == -1);
+
+  Bihom B2 = {0, 1, 0, -10'000'001, 0, 0, 0, 1};
+  Hom h2 = {1, 0, 0, 1};
+  Hom h3 = {1, 0, 0, 1};
+  Number n2 = fraction_to_SSB(10'000'002, 1);
+  Number n3 = fraction_to_SSB(1, 1);
+  std::unique_ptr<Iterator> j2 = std::make_unique<HomIterator>(h2, n2);
+  std::unique_ptr<Iterator> k2 = std::make_unique<HomIterator>(h3, n3);
+  assert(bihom_sign(B2, std::move(j2), std::move(k2)) == 1);
+
+  Bihom B = {0, 1, 0, -10'000'001, 0, 0, 0, 1};
+  Hom h4 = {1, 0, 0, 1};
+  Hom h5 = {1, 0, 0, 1};
+  Number n4 = fraction_to_SSB(10'000'000, 1);
+  Number n5 = fraction_to_SSB(1, 1);
+  std::unique_ptr<Iterator> j = std::make_unique<HomIterator>(h4, n4);
+  std::unique_ptr<Iterator> k = std::make_unique<HomIterator>(h5, n5);
+  assert(bihom_sign(B, std::move(j), std::move(k)) == -1);
+
+  std::cout << "Test passed: Bihomographic sign algorithm for large number\n";
 }
