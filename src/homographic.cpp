@@ -108,10 +108,13 @@ HomIterator::HomIterator(Hom H, const Number &n)
 }
 
 std::optional<Branch> HomIterator::next() {
+  // std::cout << "homiter next called" << std::endl;
+
   if (s == 0)
     return std::nullopt;
 
 hom_emit:
+  std::cout << std::endl << G << std::endl;
   if (is_R_emittable(G)) {
     G.up();
     return Branch::R;

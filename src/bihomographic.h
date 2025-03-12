@@ -1,6 +1,7 @@
 #ifndef BIHOMOGRAPHIC_H
 #define BIHOMOGRAPHIC_H
 
+#include "homographic.h"
 #include "tree.h"
 #include <functional>
 #include <iostream>
@@ -23,6 +24,11 @@ struct Bihom {
   void bl();
   void up();
   void down();
+  inline bool same_ratio();
+  inline bool R_emittable();
+  inline bool L_emittable();
+  std::optional<Branch> emit(std::unique_ptr<Iterator> &m,
+                             std::unique_ptr<Iterator> &n);
   double to_fraction() const;
   int64_t to_N() const;
   int64_t det() const;
@@ -38,14 +44,16 @@ public:
 
 private:
   Bihom C;
-  Hom H;
   Number m;
   Number n;
+  std::optional<std::unique_ptr<Iterator>> &hi;
 };
 
-int bihom_sign(Bihom B, std::unique_ptr<Iterator> &a,
+int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &a,
                std::unique_ptr<Iterator> &b);
 
 Number bihom(Bihom H, Number &x, Number &y);
+
+std::ostream &operator<<(std::ostream &os, Bihom B);
 
 #endif
