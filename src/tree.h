@@ -13,10 +13,14 @@
 struct Hom {
   int64_t a, b, c, d;
 
+  inline bool R_emittable();
+  inline bool L_emittable();
+
   void left();
   void right();
   void up();
   void down();
+
   double to_fraction() const;
   int64_t to_N() const;
   int64_t det() const;

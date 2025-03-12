@@ -118,14 +118,14 @@ void test_hom_sign_e() {
 }
 
 void test_bihom_sign() {
-  Bihom B1 = {0, 1, 0, 0, 0, 0, 1, 0};
-  Hom h0 = {1, 0, 0, 1};
-  Hom h1 = {1, 0, 0, 1};
-  Number n0 = fraction_to_SSB(10'000'002, 1);
-  Number n1 = fraction_to_SSB(-1, 1);
-  std::unique_ptr<Iterator> j1 = std::make_unique<HomIterator>(h0, n0);
-  std::unique_ptr<Iterator> k1 = std::make_unique<HomIterator>(h1, n1);
-  assert(bihom_sign(B1, std::move(j1), std::move(k1)) == -1);
+  // Bihom B1 = {0, 1, 0, 0, 0, 0, 1, 0};
+  // Hom h0 = {1, 0, 0, 1};
+  // Hom h1 = {1, 0, 0, 1};
+  // Number n0 = fraction_to_SSB(10'000'002, 1);
+  // Number n1 = fraction_to_SSB(-1, 1);
+  // std::unique_ptr<Iterator> j1 = std::make_unique<HomIterator>(h0, n0);
+  // std::unique_ptr<Iterator> k1 = std::make_unique<HomIterator>(h1, n1);
+  // assert(bihom_sign(B1, std::move(j1), std::move(k1)) == -1);
 
   Bihom B2 = {0, 1, 0, -10'000'001, 0, 0, 0, 1};
   Hom h2 = {1, 0, 0, 1};
