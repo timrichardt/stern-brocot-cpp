@@ -82,11 +82,12 @@ void Bihom::down() {
   h -= d;
 };
 
-double Bihom::to_fraction() const {};
+double Bihom::to_double() const {
+  return static_cast<double>(a + b + c + d) /
+         static_cast<double>(e + f + g + h);
+};
 
-int64_t Bihom::to_N() const {};
-
-int64_t Bihom::det() const {};
+int64_t Bihom::to_N() const { return (a + b + c + d) * (e + f + g + h); };
 
 bool Bihom::operator==(const Bihom &other) const {
   return a == other.a && b == other.b && c == other.c && d == other.d &&
@@ -97,8 +98,8 @@ int8_t ssg(int64_t a, int64_t b, int64_t c, int64_t d) {
   return sign(a) + sign(b) + sign(c) + sign(d);
 }
 
-int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &&a,
-               std::unique_ptr<Iterator> &&b) {
+int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &a,
+               std::unique_ptr<Iterator> &b) {
   int8_t nom_ssg = ssg(B.a, B.b, B.c, B.d);
   int8_t denom_ssg = ssg(B.e, B.f, B.g, B.h);
 
@@ -107,7 +108,7 @@ int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &&a,
 absorb:
   // 1st part, check if sign determined
   if (B.b == 0 && B.c == 0 && B.d == 0 && B.f == 0 && B.g == 0 && B.h == 0)
-    return sign(B.a) * sign(B.b);
+    return sign(B.a) * sign(B.e);
 
   if (B.b == 0 && B.c == 0 && B.d == 0) {
     if (nom_ssg > 2)
@@ -170,10 +171,13 @@ absorb:
   goto absorb;
 }
 
-std::optional<std::unique_ptr<Iterator>> nulliterator = std::nullopt;
+std::optional<std::unique_ptr<Iterator>> bhni = std::nullopt;
 
 BihomIterator::BihomIterator(Bihom B, Number &a, Number &b)
-    : C(B), m(a), n(b), hi(nulliterator) {
+    : C(B), m(a), n(b), hi(bhni) {
+
+  hi = std::nullopt;
+
   if (m.sign == -1) {
     C.a = -C.a;
     C.b = -C.b;
@@ -187,7 +191,11 @@ BihomIterator::BihomIterator(Bihom B, Number &a, Number &b)
     C.g = -C.g;
   }
 
-  s = bihom_sign(C, std::move(a.seq), std::move(b.seq));
+  s = bihom_sign(C, a.seq, b.seq);
+
+  if (s == 0) {
+    hi = std::make_unique<NullIterator>();
+  }
 
   if (s == 1 && (C.a + C.b + C.c + C.d <= 0)) {
     C.a = -C.a;
@@ -206,7 +214,6 @@ BihomIterator::BihomIterator(Bihom B, Number &a, Number &b)
       C.b = -C.b;
       C.c = -C.c;
       C.d = -C.d;
-
     } else {
       C.e = -C.e;
       C.f = -C.f;
@@ -255,6 +262,7 @@ std::optional<Branch> BihomIterator::next() {
 
 absorb:
   // std::cout << std::endl << C << std::endl;
+
   if (hi) {
     // std::cout << "a and b exhausted" << std::endl;
     return (*hi)->next();
@@ -286,12 +294,15 @@ absorb:
     int64_t n = C.a + C.b + C.c + C.d;
     int64_t d = C.e + C.f + C.g + C.h;
 
+    // std::cout << "nom   " << n << std::endl;
+    // std::cout << "denom " << d << std::endl;
+
     hi = fraction_to_SSB(n, d).seq;
 
     goto absorb;
   }
 
-  if (b_m) {
+  if (!b_n) {
     // std::cout << "a exhausted" << std::endl;
 
     if (*b_m == Branch::R)
@@ -305,7 +316,7 @@ absorb:
     goto absorb;
   }
 
-  if (b_n) {
+  if (!b_m) {
     // std::cout << "b exhausted" << std::endl;
 
     // std::cout << C << std::endl;
@@ -348,7 +359,7 @@ std::ostream &operator<<(std::ostream &os, Bihom B) {
   return os;
 }
 
-Number bihom(Bihom B, Number &a, Number &b) {
+Number bihom(Bihom B, Number &&a, Number &&b) {
   Number res;
 
   std::unique_ptr<BihomIterator> bi = std::make_unique<BihomIterator>(B, a, b);

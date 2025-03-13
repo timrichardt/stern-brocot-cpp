@@ -11,6 +11,7 @@
 
 class HomIterator : public Iterator {
 public:
+  ~HomIterator();
   explicit HomIterator(Hom H, Number &n);
   std::optional<Branch> next() override;
   std::unique_ptr<Iterator> clone() override;
@@ -19,10 +20,11 @@ public:
 private:
   Hom G;
   Number &m;
+  std::optional<std::unique_ptr<Iterator>> &i;
 };
 
-int hom_sign(Hom &H, std::unique_ptr<Iterator> &u);
+int hom_sign(Hom &H, std::unique_ptr<Iterator> &&u);
 
-Number hom(Hom H, Number &x);
+Number hom(Hom H, Number &&x);
 
 #endif

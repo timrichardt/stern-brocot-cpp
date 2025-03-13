@@ -126,6 +126,14 @@ void EulerIterator::load_next_chunk() {
   chunk_index = 0;
 }
 
+NullIterator::NullIterator() {}
+
+std::optional<Branch> NullIterator::next() { return std::nullopt; }
+
+std::unique_ptr<Iterator> NullIterator::clone() {
+  return std::make_unique<NullIterator>();
+}
+
 bool Number::operator==(const Number &other) const {
   if (sign != other.sign)
     return false;

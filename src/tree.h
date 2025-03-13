@@ -77,6 +77,13 @@ private:
   void load_next_chunk();
 };
 
+class NullIterator : public Iterator {
+public:
+  explicit NullIterator();
+  std::optional<Branch> next() override;
+  std::unique_ptr<Iterator> clone() override;
+};
+
 struct Number {
   int sign;
   // std::weak_ptr ?
