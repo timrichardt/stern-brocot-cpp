@@ -37,23 +37,23 @@ struct Bihom {
 
 class BihomIterator : public Iterator {
 public:
-  explicit BihomIterator(Bihom B, const Number &a, const Number &b);
+  explicit BihomIterator(Bihom B, Number &a, Number &b);
   std::optional<Branch> next() override;
   std::unique_ptr<Iterator> clone() override;
   int s;
 
 private:
   Bihom C;
-  Number m;
-  Number n;
+  Number &m;
+  Number &n;
   std::optional<std::unique_ptr<Iterator>> &hi;
 };
 
 int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &&a,
                std::unique_ptr<Iterator> &&b);
 
-Number bihom(Bihom H, Number &x, Number &y);
-
 std::ostream &operator<<(std::ostream &os, Bihom B);
+
+Number bihom(const Bihom B, const Number &a, const Number &b);
 
 #endif

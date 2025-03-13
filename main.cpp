@@ -55,26 +55,29 @@ int main() {
   // std::cout << "n3: " << std::move(take(50, n3)) << std::endl;
   // std::cout << "n3: " << take(50, n3).to_double() << std::endl;
 
-  Bihom B2 = {0, 1, 1, 0, 0, 0, 0, 1};
-  Bihom B2_2 = {0, 1, 1, 0, 0, 0, 0, 1};
+  Bihom B2 = {0, 0, 0, 1, 1, 0, 0, 0};
+  Bihom B2_2 = {1, 0, 0, -1, 1, 0, 0, 0};
   // Number n6 = fraction_to_SSB(42, 23);
-  Number n6 = parse_SSB("LLR");
+  Number n6 = parse_SSB("LLLR");
   // Number n7 = fraction_to_SSB(1, 1);
-  Number n7 = parse_SSB("");
-  Number n6_2 = parse_SSB("LLR");
-  Number n7_2 = parse_SSB("");
+  Number n7 = parse_SSB("RRL");
+  Number n6_2 = parse_SSB("LLLR");
+  Number n7_2 = parse_SSB("RRL");
 
   // std::unique_ptr<Iterator> bi = std::make_unique<BihomIterator>(B2, n6, n7);
   // std::unique_ptr<Iterator> i2 = std::make_unique<BihomIterator>(B2, n6, n7);
-  Number ks = {1, std::make_unique<BihomIterator>(B2, n6, n7)};
+  // Number ks = {1, std::make_unique<BihomIterator>(B2, n6, n7)};
   Number ks1 = {1, std::make_unique<BihomIterator>(B2_2, n6_2, n7_2)};
   // Number ks2 = {1, std::make_unique<BihomIterator>(B2, n6, n7)};
   // std::cout << "bi: " << bi << std::endl;
-  std::cout << "n6: " << n6.to_double() << std::endl;
-  std::cout << "n7: " << n7.to_double() << std::endl;
 
-  std::cout << "ks_k: " << std::move(ks) << std::endl;
-  std::cout << "ks_d: " << ks1.to_double() << std::endl;
+  // Number ks1 = bihom(B2_2, n6_2, n7_2);
+
+  std::cout << "n6: " << std::move(n6) << std::endl;
+  std::cout << "n7: " << std::move(n7) << std::endl;
+
+  std::cout << "ks_k: " << std::move(ks1) << std::endl;
+  std::cout << "ks_d: " << ks1.clone().to_double() << std::endl;
 
   return 0;
 }

@@ -7,23 +7,23 @@
 #include <vector>
 
 void Hom::left() {
-  a = a + b;
-  c = c + d;
+  a += b;
+  c += d;
 }
 
 void Hom::right() {
-  b = b + a;
-  d = d + c;
+  b += a;
+  d += c;
 }
 
 void Hom::up() {
-  a = a - c;
-  b = b - d;
+  a -= c;
+  b -= d;
 }
 
 void Hom::down() {
-  c = c - a;
-  d = d - b;
+  c -= a;
+  d -= b;
 }
 
 double Hom::to_fraction() const {
