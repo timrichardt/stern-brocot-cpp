@@ -77,8 +77,7 @@ inline bool Hom::L_emittable() {
   return (a <= c && b < d) || (a < c && b <= d);
 }
 
-HomIterator::HomIterator(Hom H, const Number &n)
-    : G(H), m(Number{n.sign, n.seq->clone()}) {
+HomIterator::HomIterator(Hom H, Number &n) : G(H), m(n) {
 
   if (n.sign == -1) {
     G.a = -G.a;
@@ -88,7 +87,7 @@ HomIterator::HomIterator(Hom H, const Number &n)
   s = hom_sign(G, m.seq);
 
   if (s == 1) {
-    if (G.a + G.b < 0) {
+    if (G.a + G.b <= 0) {
       G.a = -G.a;
       G.b = -G.b;
       G.c = -G.c;
@@ -132,16 +131,8 @@ hom_emit:
         goto hom_emit;
       }
     }
-    if (G.a + G.b < G.c + G.d) {
-      G.down();
-      return Branch::L;
-    }
-    if (G.a + G.b > G.c + G.d) {
-      G.up();
-      return Branch::R;
-    }
-    return std::nullopt;
   }
+  return std::nullopt;
 }
 
 std::unique_ptr<Iterator> HomIterator::clone() {

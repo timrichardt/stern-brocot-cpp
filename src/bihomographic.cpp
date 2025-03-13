@@ -251,15 +251,14 @@ std::optional<Branch> BihomIterator::next() {
   if (s == 0)
     return std::nullopt;
 
-  if (hi) {
-    // std::cout << "a and b exhausted" << std::endl;
-    return (*hi)->next();
-  }
-
   std::optional<Branch> b_m, b_n;
 
 absorb:
   // std::cout << std::endl << C << std::endl;
+  if (hi) {
+    // std::cout << "a and b exhausted" << std::endl;
+    return (*hi)->next();
+  }
 
   if (C.R_emittable()) {
     // std::cout << "R emittable" << std::endl;
@@ -288,28 +287,12 @@ absorb:
     int64_t d = C.e + C.f + C.g + C.h;
 
     hi = fraction_to_SSB(n, d).seq;
-    std::optional<Branch> b = (*hi)->next();
-    return b;
-  }
 
-  if (b_n) {
-    // std::cout << "a exhausted" << std::endl;
-
-    if (*b_n == Branch::R)
-      C.br();
-    if (*b_n == Branch::L)
-      C.bl();
-
-    Hom h = Hom{C.a + C.c, C.b + C.d, C.e + C.g, C.f + C.h};
-    hi = std::make_unique<HomIterator>(h, n);
-
-    return (*hi)->next();
+    goto absorb;
   }
 
   if (b_m) {
-    // std::cout << "b exhausted" << std::endl;
-
-    // std::cout << C << std::endl;
+    // std::cout << "a exhausted" << std::endl;
 
     if (*b_m == Branch::R)
       C.ar();
@@ -319,7 +302,23 @@ absorb:
     Hom h = {C.a + C.b, C.c + C.d, C.e + C.f, C.g + C.h};
     hi = std::make_unique<HomIterator>(h, m);
 
-    return (*hi)->next();
+    goto absorb;
+  }
+
+  if (b_n) {
+    // std::cout << "b exhausted" << std::endl;
+
+    // std::cout << C << std::endl;
+
+    if (*b_n == Branch::R)
+      C.br();
+    if (*b_n == Branch::L)
+      C.bl();
+
+    Hom h = Hom{C.a + C.c, C.b + C.d, C.e + C.g, C.f + C.h};
+    hi = std::make_unique<HomIterator>(h, n);
+
+    goto absorb;
   }
 
   // std::cout << "need to absorb" << std::endl;
@@ -349,13 +348,13 @@ std::ostream &operator<<(std::ostream &os, Bihom B) {
   return os;
 }
 
-Number bihom(const Bihom B, const Number &a, const Number &b) {
-  Number a_c = a.clone();
-  Number b_c = b.clone();
-  Bihom B_c = B;
+Number bihom(Bihom B, Number &a, Number &b) {
+  Number res;
 
-  std::unique_ptr<BihomIterator> res =
-      std::make_unique<BihomIterator>(B_c, a_c, b_c);
+  std::unique_ptr<BihomIterator> bi = std::make_unique<BihomIterator>(B, a, b);
 
-  return Number{res->s, res->clone()};
+  res.sign = bi->s;
+  res.seq = std::move(bi);
+
+  return res;
 }

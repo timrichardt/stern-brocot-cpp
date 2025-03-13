@@ -11,14 +11,14 @@
 
 class HomIterator : public Iterator {
 public:
-  explicit HomIterator(Hom H, const Number &n);
+  explicit HomIterator(Hom H, Number &n);
   std::optional<Branch> next() override;
   std::unique_ptr<Iterator> clone() override;
   int s;
 
 private:
   Hom G;
-  Number m;
+  Number &m;
 };
 
 int hom_sign(Hom &H, std::unique_ptr<Iterator> &u);

@@ -54,6 +54,6 @@ int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &&a,
 
 std::ostream &operator<<(std::ostream &os, Bihom B);
 
-Number bihom(const Bihom B, const Number &a, const Number &b);
+Number bihom(Bihom B, Number &a, Number &b);
 
 #endif
