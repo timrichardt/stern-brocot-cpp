@@ -120,7 +120,7 @@ void test_hom_sign_e() {
 void test_hom() {
   Number n1 = parse_SSB("RRL");
   Hom H1 = {0, 1, 1, 0};
-  // std::unique_ptr<Iterator> h1 = std::make_unique<HomIterator>(H1, n1);
+	// std::cout << std::move(h1) << std::endl;
   Number h1 = hom(H1, std::move(n1));
   Number res1 = parse_SSB("LLR");
   assert(h1 == res1);
@@ -128,6 +128,7 @@ void test_hom() {
   Number n2 = parse_SSB("RR");
   Hom H2 = {2, -1, 0, 5};
   Number h2 = hom(H2, std::move(n2));
+	// std::cout << std::move(h2) << std::endl;
   Number res2 = parse_SSB("");
   assert(h2 == res2);
 
@@ -138,35 +139,44 @@ void test_hom() {
   Number res3 = parse_SSB("-L");
   assert(h3 == res3);
 
+  Number n4 = parse_SSB("RR");
+  Hom H4 = {1, -1, -1, 4};
+  Number h4 = hom(H4, std::move(n4));
+  // std::cout << std::move(h4) << std::endl;
+  Number res4 = parse_SSB("R");
+  assert(h4 == res4);
+
+	Number n5 = parse_SSB("LL");
+	Hom H5 = {1, 0, 0, 2};
+  Number h5 = hom(H5, std::move(n5));
+  // std::cout << std::move(h5) << std::endl;
+  Number res5 = parse_SSB("LLLLL");
+  assert(h5 == res5);
+	
   std::cout << "Test passed: Homographic algorithm\n";
 }
 
 void test_bihom_sign() {
-  // Bihom B1 = {0, 1, 0, 0, 0, 0, 1, 0};
-  // Hom h0 = {1, 0, 0, 1};
-  // Hom h1 = {1, 0, 0, 1};
-  // Number n0 = fraction_to_SSB(10'000'002, 1);
-  // Number n1 = fraction_to_SSB(-1, 1);
-  // std::unique_ptr<Iterator> j1 = std::make_unique<HomIterator>(h0, n0);
-  // std::unique_ptr<Iterator> k1 = std::make_unique<HomIterator>(h1, n1);
-  // assert(bihom_sign(B1, std::move(j1), std::move(k1)) == -1);
-
   Bihom B1 = {0, 1, 0, -10'000'001, 0, 0, 0, 1};
-  Hom h2 = {1, 0, 0, 1};
-  Hom h3 = {1, 0, 0, 1};
   Number a1 = fraction_to_SSB(10'000'002, 1);
   Number b1 = fraction_to_SSB(1, 1);
   assert(bihom_sign(B1, a1.seq, b1.seq) == 1);
 
-  Bihom B = {0, 1, 0, -10'000'001, 0, 0, 0, 1};
-  Hom h4 = {1, 0, 0, 1};
-  Hom h5 = {1, 0, 0, 1};
-  Number n4 = fraction_to_SSB(10'000'000, 1);
-  Number n5 = fraction_to_SSB(1, 1);
-  std::unique_ptr<Iterator> j = std::make_unique<HomIterator>(h4, n4);
-  std::unique_ptr<Iterator> k = std::make_unique<HomIterator>(h5, n5);
-  assert(bihom_sign(B, j, k) == -1);
+  Bihom B2 = {0, 1, 0, -10'000'001, 0, 0, 0, 1};
+  Number a2 = fraction_to_SSB(10'000'000, 1);
+  Number b2 = fraction_to_SSB(1, 1);
+  assert(bihom_sign(B2, a2.seq, b2.seq) == -1);
 
+	Bihom B3 = {1, -1, -2, 0, 0, 0, 0, 1};
+	Number a3 = fraction_to_SSB(4, 1);
+  Number b3 = fraction_to_SSB(2, 1);
+  assert(bihom_sign(B3, a3.seq, b3.seq) == 0);
+
+	Bihom B4 = {0, 3, -2, 0, 1, 0, 0, 0};
+	Number a4 = fraction_to_SSB(2, 3);
+  Number b4 = fraction_to_SSB(1, 1);
+  assert(bihom_sign(B4, a4.seq, b4.seq) == 0);
+	
   std::cout << "Test passed: Bihomographic sign algorithm for large number\n";
 }
 
@@ -187,10 +197,19 @@ void test_bihom() {
 
   Number a4 = parse_SSB("LRLR");
   Number b4 = parse_SSB("RRL");
-  Bihom B4 = {0, 0, 0, 1, 0, 0, 1, 0};
-  Number c4 = parse_SSB("LLR");
+  Bihom B4 = {0, 0, 0, 1, 0, 1, 0, 0};
+  Number c4 = parse_SSB("RLRL");
   Number res4 = bihom(B4, std::move(a4), std::move(b4));
   assert(res4 == c4);
+
+  // works with swapped arguments?!
+  Number a5 = parse_SSB("RL");
+  Number b5 = parse_SSB("R");
+  Bihom B5 = {0, 1, 1, 0, 0, 0, 0, 1};
+  Number c5 = parse_SSB("RRRL");
+  Number res5 = bihom(B5, std::move(b5), std::move(a5));
+  std::cout << "res5: " << std::move(res5) << std::endl;
+  assert(res5 == c5);
 
   // works with swapped arguments?!
   Number a2 = parse_SSB("");

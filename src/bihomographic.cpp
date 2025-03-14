@@ -113,12 +113,12 @@ absorb:
   if (B.b == 0 && B.c == 0 && B.d == 0) {
     if (nom_ssg > 2)
       return sign(B.a);
-    if (nom_ssg < -2)
+    if (denom_ssg < -2)
       return -sign(B.a);
   }
 
   if (B.f == 0 && B.g == 0 && B.d == 0) {
-    if (nom_ssg > 2)
+    if (denom_ssg > 2)
       return sign(B.e);
     if (nom_ssg < -2)
       return -sign(B.e);
@@ -195,6 +195,7 @@ BihomIterator::BihomIterator(Bihom B, Number &a, Number &b)
 
   if (s == 0) {
     hi = std::make_unique<NullIterator>();
+    return;
   }
 
   if (s == 1 && (C.a + C.b + C.c + C.d <= 0)) {
