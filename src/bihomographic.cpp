@@ -55,17 +55,17 @@ void Bihom::al() {
 };
 
 void Bihom::br() {
-  a += b;
-  c += d;
-  e += f;
-  g += h;
-};
-
-void Bihom::bl() {
   b += a;
   d += c;
   f += e;
   h += g;
+};
+
+void Bihom::bl() {
+  a += b;
+  c += d;
+  e += f;
+  g += h;
 };
 
 void Bihom::up() {
@@ -106,6 +106,9 @@ int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &a,
   std::optional<Branch> a_b, b_b;
 
 absorb:
+  std::cout << "next sign iter" << std::endl;
+  std::cout << B << std::endl;
+
   // 1st part, check if sign determined
   if (B.b == 0 && B.c == 0 && B.d == 0 && B.f == 0 && B.g == 0 && B.h == 0)
     return sign(B.a) * sign(B.e);
@@ -137,36 +140,72 @@ absorb:
     return sign(B.a + B.b + B.c + B.d) * sign(B.e + B.f + B.g + B.h);
 
   if (!a_b) {
-    if (*b_b == Branch::R)
-      B.br();
+    B = {0, 0, B.c + B.a, B.b + B.d, 0, 0, B.e + B.g, B.f + B.h};
 
-    if (*b_b == Branch::L)
+    if (*b_b == Branch::R) {
+      std::cout << "bR" << std::endl;
+      std::cout << "B before bR" << std::endl;
+      std::cout << B << std::endl;
+      B.br();
+      std::cout << "B after bR" << std::endl;
+      std::cout << B << std::endl;
+    }
+
+    if (*b_b == Branch::L) {
+      std::cout << "bL" << std::endl;
+      std::cout << "B before bL" << std::endl;
+      std::cout << B << std::endl;
       B.bl();
+      std::cout << "B after bL" << std::endl;
+      std::cout << B << std::endl;
+    }
 
     goto absorb;
   }
 
   if (!b_b) {
-    if (*a_b == Branch::R)
-      B.ar();
+    B = {0, B.a + B.b, 0, B.c + B.d, 0, B.e + B.f, 0, B.g + B.h};
 
-    if (*a_b == Branch::L)
+    if (*a_b == Branch::R) {
+      std::cout << "aR" << std::endl;
+      B.ar();
+    }
+
+    if (*a_b == Branch::L) {
+      std::cout << "aL" << std::endl;
+      std::cout << "B before aL" << std::endl;
+      std::cout << B << std::endl;
       B.al();
+      std::cout << "B after aL" << std::endl;
+      std::cout << B << std::endl;
+    }
 
     goto absorb;
   }
 
-  if (*a_b == Branch::R && *b_b == Branch::R)
+  if (*a_b == Branch::R && *b_b == Branch::R) {
+    std::cout << "RR" << std::endl;
+    std::cout << "B before RR" << std::endl;
+    std::cout << B << std::endl;
     B.rr();
+    std::cout << "B after RR" << std::endl;
+    std::cout << B << std::endl;
+  }
 
-  if (*a_b == Branch::R && *b_b == Branch::L)
+  if (*a_b == Branch::R && *b_b == Branch::L) {
+    std::cout << "RL" << std::endl;
     B.rl();
+  }
 
-  if (*a_b == Branch::L && *b_b == Branch::R)
+  if (*a_b == Branch::L && *b_b == Branch::R) {
+    std::cout << "LR" << std::endl;
     B.lr();
+  }
 
-  if (*a_b == Branch::L && *b_b == Branch::L)
+  if (*a_b == Branch::L && *b_b == Branch::L) {
+    std::cout << "LL" << std::endl;
     B.ll();
+  }
 
   goto absorb;
 }
@@ -262,7 +301,7 @@ std::optional<Branch> BihomIterator::next() {
   std::optional<Branch> b_m, b_n;
 
 absorb:
-  // std::cout << std::endl << C << std::endl;
+  std::cout << std::endl << C << std::endl;
 
   if (hi) {
     // std::cout << "a and b exhausted" << std::endl;
@@ -306,12 +345,19 @@ absorb:
   if (!b_n) {
     // std::cout << "a exhausted" << std::endl;
 
-    if (*b_m == Branch::R)
-      C.ar();
-    if (*b_m == Branch::L)
-      C.al();
+    // C = {0, C.a + C.b, 0, C.c + C.d, 0, C.e + C.f, 0, C.g + C.h};
+
+    // if (*b_m == Branch::R)
+    //   C.ar();
+    // if (*b_m == Branch::L)
+    //   C.al();
 
     Hom h = {C.a + C.b, C.c + C.d, C.e + C.f, C.g + C.h};
+    if (*b_m == Branch::R)
+      h.right();
+    if (*b_m == Branch::L)
+      h.left();
+
     hi = std::make_unique<HomIterator>(h, m);
 
     goto absorb;
@@ -322,12 +368,19 @@ absorb:
 
     // std::cout << C << std::endl;
 
-    if (*b_n == Branch::R)
-      C.br();
-    if (*b_n == Branch::L)
-      C.bl();
+    // C = {0, 0, C.c + C.a, C.b + C.d, 0, 0, C.e + C.g, C.f + C.h};
+
+    // if (*b_n == Branch::R)
+    //   C.br();
+    // if (*b_n == Branch::L)
+    //   C.bl();
 
     Hom h = Hom{C.a + C.c, C.b + C.d, C.e + C.g, C.f + C.h};
+    if (*b_n == Branch::R)
+      h.right();
+    if (*b_n == Branch::L)
+      h.left();
+
     hi = std::make_unique<HomIterator>(h, n);
 
     goto absorb;

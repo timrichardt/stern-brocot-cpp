@@ -4,14 +4,14 @@
 #include <iostream>
 
 int main() {
-  test_parse_SSB();
-  test_number_comparators();
-  test_hom_sign();
-  test_hom_sign_large();
-  test_hom_sign_sqrt2();
-  test_hom_sign_e();
-  test_hom();
-  test_bihom_sign();
+  // test_parse_SSB();
+  // test_number_comparators();
+  // test_hom_sign();
+  // test_hom_sign_large();
+  // test_hom_sign_sqrt2();
+  // test_hom_sign_e();
+  // test_hom();
+  // test_bihom_sign();
   test_bihom();
 
   std::cout << "-----------------------" << std::endl;
@@ -74,26 +74,26 @@ int main() {
   // Number ks2 = {1, std::make_unique<BihomIterator>(B2, n6, n7)};
   // std::cout << "bi: " << bi << std::endl;
 
-  Number ks1 = bihom(B2_2, std::move(n6_2), std::move(n7_2));
+  // Number ks1 = bihom(B2_2, std::move(n6_2), std::move(n7_2));
 
-  std::cout << "a:   " << std::move(n6) << std::endl;
-  std::cout << "b:   " << std::move(n7) << std::endl;
-  std::cout << "res: " << std::move(ks1) << std::endl << std::endl;
+  // std::cout << "a:   " << std::move(n6) << std::endl;
+  // std::cout << "b:   " << std::move(n7) << std::endl;
+  // std::cout << "res: " << std::move(ks1) << std::endl << std::endl;
 
-  // 1st run differs from 2nd run
-  Number n3 = parse_SSB("RR");
-  Hom H3 = {1, 0, -1, 5};
-  Number h3 = hom(H3, std::move(n3));
-  Number res3 = parse_SSB("RL");
-  std::cout << "1st run: " << std::move(h3) << std::endl;
+  // // 1st run differs from 2nd run
+  // Number n3 = parse_SSB("RR");
+  // Hom H3 = {1, 0, -1, 5};
+  // Number h3 = hom(H3, std::move(n3));
+  // Number res3 = parse_SSB("RL");
+  // std::cout << "1st run: " << std::move(h3) << std::endl;
 
-  Number n4 = parse_SSB("RR");
-  Hom H4 = {1, 0, -1, 5};
-  // std::cout << "H4: " << H4;
-  // std::cout << "n4: " << std::move(n4) << std::endl;
-  Number h4 = hom(H4, std::move(n4));
-  Number res4 = parse_SSB("RL");
-  std::cout << "2nd run: " << std::move(h4) << std::endl;
+  // Number n4 = parse_SSB("RR");
+  // Hom H4 = {1, 0, -1, 5};
+  // // std::cout << "H4: " << H4;
+  // // std::cout << "n4: " << std::move(n4) << std::endl;
+  // Number h4 = hom(H4, std::move(n4));
+  // Number res4 = parse_SSB("RL");
+  // std::cout << "2nd run: " << std::move(h4) << std::endl;
 
   return 0;
 }

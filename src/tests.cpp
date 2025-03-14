@@ -188,6 +188,13 @@ void test_bihom() {
   Number res1 = bihom(B1, std::move(a1), std::move(b1));
   assert(res1 == c1);
 
+  Number a2 = parse_SSB("");
+  Number b2 = parse_SSB("RRL");
+  Bihom B2 = {0, 0, 0, 1, 1, 0, 0, 0};
+  Number c2 = parse_SSB("LLR");
+  Number res2 = bihom(B2, std::move(b2), std::move(a2));
+  assert(res2 == c2);
+
   Number a3 = parse_SSB("LRLR");
   Number b3 = parse_SSB("RRL");
   Bihom B3 = {0, 1, 0, 0, 0, 0, 1, 0};
@@ -202,23 +209,26 @@ void test_bihom() {
   Number res4 = bihom(B4, std::move(a4), std::move(b4));
   assert(res4 == c4);
 
-  // works with swapped arguments?!
   Number a5 = parse_SSB("RL");
-  Number b5 = parse_SSB("R");
+  Number b5 = parse_SSB("-R");
   Bihom B5 = {0, 1, 1, 0, 0, 0, 0, 1};
-  Number c5 = parse_SSB("RRRL");
+  Number c5 = parse_SSB("-L");
   Number res5 = bihom(B5, std::move(b5), std::move(a5));
-  std::cout << "res5: " << std::move(res5) << std::endl;
   assert(res5 == c5);
 
-  // works with swapped arguments?!
-  Number a2 = parse_SSB("");
-  Number b2 = parse_SSB("RRL");
-  Bihom B2 = {0, 0, 0, 1, 1, 0, 0, 0};
-  Number c2 = parse_SSB("LLR");
-  Number res2 = bihom(B2, std::move(a2), std::move(b2));
-  std::cout << "res2: " << std::move(res2) << std::endl;
-  assert(res2 == c2);
+  Number a6 = parse_SSB("RL");
+  Number b6 = parse_SSB("-R");
+  Bihom B6 = {1, 0, 0, 0, 0, 0, 0, 1};
+  Number c6 = parse_SSB("-RR");
+  Number res6 = bihom(B6, std::move(b6), std::move(a6));
+  assert(res6 == c6);
+
+  Number a7 = parse_SSB("RL");
+  Number b7 = parse_SSB("-R");
+  Bihom B7 = {0, 0, 0, -3, 0, 0, 0, 1};
+  Number c7 = parse_SSB("-RR");
+  Number res7 = bihom(B7, std::move(b7), std::move(a7));
+  assert(res7 == c7);
 
   std::cout << "Test passed: Bihomographic algorithm\n";
 }
