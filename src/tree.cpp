@@ -413,7 +413,7 @@ std::unique_ptr<Iterator> take(uint64_t n, std::unique_ptr<Iterator> &u) {
   return std::make_unique<SingleChunkIterator>(r);
 }
 
-Number take(uint64_t n, Number &x) { return Number{x.sign, take(n, x.seq)}; }
+Number take(uint64_t n, Number &&x) { return Number{x.sign, take(n, x.seq)}; }
 
 int8_t sign(int64_t a) {
   if (a == 0)

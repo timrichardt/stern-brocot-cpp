@@ -81,7 +81,7 @@ void test_hom_sign() {
 
   assert(hom_sign(node, std::move(n.seq)) == 1);
 
-  std::cout << "Test passed: Homographic sign algorithm\n";
+  std::cout << "Test passed: homographic sign algorithm\n";
 }
 
 void test_hom_sign_large() {
@@ -91,7 +91,7 @@ void test_hom_sign_large() {
 
   assert(hom_sign(node, std::move(ui)) == 0);
 
-  std::cout << "Test passed: Homographic sign algorithm for large number\n";
+  std::cout << "Test passed: homographic sign algorithm for large number\n";
 }
 
 void test_hom_sign_sqrt2() {
@@ -102,7 +102,7 @@ void test_hom_sign_sqrt2() {
   assert(hom_sign(node, std::move(sqrt2)) == -1);
   assert(hom_sign(node2, std::move(sqrt2)) == 1);
 
-  std::cout << "Test passed: Homographic sign algorithm for sqrt(2)\n";
+  std::cout << "Test passed: homographic sign algorithm for sqrt(2)\n";
 }
 
 void test_hom_sign_e() {
@@ -114,7 +114,7 @@ void test_hom_sign_e() {
   assert(hom_sign(node, std::move(e1)) == -1);
   assert(hom_sign(node2, std::move(e2)) == 1);
 
-  std::cout << "Test passed: Homographic sign algorithm for e\n";
+  std::cout << "Test passed: homographic sign algorithm for e\n";
 }
 
 void test_hom() {
@@ -153,7 +153,7 @@ void test_hom() {
   Number res5 = parse_SSB("LLLLL");
   assert(h5 == res5);
 	
-  std::cout << "Test passed: Homographic algorithm\n";
+  std::cout << "Test passed: homographic algorithm\n";
 }
 
 void test_bihom_sign() {
@@ -177,7 +177,7 @@ void test_bihom_sign() {
   Number b4 = fraction_to_SSB(1, 1);
   assert(bihom_sign(B4, a4.seq, b4.seq) == 0);
 	
-  std::cout << "Test passed: Bihomographic sign algorithm for large number\n";
+  std::cout << "Test passed: bihomographic sign algorithm for large number\n";
 }
 
 void test_bihom() {
@@ -230,5 +230,14 @@ void test_bihom() {
   Number res7 = bihom(B7, std::move(b7), std::move(a7));
   assert(res7 == c7);
 
-  std::cout << "Test passed: Bihomographic algorithm\n";
+  Number a8 = {1, make_e()};
+  Number b8 = {1, make_phi()};
+  Bihom B8 = {0, 1, 1, 0, 0, 0, 0, 1};
+  Number c8 = parse_SSB("-RR");
+  Number res8 = bihom(B8, std::move(a8), std::move(b8));
+	double res8_d = take(100, std::move(res8)).to_double();
+  assert(res8_d < 4.33633);
+	assert(res8_d >= 4.33631);
+
+  std::cout << "Test passed: bihomographic algorithm\n";
 }

@@ -2,7 +2,6 @@
 #include "homographic.h"
 #include "tree.h"
 #include <optional>
-#include <vector>
 
 void Bihom::ll() {
   a += b + c + d;
@@ -100,18 +99,17 @@ int8_t ssg(int64_t a, int64_t b, int64_t c, int64_t d) {
 
 int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &a,
                std::unique_ptr<Iterator> &b) {
-  int8_t nom_ssg = ssg(B.a, B.b, B.c, B.d);
-  int8_t denom_ssg = ssg(B.e, B.f, B.g, B.h);
 
+  int8_t nom_ssg, denom_ssg;
   std::optional<Branch> a_b, b_b;
 
 absorb:
-  std::cout << "next sign iter" << std::endl;
-  std::cout << B << std::endl;
-
   // 1st part, check if sign determined
   if (B.b == 0 && B.c == 0 && B.d == 0 && B.f == 0 && B.g == 0 && B.h == 0)
     return sign(B.a) * sign(B.e);
+
+  nom_ssg = ssg(B.a, B.b, B.c, B.d);
+  denom_ssg = ssg(B.e, B.f, B.g, B.h);
 
   if (B.b == 0 && B.c == 0 && B.d == 0) {
     if (nom_ssg > 2)
@@ -127,9 +125,9 @@ absorb:
       return -sign(B.e);
   }
 
-  if (nom_ssg * denom_ssg > 8)
+  if ((nom_ssg * denom_ssg) > 8)
     return 1;
-  if (nom_ssg * denom_ssg < -8)
+  if ((nom_ssg * denom_ssg) < -8)
     return -1;
 
   // 2nd part, check how to modify the bihom map
@@ -142,23 +140,11 @@ absorb:
   if (!a_b) {
     B = {0, 0, B.c + B.a, B.b + B.d, 0, 0, B.e + B.g, B.f + B.h};
 
-    if (*b_b == Branch::R) {
-      std::cout << "bR" << std::endl;
-      std::cout << "B before bR" << std::endl;
-      std::cout << B << std::endl;
+    if (*b_b == Branch::R)
       B.br();
-      std::cout << "B after bR" << std::endl;
-      std::cout << B << std::endl;
-    }
 
-    if (*b_b == Branch::L) {
-      std::cout << "bL" << std::endl;
-      std::cout << "B before bL" << std::endl;
-      std::cout << B << std::endl;
+    if (*b_b == Branch::L)
       B.bl();
-      std::cout << "B after bL" << std::endl;
-      std::cout << B << std::endl;
-    }
 
     goto absorb;
   }
@@ -166,46 +152,26 @@ absorb:
   if (!b_b) {
     B = {0, B.a + B.b, 0, B.c + B.d, 0, B.e + B.f, 0, B.g + B.h};
 
-    if (*a_b == Branch::R) {
-      std::cout << "aR" << std::endl;
+    if (*a_b == Branch::R)
       B.ar();
-    }
 
-    if (*a_b == Branch::L) {
-      std::cout << "aL" << std::endl;
-      std::cout << "B before aL" << std::endl;
-      std::cout << B << std::endl;
+    if (*a_b == Branch::L)
       B.al();
-      std::cout << "B after aL" << std::endl;
-      std::cout << B << std::endl;
-    }
 
     goto absorb;
   }
 
-  if (*a_b == Branch::R && *b_b == Branch::R) {
-    std::cout << "RR" << std::endl;
-    std::cout << "B before RR" << std::endl;
-    std::cout << B << std::endl;
+  if (*a_b == Branch::R && *b_b == Branch::R)
     B.rr();
-    std::cout << "B after RR" << std::endl;
-    std::cout << B << std::endl;
-  }
 
-  if (*a_b == Branch::R && *b_b == Branch::L) {
-    std::cout << "RL" << std::endl;
+  if (*a_b == Branch::R && *b_b == Branch::L)
     B.rl();
-  }
 
-  if (*a_b == Branch::L && *b_b == Branch::R) {
-    std::cout << "LR" << std::endl;
+  if (*a_b == Branch::L && *b_b == Branch::R)
     B.lr();
-  }
 
-  if (*a_b == Branch::L && *b_b == Branch::L) {
-    std::cout << "LL" << std::endl;
+  if (*a_b == Branch::L && *b_b == Branch::L)
     B.ll();
-  }
 
   goto absorb;
 }
@@ -301,25 +267,16 @@ std::optional<Branch> BihomIterator::next() {
   std::optional<Branch> b_m, b_n;
 
 absorb:
-  std::cout << std::endl << C << std::endl;
-
   if (hi) {
-    // std::cout << "a and b exhausted" << std::endl;
     return (*hi)->next();
   }
 
   if (C.R_emittable()) {
-    // std::cout << "R emittable" << std::endl;
-    // std::cout << C << std::endl;
-
     C.up();
     return Branch::R;
   }
 
   if (C.L_emittable()) {
-    // std::cout << "L emittable" << std::endl;
-    // std::cout << C << std::endl;
-
     C.down();
     return Branch::L;
   }
@@ -328,14 +285,8 @@ absorb:
   b_n = n.seq->next();
 
   if (!b_m && !b_n) {
-    // std::cout << "a and b exhausted" << std::endl;
-    // std::cout << C << std::endl;
-
     int64_t n = C.a + C.b + C.c + C.d;
     int64_t d = C.e + C.f + C.g + C.h;
-
-    // std::cout << "nom   " << n << std::endl;
-    // std::cout << "denom " << d << std::endl;
 
     hi = fraction_to_SSB(n, d).seq;
 
@@ -343,15 +294,6 @@ absorb:
   }
 
   if (!b_n) {
-    // std::cout << "a exhausted" << std::endl;
-
-    // C = {0, C.a + C.b, 0, C.c + C.d, 0, C.e + C.f, 0, C.g + C.h};
-
-    // if (*b_m == Branch::R)
-    //   C.ar();
-    // if (*b_m == Branch::L)
-    //   C.al();
-
     Hom h = {C.a + C.b, C.c + C.d, C.e + C.f, C.g + C.h};
     if (*b_m == Branch::R)
       h.right();
@@ -364,18 +306,8 @@ absorb:
   }
 
   if (!b_m) {
-    // std::cout << "b exhausted" << std::endl;
-
-    // std::cout << C << std::endl;
-
-    // C = {0, 0, C.c + C.a, C.b + C.d, 0, 0, C.e + C.g, C.f + C.h};
-
-    // if (*b_n == Branch::R)
-    //   C.br();
-    // if (*b_n == Branch::L)
-    //   C.bl();
-
     Hom h = Hom{C.a + C.c, C.b + C.d, C.e + C.g, C.f + C.h};
+
     if (*b_n == Branch::R)
       h.right();
     if (*b_n == Branch::L)
@@ -385,8 +317,6 @@ absorb:
 
     goto absorb;
   }
-
-  // std::cout << "need to absorb" << std::endl;
 
   if (*b_m == Branch::R && *b_n == Branch::R)
     C.rr();

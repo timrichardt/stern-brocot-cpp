@@ -119,7 +119,7 @@ std::unique_ptr<Iterator> make_sqrt2();
 std::unique_ptr<Iterator> make_phi();
 
 std::unique_ptr<Iterator> take(uint64_t n, std::unique_ptr<Iterator> &u);
-Number take(uint64_t n, Number &x);
+Number take(uint64_t n, Number &&x);
 std::optional<Branch> take_one(Number &x);
 
 #endif
