@@ -173,7 +173,7 @@ absorb:
       H.left();
     goto absorb;
   }
-  return static_cast<double>(H.a + H.b) / static_cast<double>(H.c + H.d);
+  return sign * static_cast<double>(H.a + H.b) / static_cast<double>(H.c + H.d);
 }
 
 std::pair<int64_t, int64_t> Number::to_fraction() {
@@ -349,10 +349,11 @@ bool Number::operator>=(const Number &other) const {
 std::ostream &operator<<(std::ostream &os, Branch branch) {
   switch (branch) {
   case Branch::R:
-    return os << "R";
+    os << "R";
   case Branch::L:
-    return os << "L";
+    os << "L";
   }
+  return os;
 }
 
 std::ostream &operator<<(std::ostream &os, std::vector<Branch> path) {
