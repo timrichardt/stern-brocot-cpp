@@ -3,10 +3,7 @@
 #include "tree.h"
 
 Number Number::operator+(Number &other) {
-  Number a = Number{sign, seq->clone()};
-  Number b = Number{other.sign, other.seq->clone()};
-
-  return bihom(Bihom{0, 1, 1, 0, 0, 0, 0, 1}, a, b);
+  return bihom(Bihom{0, 1, 1, 0, 0, 0, 0, 1}, *this, other);
 }
 
 Number Number::operator-(Number &other) {

@@ -221,7 +221,7 @@ get_branches:
   return false;
 }
 
-bool Number::operator<(const Number &other) const {
+bool Number::operator<(Number &other) {
   if (sign > other.sign)
     return false;
 
@@ -241,11 +241,11 @@ bool Number::operator<(const Number &other) const {
       goto get_branches;
     }
 
-    if (a)
+    if (!b)
       if (*a == Branch::L)
         return true;
 
-    if (b)
+    if (!a)
       if (*b == Branch::R)
         return true;
   }
@@ -413,7 +413,7 @@ std::unique_ptr<Iterator> take(uint64_t n, std::unique_ptr<Iterator> &u) {
   return std::make_unique<SingleChunkIterator>(r);
 }
 
-Number take(uint64_t n, Number &&x) { return Number{x.sign, take(n, x.seq)}; }
+Number take(uint64_t n, Number &x) { return Number{x.sign, take(n, x.seq)}; }
 
 int8_t sign(int64_t a) {
   if (a == 0)

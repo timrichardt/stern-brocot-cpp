@@ -93,9 +93,11 @@ bool Bihom::operator==(const Bihom &other) const {
          e == other.e && f == other.f && g == other.g && h == other.h;
 };
 
-int8_t ssg(int64_t a, int64_t b, int64_t c, int64_t d) {
+inline int8_t ssg(int64_t a, int64_t b, int64_t c, int64_t d) {
   return sign(a) + sign(b) + sign(c) + sign(d);
 }
+
+inline int8_t ssg(int64_t a, int64_t b) { return sign(a) + sign(b); }
 
 int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &a,
                std::unique_ptr<Iterator> &b) {
@@ -129,6 +131,22 @@ absorb:
     return 1;
   if ((nom_ssg * denom_ssg) < -8)
     return -1;
+
+  if (B.a == 0 && B.c == 0 && B.e == 0 && B.g == 0) {
+    std::optional<int8_t> nom_lsg = lin_sign(B.b, B.d);
+    std::optional<int8_t> denom_lsg = lin_sign(B.f, B.h);
+    if (nom_lsg && denom_lsg) {
+      return (*nom_lsg) * (*denom_lsg);
+    }
+  }
+
+  if (B.a == 0 && B.b == 0 && B.e == 0 && B.f == 0) {
+    std::optional<int8_t> nom_lsg = lin_sign(B.c, B.d);
+    std::optional<int8_t> denom_lsg = lin_sign(B.g, B.h);
+    if (nom_lsg && denom_lsg) {
+      return (*nom_lsg) * (*denom_lsg);
+    }
+  }
 
   // 2nd part, check how to modify the bihom map
   a_b = a->next();
@@ -352,4 +370,5 @@ Number bihom(Bihom B, Number &a, Number &b) {
   res.seq = std::move(bi);
 
   return res;
+  // return Number{bi->s, bi->clone()};
 }

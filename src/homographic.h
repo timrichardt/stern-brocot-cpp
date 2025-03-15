@@ -23,6 +23,7 @@ private:
   std::optional<std::unique_ptr<Iterator>> &i;
 };
 
+std::optional<int64_t> lin_sign(int64_t a, int64_t b);
 int hom_sign(Hom &H, std::unique_ptr<Iterator> &u);
 
 Number hom(Hom H, Number &x);
