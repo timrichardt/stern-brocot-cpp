@@ -96,7 +96,7 @@ public:
 
   bool operator==(const Number &other) const;
   bool operator!=(const Number &other) const;
-  bool operator<(Number &other);
+  bool operator<(const Number &other) const;
   bool operator<=(const Number &other) const;
   bool operator>(const Number &other) const;
   bool operator>=(const Number &other) const;

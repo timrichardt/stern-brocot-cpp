@@ -221,7 +221,7 @@ get_branches:
   return false;
 }
 
-bool Number::operator<(Number &other) {
+bool Number::operator<(const Number &other) const {
   if (sign > other.sign)
     return false;
 
@@ -238,6 +238,8 @@ bool Number::operator<(Number &other) {
     if (a && b) {
       if ((*a == Branch::R) && (*b == Branch::L))
         return false;
+      if ((*a == Branch::L) && (*b == Branch::R))
+        return true;
       goto get_branches;
     }
 

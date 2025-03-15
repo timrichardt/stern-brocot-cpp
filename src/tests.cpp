@@ -275,9 +275,9 @@ void test_arithmetic_binary() {
 	Number z5 = parse_SSB("RLLRLLLLL");
 	// Number asd = x5 / y5;
 	Number asd2 = take(10, x5);
-	std::cout << z5 << std::endl;
-	std::cout << asd2 << std::endl;
-	// assert(z5 < x5);
+	// std::cout << z5 << std::endl;
+	// std::cout << asd2 << std::endl;
+	assert(z5 < x5);
 
 	
 	std::cout << "Test passed: binary arithmetic operations\n";
