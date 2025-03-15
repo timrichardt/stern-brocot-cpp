@@ -79,7 +79,7 @@ void test_hom_sign() {
   Hom node = {-5, 7, 1, 2};
   Number n = parse_SSB("RLLRLR");
 
-  assert(hom_sign(node, std::move(n.seq)) == 1);
+  assert(hom_sign(node, n.seq) == 1);
 
   std::cout << "Test passed: homographic sign algorithm\n";
 }
@@ -89,7 +89,7 @@ void test_hom_sign_large() {
   std::vector<Branch> u(10'000'000, Branch::R);
   std::unique_ptr<Iterator> ui = std::make_unique<SingleChunkIterator>(u);
 
-  assert(hom_sign(node, std::move(ui)) == 0);
+  assert(hom_sign(node, ui) == 0);
 
   std::cout << "Test passed: homographic sign algorithm for large number\n";
 }
@@ -99,8 +99,8 @@ void test_hom_sign_sqrt2() {
   Hom node = {100000000000, -141421356238, 0, 1};
   Hom node2 = {100000000000, -141421356237, 0, 1};
 
-  assert(hom_sign(node, std::move(sqrt2)) == -1);
-  assert(hom_sign(node2, std::move(sqrt2)) == 1);
+  assert(hom_sign(node, sqrt2) == -1);
+  assert(hom_sign(node2, sqrt2) == 1);
 
   std::cout << "Test passed: homographic sign algorithm for sqrt(2)\n";
 }
@@ -111,8 +111,8 @@ void test_hom_sign_e() {
   Hom node = {100000, -271829, 0, 1};
   Hom node2 = {100000, -271828, 0, 1};
 
-  assert(hom_sign(node, std::move(e1)) == -1);
-  assert(hom_sign(node2, std::move(e2)) == 1);
+  assert(hom_sign(node, e1) == -1);
+  assert(hom_sign(node2, e2) == 1);
 
   std::cout << "Test passed: homographic sign algorithm for e\n";
 }
@@ -121,34 +121,34 @@ void test_hom() {
   Number n1 = parse_SSB("RRL");
   Hom H1 = {0, 1, 1, 0};
 	// std::cout << std::move(h1) << std::endl;
-  Number h1 = hom(H1, std::move(n1));
+  Number h1 = hom(H1, n1);
   Number res1 = parse_SSB("LLR");
   assert(h1 == res1);
 
   Number n2 = parse_SSB("RR");
   Hom H2 = {2, -1, 0, 5};
-  Number h2 = hom(H2, std::move(n2));
+  Number h2 = hom(H2, n2);
 	// std::cout << std::move(h2) << std::endl;
   Number res2 = parse_SSB("");
   assert(h2 == res2);
 
   Number n3 = parse_SSB("RR");
   Hom H3 = {0, -1, -1, 5};
-  Number h3 = hom(H3, std::move(n3));
+  Number h3 = hom(H3, n3);
   // std::cout << std::move(h3) << std::endl;
   Number res3 = parse_SSB("-L");
   assert(h3 == res3);
 
   Number n4 = parse_SSB("RR");
   Hom H4 = {1, -1, -1, 4};
-  Number h4 = hom(H4, std::move(n4));
+  Number h4 = hom(H4, n4);
   // std::cout << std::move(h4) << std::endl;
   Number res4 = parse_SSB("R");
   assert(h4 == res4);
 
 	Number n5 = parse_SSB("LL");
 	Hom H5 = {1, 0, 0, 2};
-  Number h5 = hom(H5, std::move(n5));
+  Number h5 = hom(H5, n5);
   // std::cout << std::move(h5) << std::endl;
   Number res5 = parse_SSB("LLLLL");
   assert(h5 == res5);
@@ -177,7 +177,7 @@ void test_bihom_sign() {
   Number b4 = fraction_to_SSB(1, 1);
   assert(bihom_sign(B4, a4.seq, b4.seq) == 0);
 	
-  std::cout << "Test passed: bihomographic sign algorithm for large number\n";
+  std::cout << "Test passed: bihomographic sign algorithm\n";
 }
 
 void test_bihom() {
@@ -185,56 +185,56 @@ void test_bihom() {
   Number b1 = parse_SSB("RRL");
   Bihom B1 = {1, 0, 0, -1, 1, 0, 0, 0};
   Number c1 = parse_SSB("-LLR");
-  Number res1 = bihom(B1, std::move(a1), std::move(b1));
+  Number res1 = bihom(B1, a1, b1);
   assert(res1 == c1);
 
   Number a2 = parse_SSB("");
   Number b2 = parse_SSB("RRL");
   Bihom B2 = {0, 0, 0, 1, 1, 0, 0, 0};
   Number c2 = parse_SSB("LLR");
-  Number res2 = bihom(B2, std::move(b2), std::move(a2));
+  Number res2 = bihom(B2, b2, a2);
   assert(res2 == c2);
 
   Number a3 = parse_SSB("LRLR");
   Number b3 = parse_SSB("RRL");
   Bihom B3 = {0, 1, 0, 0, 0, 0, 1, 0};
   Number c3 = parse_SSB("LLL");
-  Number res3 = bihom(B3, std::move(a3), std::move(b3));
+  Number res3 = bihom(B3, a3, b3);
   assert(res3 == c3);
 
   Number a4 = parse_SSB("LRLR");
   Number b4 = parse_SSB("RRL");
   Bihom B4 = {0, 0, 0, 1, 0, 1, 0, 0};
   Number c4 = parse_SSB("RLRL");
-  Number res4 = bihom(B4, std::move(a4), std::move(b4));
+  Number res4 = bihom(B4, a4, b4);
   assert(res4 == c4);
 
   Number a5 = parse_SSB("RL");
   Number b5 = parse_SSB("-R");
   Bihom B5 = {0, 1, 1, 0, 0, 0, 0, 1};
   Number c5 = parse_SSB("-L");
-  Number res5 = bihom(B5, std::move(b5), std::move(a5));
+  Number res5 = bihom(B5, b5, a5);
   assert(res5 == c5);
 
   Number a6 = parse_SSB("RL");
   Number b6 = parse_SSB("-R");
   Bihom B6 = {1, 0, 0, 0, 0, 0, 0, 1};
   Number c6 = parse_SSB("-RR");
-  Number res6 = bihom(B6, std::move(b6), std::move(a6));
+  Number res6 = bihom(B6, b6, a6);
   assert(res6 == c6);
 
   Number a7 = parse_SSB("RL");
   Number b7 = parse_SSB("-R");
   Bihom B7 = {0, 0, 0, -3, 0, 0, 0, 1};
   Number c7 = parse_SSB("-RR");
-  Number res7 = bihom(B7, std::move(b7), std::move(a7));
+  Number res7 = bihom(B7, b7, a7);
   assert(res7 == c7);
 
   Number a8 = {1, make_e()};
   Number b8 = {1, make_phi()};
   Bihom B8 = {0, 1, 1, 0, 0, 0, 0, 1};
   Number c8 = parse_SSB("-RR");
-  Number res8 = bihom(B8, std::move(a8), std::move(b8));
+	Number res8 = bihom(B8, a8, b8);
 	double res8_d = take(100, std::move(res8)).to_double();
   assert(res8_d < 4.33633);
 	assert(res8_d >= 4.33631);

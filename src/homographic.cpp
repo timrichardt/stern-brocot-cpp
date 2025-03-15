@@ -42,7 +42,7 @@ std::optional<int64_t> lin_sign(int64_t a, int64_t b) {
 //   }
 // }
 
-int hom_sign(Hom &H, std::unique_ptr<Iterator> &&u) {
+int hom_sign(Hom &H, std::unique_ptr<Iterator> &u) {
   std::optional<Branch> next;
 
 absorb:
@@ -88,7 +88,7 @@ HomIterator::HomIterator(Hom H, Number &n) : G(H), m(n), i(ni) {
     G.c = -G.c;
   }
 
-  s = hom_sign(G, std::move(m.seq));
+  s = hom_sign(G, m.seq);
 
   if (s == 0) {
     i = std::make_unique<NullIterator>();
@@ -159,7 +159,7 @@ std::unique_ptr<Iterator> HomIterator::clone() {
   return std::make_unique<HomIterator>(G, m);
 }
 
-Number hom(Hom H, Number &&n) {
+Number hom(Hom H, Number &n) {
   Number res;
 
   std::unique_ptr<HomIterator> hi = std::make_unique<HomIterator>(H, n);

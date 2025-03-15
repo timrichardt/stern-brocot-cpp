@@ -343,7 +343,7 @@ std::ostream &operator<<(std::ostream &os, Bihom B) {
   return os;
 }
 
-Number bihom(Bihom B, Number &&a, Number &&b) {
+Number bihom(Bihom B, Number &a, Number &b) {
   Number res;
 
   std::unique_ptr<BihomIterator> bi = std::make_unique<BihomIterator>(B, a, b);

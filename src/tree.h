@@ -84,7 +84,8 @@ public:
   std::unique_ptr<Iterator> clone() override;
 };
 
-struct Number {
+class Number {
+public:
   int sign;
   // std::weak_ptr ?
   std::unique_ptr<Iterator> seq;
@@ -99,6 +100,11 @@ struct Number {
   bool operator<=(const Number &other) const;
   bool operator>(const Number &other) const;
   bool operator>=(const Number &other) const;
+
+  Number operator+(Number &other);
+  Number operator-(Number &other);
+  Number operator*(Number &other);
+  Number operator/(Number &other);
 };
 
 std::ostream &operator<<(std::ostream &os, Hom H);
@@ -106,7 +112,7 @@ std::ostream &operator<<(std::ostream &os, Branch branch);
 std::ostream &operator<<(std::ostream &os, std::vector<Branch> path);
 std::ostream &operator<<(std::ostream &os, std::unique_ptr<Iterator> &u);
 std::ostream &operator<<(std::ostream &os, Iterator &u);
-std::ostream &operator<<(std::ostream &os, Number &&n);
+std::ostream &operator<<(std::ostream &os, Number &n);
 
 int8_t sign(int64_t x);
 int sign(int x);

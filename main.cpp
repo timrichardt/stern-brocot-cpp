@@ -1,4 +1,5 @@
 #include "src/bihomographic.h"
+#include "src/arithmetic.h"
 #include "src/tests.h"
 #include "src/tree.h"
 #include <iostream>
@@ -14,8 +15,20 @@ int main() {
   test_hom();
   test_bihom_sign();
   test_bihom();
-
+	
   std::cout << "-----------------------" << std::endl;
 
+	Number x = parse_SSB("R");
+	Number y = parse_SSB("RRL");
+	Number u = parse_SSB("RRRRL");
+	// Number z = add(x,y); // bihom(Bihom{0, 1, 1, 0, 0, 0, 0, 1}, std::move(x), std::move(y));
+	// std::unique_ptr<Number> z = std::make_unique<Number>(x + y);
+	Number z = x + y;
+
+	if (z == u) std::cout << "yip" << std::endl;
+	// Number w = z * u;
+	// std::unique_ptr<Number> w = std::make_unique<Number>(*z + u);
+	// std::cout << z << std::endl;
+	
   return 0;
 }

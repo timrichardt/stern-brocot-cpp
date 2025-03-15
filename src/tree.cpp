@@ -387,7 +387,7 @@ std::ostream &operator<<(std::ostream &os, Iterator &u) {
   return os;
 }
 
-std::ostream &operator<<(std::ostream &os, Number &&n) {
+std::ostream &operator<<(std::ostream &os, Number &n) {
   os << ((n.sign == 1) ? '+' : (n.sign == -1) ? '-' : '0');
   os << *n.seq;
 

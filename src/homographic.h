@@ -23,8 +23,8 @@ private:
   std::optional<std::unique_ptr<Iterator>> &i;
 };
 
-int hom_sign(Hom &H, std::unique_ptr<Iterator> &&u);
+int hom_sign(Hom &H, std::unique_ptr<Iterator> &u);
 
-Number hom(Hom H, Number &&x);
+Number hom(Hom H, Number &x);
 
 #endif
