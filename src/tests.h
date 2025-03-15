@@ -23,5 +23,6 @@ void test_hom();
 void test_parse_SB();
 void test_bihom_sign();
 void test_bihom();
+void test_arithmetic_binary();
 
 #endif

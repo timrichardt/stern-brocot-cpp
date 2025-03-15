@@ -241,3 +241,27 @@ void test_bihom() {
 
   std::cout << "Test passed: bihomographic algorithm\n";
 }
+
+void test_arithmetic_binary() {
+	Number x1 = parse_SSB("R");
+	Number y1 = parse_SSB("RRL");
+	Number z1 = parse_SSB("RRRRL");
+	assert(x1 + y1 == z1);
+
+	Number x2 = parse_SSB("R");
+	Number y2 = parse_SSB("RRL");
+	Number z2 = parse_SSB("-L");
+	assert(x2 - y2 == z2);
+
+	Number x3 = parse_SSB("R");
+	Number y3 = parse_SSB("RRL");
+	Number z3 = parse_SSB("RRRR");
+	assert(x3 * y3 == z3);
+
+	Number x4 = parse_SSB("RRRR");
+	Number y4 = parse_SSB("R");
+	Number z4 = parse_SSB("RRL");
+	assert(x4 / y4 == z4);
+
+	std::cout << "Test passed: binary arithmetic operations\n";
+}
