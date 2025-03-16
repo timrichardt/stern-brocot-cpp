@@ -350,8 +350,10 @@ std::ostream &operator<<(std::ostream &os, Branch branch) {
   switch (branch) {
   case Branch::R:
     os << "R";
+    break;
   case Branch::L:
     os << "L";
+    break;
   }
   return os;
 }
@@ -368,8 +370,10 @@ std::ostream &operator<<(std::ostream &os, Hom H) {
   return os;
 }
 
-std::ostream &operator<<(std::ostream &os, std::unique_ptr<Iterator> u) {
-  std::optional<Branch> branch = u->next();
+std::ostream &operator<<(std::ostream &os, std::unique_ptr<Iterator> &u) {
+  std::optional<Branch> branch;
+
+  branch = u->next();
 
   while (branch) {
     os << *branch;
@@ -390,7 +394,7 @@ std::ostream &operator<<(std::ostream &os, Iterator &u) {
   return os;
 }
 
-std::ostream &operator<<(std::ostream &os, Number &n) {
+std::ostream &operator<<(std::ostream &os, Number &&n) {
   os << ((n.sign == 1) ? '+' : (n.sign == -1) ? '-' : '0');
   os << *n.seq;
 
@@ -398,13 +402,14 @@ std::ostream &operator<<(std::ostream &os, Number &n) {
 }
 
 std::unique_ptr<Iterator> take(uint64_t n, std::unique_ptr<Iterator> &u) {
-  std::unique_ptr<Iterator> v = u->clone();
+  // std::unique_ptr<Iterator> v = u->clone();
 
   std::vector<Branch> r = {};
   uint64_t i = 0;
+  std::optional<Branch> next_branch;
 
   while (i < n) {
-    std::optional<Branch> next_branch = v->next();
+    next_branch = u->next();
     if (next_branch) {
       r.push_back(*next_branch);
       i++;

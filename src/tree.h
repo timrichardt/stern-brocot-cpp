@@ -112,7 +112,7 @@ std::ostream &operator<<(std::ostream &os, Branch branch);
 std::ostream &operator<<(std::ostream &os, std::vector<Branch> path);
 std::ostream &operator<<(std::ostream &os, std::unique_ptr<Iterator> &u);
 std::ostream &operator<<(std::ostream &os, Iterator &u);
-std::ostream &operator<<(std::ostream &os, Number &n);
+std::ostream &operator<<(std::ostream &os, Number &&n);
 
 int8_t sign(int64_t x);
 int sign(int x);
