@@ -19,6 +19,6 @@
 // }
 
 std::unique_ptr<Number> add(std::unique_ptr<Number> &a, std::unique_ptr<Number> &b) {
-  return bihom(Bihom{0, 1, 1, 0, 0, 0, 0, 1}, a, b);
+	std::unique_ptr<Number> res = bihom(Bihom{0, 1, 1, 0, 0, 0, 0, 1}, a,b);
+  return res;
 }
-

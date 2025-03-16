@@ -218,7 +218,9 @@ absorb:
   return {H.a + H.b, H.c + H.d};
 }
 
-Number Number::clone() const { return Number{sign, seq->clone()}; }
+std::unique_ptr<Number> Number::clone() {
+  return std::make_unique<Number>(Number{sign, seq->clone()});
+}
 
 bool Number::operator!=(const Number &other) const {
   if (sign != other.sign)

@@ -106,6 +106,8 @@ int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &a,
   std::optional<Branch> a_b, b_b;
 
 absorb:
+  std::cout << "x" << std::endl;
+
   // 1st part, check if sign determined
   if (B.b == 0 && B.c == 0 && B.d == 0 && B.f == 0 && B.g == 0 && B.h == 0)
     return sign(B.a) * sign(B.e);
