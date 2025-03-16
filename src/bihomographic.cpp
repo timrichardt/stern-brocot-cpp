@@ -196,25 +196,26 @@ absorb:
 
 std::optional<std::unique_ptr<Iterator>> bhni = std::nullopt;
 
-BihomIterator::BihomIterator(Bihom B, Number &a, Number &b)
+BihomIterator::BihomIterator(Bihom B, std::unique_ptr<Number> &a,
+                             std::unique_ptr<Number> &b)
     : C(B), m(a), n(b), hi(bhni) {
 
   hi = std::nullopt;
 
-  if (m.sign == -1) {
+  if (m->sign == -1) {
     C.a = -C.a;
     C.b = -C.b;
     C.e = -C.e;
     C.f = -C.f;
   }
-  if (n.sign == -1) {
+  if (n->sign == -1) {
     C.a = -C.a;
     C.c = -C.c;
     C.e = -C.e;
     C.g = -C.g;
   }
 
-  s = bihom_sign(C, a.seq, b.seq);
+  s = bihom_sign(C, a->seq, b->seq);
 
   if (s == 0) {
     hi = std::make_unique<NullIterator>();
@@ -299,8 +300,8 @@ absorb:
     return Branch::L;
   }
 
-  b_m = m.seq->next();
-  b_n = n.seq->next();
+  b_m = m->seq->next();
+  b_n = n->seq->next();
 
   if (!b_m && !b_n) {
     int64_t n = C.a + C.b + C.c + C.d;
@@ -361,14 +362,22 @@ std::ostream &operator<<(std::ostream &os, Bihom B) {
   return os;
 }
 
-Number bihom(Bihom B, Number &a, Number &b) {
-  Number res;
+// Number bihom(Bihom B, Number &a, Number &b) {
+//   Number res;
 
+//   std::unique_ptr<BihomIterator> bi = std::make_unique<BihomIterator>(B, a,
+//   b);
+
+//   res.sign = bi->s;
+//   res.seq = std::move(bi);
+
+//   return res;
+//   // return Number{bi->s, bi->clone()};
+// }
+
+std::unique_ptr<Number> bihom(Bihom B, std::unique_ptr<Number> &a,
+                              std::unique_ptr<Number> &b) {
   std::unique_ptr<BihomIterator> bi = std::make_unique<BihomIterator>(B, a, b);
 
-  res.sign = bi->s;
-  res.seq = std::move(bi);
-
-  return res;
-  // return Number{bi->s, bi->clone()};
+  return std::make_unique<Number>(Number{bi->s, bi->clone()});
 }

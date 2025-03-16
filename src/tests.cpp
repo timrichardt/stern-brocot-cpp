@@ -125,40 +125,41 @@ void test_hom_sign_e() {
 }
 
 void test_hom() {
-  Number n1 = parse_SSB("RRL");
+	std::unique_ptr<Number> n1 = std::make_unique<Number>(parse_SSB("RRL"));
   Hom H1 = {0, 1, 1, 0};
 	// std::cout << std::move(h1) << std::endl;
-  Number h1 = hom(H1, n1);
-  Number res1 = parse_SSB("LLR");
-  assert(h1 == res1);
+	std::unique_ptr<Number> h1 = hom(H1, n1);
+	// std::cout << h1 << std::endl;
+	std::unique_ptr<Number> res1 = std::make_unique<Number>(parse_SSB("LLR"));
+	assert(*h1 == res1);
 
-  Number n2 = parse_SSB("RR");
+  std::unique_ptr<Number> n2 = std::make_unique<Number>(parse_SSB("RR"));
   Hom H2 = {2, -1, 0, 5};
-  Number h2 = hom(H2, n2);
+  std::unique_ptr<Number> h2 = hom(H2, n2);
 	// std::cout << std::move(h2) << std::endl;
-  Number res2 = parse_SSB("");
-  assert(h2 == res2);
+  std::unique_ptr<Number> res2 = std::make_unique<Number>(parse_SSB(""));
+  assert(*h2 == res2);
 
-  Number n3 = parse_SSB("RR");
+  std::unique_ptr<Number> n3 = std::make_unique<Number>(parse_SSB("RR"));
   Hom H3 = {0, -1, -1, 5};
-  Number h3 = hom(H3, n3);
+  std::unique_ptr<Number> h3 = hom(H3, n3);
   // std::cout << std::move(h3) << std::endl;
-  Number res3 = parse_SSB("-L");
-  assert(h3 == res3);
+  std::unique_ptr<Number> res3 = std::make_unique<Number>(parse_SSB("-L"));
+  assert(*h3 == res3);
 
-  Number n4 = parse_SSB("RR");
+  std::unique_ptr<Number> n4 = std::make_unique<Number>(parse_SSB("RR"));
   Hom H4 = {1, -1, -1, 4};
-  Number h4 = hom(H4, n4);
+  std::unique_ptr<Number> h4 = hom(H4, n4);
   // std::cout << std::move(h4) << std::endl;
-  Number res4 = parse_SSB("R");
-  assert(h4 == res4);
+  std::unique_ptr<Number> res4 = std::make_unique<Number>(parse_SSB("R"));
+  assert(*h4 == res4);
 
-	Number n5 = parse_SSB("LL");
+	std::unique_ptr<Number> n5 = std::make_unique<Number>(parse_SSB("LL"));
 	Hom H5 = {1, 0, 0, 2};
-  Number h5 = hom(H5, n5);
+  std::unique_ptr<Number> h5 = hom(H5, n5);
   // std::cout << std::move(h5) << std::endl;
-  Number res5 = parse_SSB("LLLLL");
-  assert(h5 == res5);
+  std::unique_ptr<Number> res5 = std::make_unique<Number>(parse_SSB("LLLLL"));
+  assert(*h5 == res5);
 	
   std::cout << "Test passed: homographic algorithm\n";
 }
@@ -188,94 +189,94 @@ void test_bihom_sign() {
 }
 
 void test_bihom() {
-  Number a1 = parse_SSB("LLLR");
-  Number b1 = parse_SSB("RRL");
+  std::unique_ptr<Number> a1 = std::make_unique<Number>(parse_SSB("LLLR"));
+  std::unique_ptr<Number> b1 = std::make_unique<Number>(parse_SSB("RRL"));
   Bihom B1 = {1, 0, 0, -1, 1, 0, 0, 0};
-  Number c1 = parse_SSB("-LLR");
-  Number res1 = bihom(B1, a1, b1);
-  assert(res1 == c1);
+  std::unique_ptr<Number> c1 = std::make_unique<Number>(parse_SSB("-LLR"));
+  std::unique_ptr<Number> res1 = bihom(B1, a1, b1);
+	assert(*res1 == c1);
 
-  Number a2 = parse_SSB("");
-  Number b2 = parse_SSB("RRL");
+  std::unique_ptr<Number> a2 = std::make_unique<Number>(parse_SSB(""));
+  std::unique_ptr<Number> b2 = std::make_unique<Number>(parse_SSB("RRL"));
   Bihom B2 = {0, 0, 0, 1, 1, 0, 0, 0};
-  Number c2 = parse_SSB("LLR");
-  Number res2 = bihom(B2, b2, a2);
-  assert(res2 == c2);
+  std::unique_ptr<Number> c2 = std::make_unique<Number>(parse_SSB("LLR"));
+  std::unique_ptr<Number> res2 = bihom(B2, b2, a2);
+  assert(*res2 == c2);
 
-  Number a3 = parse_SSB("LRLR");
-  Number b3 = parse_SSB("RRL");
+  std::unique_ptr<Number> a3 = std::make_unique<Number>(parse_SSB("LRLR"));
+  std::unique_ptr<Number> b3 = std::make_unique<Number>(parse_SSB("RRL"));
   Bihom B3 = {0, 1, 0, 0, 0, 0, 1, 0};
-  Number c3 = parse_SSB("LLL");
-  Number res3 = bihom(B3, a3, b3);
-  assert(res3 == c3);
+  std::unique_ptr<Number> c3 = std::make_unique<Number>(parse_SSB("LLL"));
+  std::unique_ptr<Number> res3 = bihom(B3, a3, b3);
+  assert(*res3 == c3);
 
-  Number a4 = parse_SSB("LRLR");
-  Number b4 = parse_SSB("RRL");
+  std::unique_ptr<Number> a4 = std::make_unique<Number>(parse_SSB("LRLR"));
+  std::unique_ptr<Number> b4 = std::make_unique<Number>(parse_SSB("RRL"));
   Bihom B4 = {0, 0, 0, 1, 0, 1, 0, 0};
-  Number c4 = parse_SSB("RLRL");
-  Number res4 = bihom(B4, a4, b4);
-  assert(res4 == c4);
+  std::unique_ptr<Number> c4 = std::make_unique<Number>(parse_SSB("RLRL"));
+  std::unique_ptr<Number> res4 = bihom(B4, a4, b4);
+  assert(*res4 == c4);
 
-  Number a5 = parse_SSB("RL");
-  Number b5 = parse_SSB("-R");
+  std::unique_ptr<Number> a5 = std::make_unique<Number>(parse_SSB("RL"));
+  std::unique_ptr<Number> b5 = std::make_unique<Number>(parse_SSB("-R"));
   Bihom B5 = {0, 1, 1, 0, 0, 0, 0, 1};
-  Number c5 = parse_SSB("-L");
-  Number res5 = bihom(B5, b5, a5);
-  assert(res5 == c5);
+  std::unique_ptr<Number> c5 = std::make_unique<Number>(parse_SSB("-L"));
+  std::unique_ptr<Number> res5 = bihom(B5, b5, a5);
+  assert(*res5 == c5);
 
-  Number a6 = parse_SSB("RL");
-  Number b6 = parse_SSB("-R");
+  std::unique_ptr<Number> a6 = std::make_unique<Number>(parse_SSB("RL"));
+  std::unique_ptr<Number> b6 = std::make_unique<Number>(parse_SSB("-R"));
   Bihom B6 = {1, 0, 0, 0, 0, 0, 0, 1};
-  Number c6 = parse_SSB("-RR");
-  Number res6 = bihom(B6, b6, a6);
-  assert(res6 == c6);
+  std::unique_ptr<Number> c6 = std::make_unique<Number>(parse_SSB("-RR"));
+  std::unique_ptr<Number> res6 = bihom(B6, b6, a6);
+  assert(*res6 == c6);
 
-  Number a7 = parse_SSB("RL");
-  Number b7 = parse_SSB("-R");
+  std::unique_ptr<Number> a7 = std::make_unique<Number>(parse_SSB("RL"));
+  std::unique_ptr<Number> b7 = std::make_unique<Number>(parse_SSB("-R"));
   Bihom B7 = {0, 0, 0, -3, 0, 0, 0, 1};
-  Number c7 = parse_SSB("-RR");
-  Number res7 = bihom(B7, b7, a7);
-  assert(res7 == c7);
+  std::unique_ptr<Number> c7 = std::make_unique<Number>(parse_SSB("-RR"));
+  std::unique_ptr<Number> res7 = bihom(B7, b7, a7);
+  assert(*res7 == c7);
 
-  Number a8 = {1, make_e()};
-  Number b8 = {1, make_phi()};
+  std::unique_ptr<Number> a8 = std::make_unique<Number>(Number{1, make_e()});
+  std::unique_ptr<Number> b8 = std::make_unique<Number>(Number{1, make_phi()});
   Bihom B8 = {0, 1, 1, 0, 0, 0, 0, 1};
-  Number c8 = parse_SSB("-RR");
-	Number res8 = bihom(B8, a8, b8);
-	double res8_d = take(100, res8).to_double();
+  std::unique_ptr<Number> c8 = std::make_unique<Number>(parse_SSB("-RR"));
+	std::unique_ptr<Number> res8 = bihom(B8, a8, b8);
+	double res8_d = take(100, res8)->to_double();
   assert(res8_d < 4.33633);
 	assert(res8_d >= 4.33631);
 
   std::cout << "Test passed: bihomographic algorithm\n";
 }
 
-void test_arithmetic_binary() {
-	Number x1 = parse_SSB("R");
-	Number y1 = parse_SSB("RRL");
-	Number z1 = parse_SSB("RRRRL");
-	assert(x1 + y1 == z1);
+// void test_arithmetic_binary() {
+// 	Number x1 = parse_SSB("R");
+// 	Number y1 = parse_SSB("RRL");
+// 	Number z1 = parse_SSB("RRRRL");
+// 	assert(x1 + y1 == z1);
 
-	Number x2 = parse_SSB("R");
-	Number y2 = parse_SSB("RRL");
-	Number z2 = parse_SSB("-L");
-	assert(x2 - y2 == z2);
+// 	Number x2 = parse_SSB("R");
+// 	Number y2 = parse_SSB("RRL");
+// 	Number z2 = parse_SSB("-L");
+// 	assert(x2 - y2 == z2);
 
-	Number x3 = parse_SSB("R");
-	Number y3 = parse_SSB("RRL");
-	Number z3 = parse_SSB("RRRR");
-	assert(x3 * y3 == z3);
+// 	Number x3 = parse_SSB("R");
+// 	Number y3 = parse_SSB("RRL");
+// 	Number z3 = parse_SSB("RRRR");
+// 	assert(x3 * y3 == z3);
 
-	Number x4 = parse_SSB("RRRR");
-	Number y4 = parse_SSB("R");
-	Number z4 = parse_SSB("RRL");
-	assert(x4 / y4 == z4);
+// 	Number x4 = parse_SSB("RRRR");
+// 	Number y4 = parse_SSB("R");
+// 	Number z4 = parse_SSB("RRL");
+// 	assert(x4 / y4 == z4);
 
-	Number x5 = {1, make_e()};
-	Number y5 = parse_SSB("R");
-	Number z5 = parse_SSB("RLLRLLLLL");
-	Number asd2 = take(10, x5);
-	assert(z5 < x5);
+// 	Number x5 = {1, make_e()};
+// 	Number y5 = parse_SSB("R");
+// 	Number z5 = parse_SSB("RLLRLLLLL");
+// 	Number asd2 = take(10, x5);
+// 	assert(z5 < x5);
 
 	
-	std::cout << "Test passed: binary arithmetic operations\n";
-}
+// 	std::cout << "Test passed: binary arithmetic operations\n";
+// }

@@ -84,8 +84,8 @@ public:
   std::unique_ptr<Iterator> clone() override;
 };
 
-class Number {
-public:
+struct Number {
+
   int sign;
   // std::weak_ptr ?
   std::unique_ptr<Iterator> seq;
@@ -94,6 +94,7 @@ public:
   std::pair<int64_t, int64_t> to_fraction();
   Number clone() const;
 
+  bool operator==(const std::unique_ptr<Number> &other) const;
   bool operator==(const Number &other) const;
   bool operator!=(const Number &other) const;
   bool operator<(const Number &other) const;
@@ -112,7 +113,7 @@ std::ostream &operator<<(std::ostream &os, Branch branch);
 std::ostream &operator<<(std::ostream &os, std::vector<Branch> path);
 std::ostream &operator<<(std::ostream &os, std::unique_ptr<Iterator> &u);
 std::ostream &operator<<(std::ostream &os, Iterator &u);
-std::ostream &operator<<(std::ostream &os, Number &&n);
+std::ostream &operator<<(std::ostream &os, std::unique_ptr<Number> &n);
 
 int8_t sign(int64_t x);
 int sign(int x);
@@ -125,6 +126,7 @@ std::unique_ptr<Iterator> make_sqrt2();
 std::unique_ptr<Iterator> make_phi();
 
 std::unique_ptr<Iterator> take(uint64_t n, std::unique_ptr<Iterator> &u);
+std::unique_ptr<Number> take(uint64_t n, std::unique_ptr<Number> &x);
 Number take(uint64_t n, Number &x);
 std::optional<Branch> take_one(Number &x);
 

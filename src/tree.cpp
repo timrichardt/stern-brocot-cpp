@@ -134,6 +134,32 @@ std::unique_ptr<Iterator> NullIterator::clone() {
   return std::make_unique<NullIterator>();
 }
 
+bool Number::operator==(const std::unique_ptr<Number> &other) const {
+  if (sign != other->sign)
+    return false;
+
+  std::unique_ptr<Iterator> seq_c = seq->clone();
+  std::unique_ptr<Iterator> other_seq_c = other->seq->clone();
+
+  std::optional<Branch> a, b;
+
+get_branches:
+  a = seq_c->next();
+  b = other_seq_c->next();
+
+  if (a && b) {
+    if (*a != *b) {
+      return false;
+    }
+    goto get_branches;
+  }
+
+  if (a || b)
+    return false;
+
+  return true;
+}
+
 bool Number::operator==(const Number &other) const {
   if (sign != other.sign)
     return false;
@@ -394,9 +420,9 @@ std::ostream &operator<<(std::ostream &os, Iterator &u) {
   return os;
 }
 
-std::ostream &operator<<(std::ostream &os, Number &&n) {
-  os << ((n.sign == 1) ? '+' : (n.sign == -1) ? '-' : '0');
-  os << *n.seq;
+std::ostream &operator<<(std::ostream &os, std::unique_ptr<Number> &n) {
+  os << ((n->sign == 1) ? '+' : (n->sign == -1) ? '-' : '0');
+  os << *n->seq;
 
   return os;
 }
@@ -419,6 +445,10 @@ std::unique_ptr<Iterator> take(uint64_t n, std::unique_ptr<Iterator> &u) {
   }
 
   return std::make_unique<SingleChunkIterator>(r);
+}
+
+std::unique_ptr<Number> take(uint64_t n, std::unique_ptr<Number> &x) {
+  return std::make_unique<Number>(Number{x->sign, take(n, x->seq)});
 }
 
 Number take(uint64_t n, Number &x) { return Number{x.sign, take(n, x.seq)}; }

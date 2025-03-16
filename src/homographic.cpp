@@ -79,16 +79,17 @@ inline bool Hom::L_emittable() {
 
 std::optional<std::unique_ptr<Iterator>> ni = std::nullopt;
 
-HomIterator::HomIterator(Hom H, Number &n) : G(H), m(n), i(ni) {
+HomIterator::HomIterator(Hom H, std::unique_ptr<Number> &n)
+    : G(H), m(n), i(ni) {
 
   i = std::nullopt;
 
-  if (m.sign == -1) {
+  if (m->sign == -1) {
     G.a = -G.a;
     G.c = -G.c;
   }
 
-  s = hom_sign(G, m.seq);
+  s = hom_sign(G, m->seq);
 
   if (s == 0) {
     i = std::make_unique<NullIterator>();
@@ -139,7 +140,7 @@ hom_emit:
     G.down();
     return Branch::L;
   } else {
-    b = m.seq->next();
+    b = m->seq->next();
     if (b) {
       if (b == Branch::R) {
         G.right();
@@ -159,14 +160,9 @@ std::unique_ptr<Iterator> HomIterator::clone() {
   return std::make_unique<HomIterator>(G, m);
 }
 
-Number hom(Hom H, Number &n) {
-  Number res;
-
+std::unique_ptr<Number> hom(Hom H, std::unique_ptr<Number> &n) {
   std::unique_ptr<HomIterator> hi = std::make_unique<HomIterator>(H, n);
 
-  res.sign = hi->s;
-  res.seq = std::move(hi);
-
-  return res;
+  return std::make_unique<Number>(Number{hi->s, std::move(hi)});
   // return Number{hi->s, res.seq->clone()};
 }
