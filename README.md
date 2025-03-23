@@ -1,1 +1,3 @@
-Learning C++ by implementing Stern–Brocot arithmetic.
+# Stern–Brocot arithmetic
+
+Docs in progress.
