@@ -26,3 +26,15 @@ Number *Number::operator+(Number *&other) {
 Number *add(Number *&a, Number *&b) {
   return bihom(Bihom{0, 1, 1, 0, 0, 0, 0, 1}, a, b);
 }
+
+Number *sub(Number *&a, Number *&b) {
+  return bihom(Bihom{0, 1, -1, 0, 0, 0, 0, 1}, a, b);
+}
+
+Number *mul(Number *&a, Number *&b) {
+  return bihom(Bihom{1, 0, 0, 0, 0, 0, 0, 1}, a, b);
+}
+
+Number *div(Number *&a, Number *&b) {
+  return bihom(Bihom{0, 1, 0, 0, 0, 0, 1, 0}, a, b);
+}

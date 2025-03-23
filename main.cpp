@@ -6,16 +6,16 @@
 
 int main() {
   std::cout << "Tests: ----------------" << std::endl;
-  // test_parse_SSB();
-  // test_number_comparators();
-  // test_hom_sign();
-  // test_hom_sign_large();
-  // test_hom_sign_sqrt2();
-  // test_hom_sign_e();
-  // test_hom();
-  // test_bihom_sign();
-  // test_bihom();
-  // test_arithmetic_binary();
+  test_parse_SSB();
+  test_number_comparators();
+  test_hom_sign();
+  test_hom_sign_large();
+  test_hom_sign_sqrt2();
+  test_hom_sign_e();
+  test_hom();
+  test_bihom_sign();
+  test_bihom();
+  test_arithmetic_binary();
   std::cout << "-----------------------" << std::endl;
 
 	Number* e1 = new Number(1, make_e());
@@ -24,8 +24,9 @@ int main() {
 	Number* phi = new Number(1, make_phi());
 	Number* r = add(e1, e2);
 	Number* s = add(r, phi);
+	Number* t = add(s, e3);
 
-	Number* o = take(10'000'000, s);
+	Number* o = take(100, t);
 	
 	std::cout << o->to_double() << std::endl;
   

@@ -1,10 +1,10 @@
 #include "tests.h"
+#include "arithmetic.h"
 #include "bihomographic.h"
 #include "homographic.h"
 #include "tree.h"
 #include <cassert>
 #include <iostream>
-#include <memory>
 #include <vector>
 
 void test_parse_SSB() {
@@ -343,32 +343,57 @@ void test_arithmetic_binary() {
   Number *x1 = parse_SSB("R");
   Number *y1 = parse_SSB("RRL");
   Number *z1 = parse_SSB("RRRRL");
-  Number *w1 = *x1 + y1;
+  Number *res1 = add(x1, y1);
+  assert(*res1 == *z1);
 
-  std::cout << w1 << std::endl;
+  delete x1;
+  delete y1;
+  delete z1;
+  delete res1;
 
-  // assert(*x1 + *y1 == *z1);
+  Number *x2 = parse_SSB("R");
+  Number *y2 = parse_SSB("RRL");
+  Number *z2 = parse_SSB("-L");
+  Number *res2 = sub(x2, y2);
+  assert(*res2 == *z2);
 
-  // Number x2 = parse_SSB("R");
-  // Number y2 = parse_SSB("RRL");
-  // Number z2 = parse_SSB("-L");
-  // assert(x2 - y2 == z2);
+  delete x2;
+  delete y2;
+  delete z2;
+  delete res2;
 
-  // Number x3 = parse_SSB("R");
-  // Number y3 = parse_SSB("RRL");
-  // Number z3 = parse_SSB("RRRR");
-  // assert(x3 * y3 == z3);
+  Number *x3 = parse_SSB("R");
+  Number *y3 = parse_SSB("RRL");
+  Number *z3 = parse_SSB("RRRR");
+  Number *res3 = mul(x3, y3);
+  assert(*res3 == *z3);
 
-  // Number x4 = parse_SSB("RRRR");
-  // Number y4 = parse_SSB("R");
-  // Number z4 = parse_SSB("RRL");
-  // assert(x4 / y4 == z4);
+  delete x3;
+  delete y3;
+  delete z3;
+  delete res3;
 
-  // Number x5 = {1, make_e()};
-  // Number y5 = parse_SSB("R");
-  // Number z5 = parse_SSB("RLLRLLLLL");
-  // Number asd2 = take(10, x5);
-  // assert(z5 < x5);
+  Number *x4 = parse_SSB("RRRR");
+  Number *y4 = parse_SSB("R");
+  Number *z4 = parse_SSB("RRL");
+  Number *res4 = div(x4, y4);
+  assert(*res4 == *z4);
+
+  delete x4;
+  delete y4;
+  delete z4;
+  delete res4;
+
+  Number *x5 = new Number(1, make_e());
+  Number *y5 = parse_SSB("R");
+  Number *z5 = parse_SSB("RLLRLLLLL");
+  Number *res5 = sub(x5, y5);
+  assert(*res5 < *z5);
+
+  delete x5;
+  delete y5;
+  delete z5;
+  delete res5;
 
   std::cout << "Test passed: binary arithmetic operations\n";
 }
