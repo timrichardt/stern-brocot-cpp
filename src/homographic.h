@@ -12,20 +12,20 @@
 class HomIterator : public Iterator {
 public:
   ~HomIterator();
-  explicit HomIterator(Hom H, std::unique_ptr<Number> &n);
+  explicit HomIterator(Hom H, Number* &n);
   std::optional<Branch> next() override;
-  std::unique_ptr<Iterator> clone() override;
+  Iterator* clone() override;
   int s;
 
 private:
   Hom G;
-	std::unique_ptr<Number> &m;
-  std::optional<std::unique_ptr<Iterator>> &i;
+	Number* &m;
+  std::optional<Iterator*> &i;
 };
 
 std::optional<int64_t> lin_sign(int64_t a, int64_t b);
-int hom_sign(Hom &H, std::unique_ptr<Iterator> &u);
+int hom_sign(Hom &H, Iterator* &u);
 
-std::unique_ptr<Number> hom(Hom H, std::unique_ptr<Number> &x);
+Number* hom(Hom H, Number* &x);
 
 #endif

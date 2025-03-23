@@ -42,7 +42,7 @@ std::optional<int64_t> lin_sign(int64_t a, int64_t b) {
 //   }
 // }
 
-int hom_sign(Hom &H, std::unique_ptr<Iterator> &u) {
+int hom_sign(Hom &H, Iterator *&u) {
   std::optional<Branch> next;
 
 absorb:
@@ -77,10 +77,9 @@ inline bool Hom::L_emittable() {
   return (a <= c && b < d) || (a < c && b <= d);
 }
 
-std::optional<std::unique_ptr<Iterator>> ni = std::nullopt;
+std::optional<Iterator *> ni = std::nullopt;
 
-HomIterator::HomIterator(Hom H, std::unique_ptr<Number> &n)
-    : G(H), m(n), i(ni) {
+HomIterator::HomIterator(Hom H, Number *&n) : G(H), m(n), i(ni) {
 
   i = std::nullopt;
 
@@ -92,7 +91,7 @@ HomIterator::HomIterator(Hom H, std::unique_ptr<Number> &n)
   s = hom_sign(G, m->seq);
 
   if (s == 0) {
-    i = std::make_unique<NullIterator>();
+    i = new NullIterator();
   }
 
   if (s == 1) {
@@ -150,19 +149,18 @@ hom_emit:
       goto hom_emit;
     }
 
-    i = fraction_to_SSB(G.a + G.b, G.c + G.d).seq;
+    i = fraction_to_SSB(G.a + G.b, G.c + G.d)->seq;
 
     goto hom_emit;
   }
 }
 
-std::unique_ptr<Iterator> HomIterator::clone() {
-  return std::make_unique<HomIterator>(G, m);
-}
+Iterator *HomIterator::clone() { return new HomIterator(G, m); }
 
-std::unique_ptr<Number> hom(Hom H, std::unique_ptr<Number> &n) {
-  std::unique_ptr<HomIterator> hi = std::make_unique<HomIterator>(H, n);
+Number *hom(Hom H, Number *&n) {
 
-  return std::make_unique<Number>(Number{hi->s, std::move(hi)});
+  HomIterator *hi = new HomIterator(H, n);
+
+  return new Number(hi->s, hi);
   // return Number{hi->s, res.seq->clone()};
 }
