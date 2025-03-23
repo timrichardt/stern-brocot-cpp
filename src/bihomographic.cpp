@@ -99,8 +99,7 @@ inline int8_t ssg(int64_t a, int64_t b, int64_t c, int64_t d) {
 
 inline int8_t ssg(int64_t a, int64_t b) { return sign(a) + sign(b); }
 
-int bihom_sign(Bihom &B, std::unique_ptr<Iterator> &a,
-               std::unique_ptr<Iterator> &b) {
+int bihom_sign(Bihom &B, Iterator *&a, Iterator *&b) {
 
   int8_t nom_ssg, denom_ssg;
   std::optional<Branch> a_b, b_b;
@@ -196,10 +195,9 @@ absorb:
   goto absorb;
 }
 
-std::optional<std::unique_ptr<Iterator>> bhni = std::nullopt;
+std::optional<Iterator *> bhni = std::nullopt;
 
-BihomIterator::BihomIterator(Bihom B, std::unique_ptr<Number> &a,
-                             std::unique_ptr<Number> &b)
+BihomIterator::BihomIterator(Bihom B, Number *&a, Number *&b)
     : C(B), m(a), n(b), hi(bhni) {
 
   hi = std::nullopt;
@@ -220,7 +218,7 @@ BihomIterator::BihomIterator(Bihom B, std::unique_ptr<Number> &a,
   s = bihom_sign(C, a->seq, b->seq);
 
   if (s == 0) {
-    hi = std::make_unique<NullIterator>();
+    hi = new NullIterator();
     return;
   }
 
@@ -251,13 +249,13 @@ BihomIterator::BihomIterator(Bihom B, std::unique_ptr<Number> &a,
 
   if (C.same_ratio()) {
     if (C.h != 0) {
-      hi = fraction_to_SSB(C.d, C.h).seq;
+      hi = fraction_to_SSB(C.d, C.h)->seq;
     } else if (C.g != 0) {
-      hi = fraction_to_SSB(C.c, C.g).seq;
+      hi = fraction_to_SSB(C.c, C.g)->seq;
     } else if (C.f != 0) {
-      hi = fraction_to_SSB(C.b, C.f).seq;
+      hi = fraction_to_SSB(C.b, C.f)->seq;
     } else {
-      hi = fraction_to_SSB(C.a, C.e).seq;
+      hi = fraction_to_SSB(C.a, C.e)->seq;
     }
   }
 }
@@ -309,7 +307,7 @@ absorb:
     int64_t n = C.a + C.b + C.c + C.d;
     int64_t d = C.e + C.f + C.g + C.h;
 
-    hi = fraction_to_SSB(n, d).seq;
+    hi = fraction_to_SSB(n, d)->seq;
 
     goto absorb;
   }
@@ -321,7 +319,7 @@ absorb:
     if (*b_m == Branch::L)
       h.left();
 
-    hi = std::make_unique<HomIterator>(h, m);
+    hi = new HomIterator(h, m);
 
     goto absorb;
   }
@@ -334,7 +332,7 @@ absorb:
     if (*b_n == Branch::L)
       h.left();
 
-    hi = std::make_unique<HomIterator>(h, n);
+    hi = new HomIterator(h, n);
 
     goto absorb;
   }
@@ -354,9 +352,7 @@ absorb:
   goto absorb;
 }
 
-std::unique_ptr<Iterator> BihomIterator::clone() {
-  return std::make_unique<BihomIterator>(C, m, n);
-};
+Iterator *BihomIterator::clone() { return new BihomIterator(C, m, n); };
 
 std::ostream &operator<<(std::ostream &os, Bihom B) {
   os << B.a << " " << B.b << " " << B.c << " " << B.d << std::endl;
@@ -377,9 +373,8 @@ std::ostream &operator<<(std::ostream &os, Bihom B) {
 //   // return Number{bi->s, bi->clone()};
 // }
 
-std::unique_ptr<Number> bihom(Bihom B, std::unique_ptr<Number> &a,
-                              std::unique_ptr<Number> &b) {
-  std::unique_ptr<BihomIterator> bi = std::make_unique<BihomIterator>(B, a, b);
+Number *bihom(Bihom B, Number *&a, Number *&b) {
+  BihomIterator *bi = new BihomIterator(B, a, b);
 
-  return std::make_unique<Number>(Number{bi->s, std::move(bi)});
+  return new Number(bi->s, bi);
 }

@@ -45,7 +45,7 @@ std::optional<Branch> Iterator::next() {
       "Iterator::next() should be overridden by derived class");
 }
 
-std::unique_ptr<Iterator> Iterator::clone() {
+Iterator *Iterator::clone() {
   throw std::runtime_error(
       "Iterator::clone() should be overridden by derived class");
 }
@@ -60,8 +60,8 @@ std::optional<Branch> SingleChunkIterator::next() {
   return chunk[index++];
 }
 
-std::unique_ptr<Iterator> SingleChunkIterator::clone() {
-  return std::make_unique<SingleChunkIterator>(chunk);
+Iterator *SingleChunkIterator::clone() {
+  return new SingleChunkIterator(chunk);
 }
 
 ChunkedIterator::ChunkedIterator(ChunkGenerator generator)
@@ -83,9 +83,7 @@ std::optional<Branch> ChunkedIterator::next() {
   return value;
 }
 
-std::unique_ptr<Iterator> ChunkedIterator::clone() {
-  return std::make_unique<ChunkedIterator>(generator);
-}
+Iterator *ChunkedIterator::clone() { return new ChunkedIterator(generator); }
 
 void ChunkedIterator::load_next_chunk() {
   chunk = generator();
@@ -104,9 +102,7 @@ std::optional<Branch> EulerIterator::next() {
   return value;
 }
 
-std::unique_ptr<Iterator> EulerIterator::clone() {
-  return std::make_unique<EulerIterator>();
-}
+Iterator *EulerIterator::clone() { return new EulerIterator(); }
 
 void EulerIterator::load_next_chunk() {
   std::vector<Branch> result;
@@ -130,16 +126,14 @@ NullIterator::NullIterator() {}
 
 std::optional<Branch> NullIterator::next() { return std::nullopt; }
 
-std::unique_ptr<Iterator> NullIterator::clone() {
-  return std::make_unique<NullIterator>();
-}
+Iterator *NullIterator::clone() { return new NullIterator(); }
 
-bool Number::operator==(const std::unique_ptr<Number> &other) const {
+bool Number::operator==(const Number *&other) const {
   if (sign != other->sign)
     return false;
 
-  std::unique_ptr<Iterator> seq_c = seq->clone();
-  std::unique_ptr<Iterator> other_seq_c = other->seq->clone();
+  Iterator *seq_c = seq->clone();
+  Iterator *other_seq_c = other->seq->clone();
 
   std::optional<Branch> a, b;
 
@@ -164,8 +158,8 @@ bool Number::operator==(const Number &other) const {
   if (sign != other.sign)
     return false;
 
-  std::unique_ptr<Iterator> seq_c = seq->clone();
-  std::unique_ptr<Iterator> other_seq_c = other.seq->clone();
+  Iterator *seq_c = seq->clone();
+  Iterator *other_seq_c = other.seq->clone();
 
   std::optional<Branch> a, b;
 
@@ -187,7 +181,7 @@ get_branches:
 }
 
 double Number::to_double() {
-  std::unique_ptr<Iterator> u = seq->clone();
+  Iterator *u = seq->clone();
   Hom H = I;
 
 absorb:
@@ -203,7 +197,7 @@ absorb:
 }
 
 std::pair<int64_t, int64_t> Number::to_fraction() {
-  std::unique_ptr<Iterator> u = seq->clone();
+  Iterator *u = seq->clone();
   Hom H = I;
 
 absorb:
@@ -218,16 +212,14 @@ absorb:
   return {H.a + H.b, H.c + H.d};
 }
 
-std::unique_ptr<Number> Number::clone() {
-  return std::make_unique<Number>(Number{sign, seq->clone()});
-}
+Number *Number::clone() { return new Number(Number{sign, seq->clone()}); }
 
 bool Number::operator!=(const Number &other) const {
   if (sign != other.sign)
     return true;
 
-  std::unique_ptr<Iterator> seq_c = seq->clone();
-  std::unique_ptr<Iterator> other_seq_c = other.seq->clone();
+  Iterator *seq_c = seq->clone();
+  Iterator *other_seq_c = other.seq->clone();
 
   std::optional<Branch> a, b;
 
@@ -253,8 +245,8 @@ bool Number::operator<(const Number &other) const {
   if (sign > other.sign)
     return false;
 
-  std::unique_ptr<Iterator> seq_c = seq->clone();
-  std::unique_ptr<Iterator> other_seq_c = other.seq->clone();
+  Iterator *seq_c = seq->clone();
+  Iterator *other_seq_c = other.seq->clone();
 
   if (sign == other.sign) {
     std::optional<Branch> a, b;
@@ -287,8 +279,8 @@ bool Number::operator<=(const Number &other) const {
   if (sign != other.sign)
     return true;
 
-  std::unique_ptr<Iterator> seq_c = seq->clone();
-  std::unique_ptr<Iterator> other_seq_c = other.seq->clone();
+  Iterator *seq_c = seq->clone();
+  Iterator *other_seq_c = other.seq->clone();
 
   std::optional<Branch> a, b;
 
@@ -315,8 +307,8 @@ bool Number::operator>(const Number &other) const {
     return true;
 
   if (sign == other.sign) {
-    std::unique_ptr<Iterator> seq_c = seq->clone();
-    std::unique_ptr<Iterator> other_seq_c = other.seq->clone();
+    Iterator *seq_c = seq->clone();
+    Iterator *other_seq_c = other.seq->clone();
 
     std::optional<Branch> a, b;
 
@@ -347,8 +339,8 @@ bool Number::operator>=(const Number &other) const {
     return false;
 
   if (sign == other.sign) {
-    std::unique_ptr<Iterator> seq_c = seq->clone();
-    std::unique_ptr<Iterator> other_seq_c = other.seq->clone();
+    Iterator *seq_c = seq->clone();
+    Iterator *other_seq_c = other.seq->clone();
 
     std::optional<Branch> a, b;
 
@@ -398,7 +390,7 @@ std::ostream &operator<<(std::ostream &os, Hom H) {
   return os;
 }
 
-std::ostream &operator<<(std::ostream &os, std::unique_ptr<Iterator> &u) {
+std::ostream &operator<<(std::ostream &os, Iterator *&u) {
   std::optional<Branch> branch;
 
   branch = u->next();
@@ -422,14 +414,14 @@ std::ostream &operator<<(std::ostream &os, Iterator &u) {
   return os;
 }
 
-std::ostream &operator<<(std::ostream &os, std::unique_ptr<Number> &n) {
+std::ostream &operator<<(std::ostream &os, Number *&n) {
   os << ((n->sign == 1) ? '+' : (n->sign == -1) ? '-' : '0');
   os << *n->seq;
 
   return os;
 }
 
-std::unique_ptr<Iterator> take(uint64_t n, std::unique_ptr<Iterator> &u) {
+Iterator *take(uint64_t n, Iterator *&u) {
   // std::unique_ptr<Iterator> v = u->clone();
 
   std::vector<Branch> r = {};
@@ -446,11 +438,13 @@ std::unique_ptr<Iterator> take(uint64_t n, std::unique_ptr<Iterator> &u) {
     }
   }
 
-  return std::make_unique<SingleChunkIterator>(r);
+  return new SingleChunkIterator(r);
 }
 
-std::unique_ptr<Number> take(uint64_t n, std::unique_ptr<Number> &x) {
-  return std::make_unique<Number>(Number{x->sign, take(n, x->seq)});
+Number *take(uint64_t n, Number *&x) {
+  Iterator *u = take(n, x->seq);
+
+  return new Number(x->sign, u);
 }
 
 Number take(uint64_t n, Number &x) { return Number{x.sign, take(n, x.seq)}; }
@@ -461,7 +455,7 @@ int8_t sign(int64_t a) {
   return (a > 0) ? 1 : -1;
 }
 
-Number parse_SSB(const std::string &str) {
+Number *parse_SSB(const std::string &str) {
   std::vector<Branch> u = {};
   int8_t s = 1;
 
@@ -488,10 +482,10 @@ Number parse_SSB(const std::string &str) {
     }
   }
 
-  return Number{s, std::make_unique<SingleChunkIterator>(u)};
+  return new Number(s, new SingleChunkIterator(u));
 }
 
-Number fraction_to_SSB(int64_t n, int64_t d) {
+Number *fraction_to_SSB(int64_t n, int64_t d) {
   std::vector<Branch> u;
 
   int s = sign(n) * sign(d);
@@ -509,21 +503,19 @@ Number fraction_to_SSB(int64_t n, int64_t d) {
     }
   }
 
-  return Number{s, std::make_unique<SingleChunkIterator>(u)};
+  return new Number(s, new SingleChunkIterator(u));
 }
 
-std::unique_ptr<Iterator> make_e() { return std::make_unique<EulerIterator>(); }
+Iterator *make_e() { return new EulerIterator(); }
 
 std::vector<Branch> sqrt2_generator() {
   return {Branch::R, Branch::L, Branch::L, Branch::R};
 }
 
-std::unique_ptr<Iterator> make_sqrt2() {
-  return std::make_unique<ChunkedIterator>(sqrt2_generator);
-}
+Iterator *make_sqrt2() { return new ChunkedIterator(sqrt2_generator); }
 
 std::vector<Branch> phi_generator() { return {Branch::R, Branch::L}; }
 
-std::unique_ptr<Iterator> make_phi() {
-  return std::make_unique<ChunkedIterator>(phi_generator);
-}
+Iterator *make_phi() { return new ChunkedIterator(phi_generator); }
+
+Number::Number(int sign, Iterator *seq) : sign(sign), seq(seq) {}

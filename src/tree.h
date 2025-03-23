@@ -36,14 +36,14 @@ public:
   virtual ~Iterator() = default;
   Iterator() = default;
   virtual std::optional<Branch> next();
-  virtual std::unique_ptr<Iterator> clone();
+  virtual Iterator *clone();
 };
 
 class SingleChunkIterator : public Iterator {
 public:
   explicit SingleChunkIterator(const std::vector<Branch> &chunk);
   std::optional<Branch> next() override;
-  std::unique_ptr<Iterator> clone() override;
+  Iterator *clone() override;
 
 private:
   std::vector<Branch> chunk;
@@ -55,7 +55,7 @@ public:
   using ChunkGenerator = std::function<std::vector<Branch>()>;
   explicit ChunkedIterator(ChunkGenerator generator);
   std::optional<Branch> next() override;
-  std::unique_ptr<Iterator> clone() override;
+  Iterator *clone() override;
 
 private:
   ChunkGenerator generator;
@@ -68,7 +68,7 @@ class EulerIterator : public Iterator {
 public:
   explicit EulerIterator();
   std::optional<Branch> next() override;
-  std::unique_ptr<Iterator> clone() override;
+  Iterator *clone() override;
 
 private:
   uint n;
@@ -81,20 +81,21 @@ class NullIterator : public Iterator {
 public:
   explicit NullIterator();
   std::optional<Branch> next() override;
-  std::unique_ptr<Iterator> clone() override;
+  Iterator *clone() override;
 };
 
-struct Number {
-
+class Number {
+public:
   int sign;
   // std::weak_ptr ?
-  std::unique_ptr<Iterator> seq;
+  Iterator *seq;
+  explicit Number(int sign, Iterator *seq);
 
   double to_double();
   std::pair<int64_t, int64_t> to_fraction();
-  std::unique_ptr<Number> clone();
+  Number *clone();
 
-  bool operator==(const std::unique_ptr<Number> &other) const;
+  bool operator==(const Number *&other) const;
   bool operator==(const Number &other) const;
   bool operator!=(const Number &other) const;
   bool operator<(const Number &other) const;
@@ -102,32 +103,31 @@ struct Number {
   bool operator>(const Number &other) const;
   bool operator>=(const Number &other) const;
 
-  Number operator+(Number &other);
-  Number operator-(Number &other);
-  Number operator*(Number &other);
-  Number operator/(Number &other);
+  Number *operator+(Number *&other);
+  Number *operator-(Number *other);
+  Number *operator*(Number *other);
+  Number *operator/(Number *other);
 };
 
 std::ostream &operator<<(std::ostream &os, Hom H);
 std::ostream &operator<<(std::ostream &os, Branch branch);
 std::ostream &operator<<(std::ostream &os, std::vector<Branch> path);
-std::ostream &operator<<(std::ostream &os, std::unique_ptr<Iterator> &u);
+std::ostream &operator<<(std::ostream &os, Iterator *&u);
 std::ostream &operator<<(std::ostream &os, Iterator &u);
-std::ostream &operator<<(std::ostream &os, std::unique_ptr<Number> &n);
+std::ostream &operator<<(std::ostream &os, Number *&n);
 
 int8_t sign(int64_t x);
 int sign(int x);
 
-Number parse_SSB(const std::string &str);
-Number fraction_to_SSB(int64_t n, int64_t d);
+Number *parse_SSB(const std::string &str);
+Number *fraction_to_SSB(int64_t n, int64_t d);
 
-std::unique_ptr<Iterator> make_e();
-std::unique_ptr<Iterator> make_sqrt2();
-std::unique_ptr<Iterator> make_phi();
+Iterator *make_e();
+Iterator *make_sqrt2();
+Iterator *make_phi();
 
-std::unique_ptr<Iterator> take(uint64_t n, std::unique_ptr<Iterator> &u);
-std::unique_ptr<Number> take(uint64_t n, std::unique_ptr<Number> &x);
-Number take(uint64_t n, Number &x);
+Iterator *take(uint64_t n, Iterator *&u);
+Number *take(uint64_t n, Number *&x);
 std::optional<Branch> take_one(Number &x);
 
 #endif
