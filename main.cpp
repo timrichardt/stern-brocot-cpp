@@ -1,5 +1,4 @@
 #include "src/arithmetic.h"
-#include "src/bihomographic.h"
 #include "src/tests.h"
 #include "src/tree.h"
 #include <iostream>
@@ -18,17 +17,18 @@ int main() {
   test_arithmetic_binary();
   std::cout << "-----------------------" << std::endl;
 
-	Number* e1 = new Number(1, make_e());
-	Number* e2 = new Number(1, make_e());
-	Number* e3 = new Number(1, make_e());
-	Number* phi = new Number(1, make_phi());
-	Number* r = add(e1, e2);
-	Number* s = add(r, phi);
-	Number* t = add(s, e3);
+  Number *e1 = new Number(1, make_e());
+  Number *e2 = new Number(1, make_e());
+  Number *e3 = new Number(1, make_e());
+  Number *phi = new Number(1, make_phi());
+  Number *r = add(e1, e2);
+  Number *s = add(r, phi);
+  Number *t = mul(s, e3);
 
-	Number* o = take(100, t);
-	
-	std::cout << o->to_double() << std::endl;
-  
+  Number *o = take(100, t);
+  Number *p = inv(o);
+
+  std::cout << p->to_double() << std::endl;
+
   return 0;
 }
