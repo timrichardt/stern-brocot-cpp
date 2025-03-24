@@ -24,5 +24,6 @@ void test_parse_SSB();
 void test_bihom_sign();
 void test_bihom();
 void test_arithmetic_binary();
+void test_arithmetic_chained();
 
 #endif

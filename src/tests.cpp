@@ -397,3 +397,22 @@ void test_arithmetic_binary() {
 
   std::cout << "Test passed: binary arithmetic operations\n";
 }
+
+void test_arithmetic_chained() {
+  Number *x1 = parse_SSB("R");
+  Number *y1 = parse_SSB("RRL");
+  Number *z1 = parse_SSB("RRRRL");
+  Number *u1 = parse_SSB("0");
+  Number *tmp1 = add(x1, y1);
+  Number *res1 = sub(tmp1, z1);
+  assert(*res1 == *u1);
+
+  delete x1;
+  delete y1;
+  delete z1;
+  delete u1;
+  delete tmp1;
+  delete res1;
+
+  std::cout << "Test passed: chained arithmetic operations\n";
+}

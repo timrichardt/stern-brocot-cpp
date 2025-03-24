@@ -15,6 +15,7 @@ int main() {
   test_bihom_sign();
   test_bihom();
   test_arithmetic_binary();
+  test_arithmetic_chained();
   std::cout << "-----------------------" << std::endl;
 
   Number *e1 = new Number(1, make_e());
