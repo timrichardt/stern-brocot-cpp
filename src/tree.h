@@ -95,8 +95,6 @@ public:
   std::pair<int64_t, int64_t> to_fraction();
   Number *clone();
 
-  bool operator==(const Number *&other) const;
-  bool operator==(const Number &other) const;
   bool operator!=(const Number &other) const;
   bool operator<(const Number &other) const;
   bool operator<=(const Number &other) const;
@@ -108,6 +106,8 @@ public:
   Number *operator*(Number *other);
   Number *operator/(Number *other);
 };
+
+bool operator==(const Number &lhs, const Number &rhs);
 
 std::ostream &operator<<(std::ostream &os, Hom H);
 std::ostream &operator<<(std::ostream &os, Branch branch);

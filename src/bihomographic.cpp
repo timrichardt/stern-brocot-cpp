@@ -352,7 +352,9 @@ absorb:
   goto absorb;
 }
 
-Iterator *BihomIterator::clone() { return new BihomIterator(C, m, n); };
+Iterator *BihomIterator::clone() {
+  return new BihomIterator(C, m->clone(), n->clone());
+};
 
 std::ostream &operator<<(std::ostream &os, Bihom B) {
   os << B.a << " " << B.b << " " << B.c << " " << B.d << std::endl;

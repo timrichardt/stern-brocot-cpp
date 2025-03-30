@@ -128,44 +128,18 @@ std::optional<Branch> NullIterator::next() { return std::nullopt; }
 
 Iterator *NullIterator::clone() { return new NullIterator(); }
 
-bool Number::operator==(const Number *&other) const {
-  if (sign != other->sign)
+bool operator==(const Number &lhs, const Number &rhs) {
+  if (lhs.sign != rhs.sign)
     return false;
 
-  Iterator *seq_c = seq->clone();
-  Iterator *other_seq_c = other->seq->clone();
+  Iterator *lhs_c = lhs.seq->clone();
+  Iterator *rhs_c = rhs.seq->clone();
 
   std::optional<Branch> a, b;
 
 get_branches:
-  a = seq_c->next();
-  b = other_seq_c->next();
-
-  if (a && b) {
-    if (*a != *b) {
-      return false;
-    }
-    goto get_branches;
-  }
-
-  if (a || b)
-    return false;
-
-  return true;
-}
-
-bool Number::operator==(const Number &other) const {
-  if (sign != other.sign)
-    return false;
-
-  Iterator *seq_c = seq->clone();
-  Iterator *other_seq_c = other.seq->clone();
-
-  std::optional<Branch> a, b;
-
-get_branches:
-  a = seq_c->next();
-  b = other_seq_c->next();
+  a = lhs.seq->next();
+  b = rhs.seq->next();
 
   if (a && b) {
     if (*a != *b) {
@@ -212,7 +186,7 @@ absorb:
   return {H.a + H.b, H.c + H.d};
 }
 
-Number *Number::clone() { return new Number(Number{sign, seq->clone()}); }
+Number *Number::clone() { return new Number(sign, seq->clone()); }
 
 bool Number::operator!=(const Number &other) const {
   if (sign != other.sign)

@@ -77,11 +77,8 @@ inline bool Hom::L_emittable() {
   return (a <= c && b < d) || (a < c && b <= d);
 }
 
-std::optional<Iterator *> ni = std::nullopt;
-
-HomIterator::HomIterator(Hom H, Number *n) : G(H), m(n), i(ni) {
-
-  i = std::nullopt;
+HomIterator::HomIterator(Hom H, Number *n)
+    : G(H), m(n->clone()), i(std::nullopt) {
 
   if (m->sign == -1) {
     G.a = -G.a;
@@ -155,7 +152,7 @@ hom_emit:
   }
 }
 
-Iterator *HomIterator::clone() { return new HomIterator(G, m); }
+Iterator *HomIterator::clone() { return new HomIterator(G, m->clone()); }
 
 Number *hom(Hom H, Number *n) {
 
