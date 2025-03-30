@@ -27,8 +27,7 @@ struct Bihom {
   inline bool same_ratio();
   inline bool R_emittable();
   inline bool L_emittable();
-  std::optional<Branch> emit(Iterator* &m,
-                             Iterator* &n);
+  std::optional<Branch> emit(Iterator *&m, Iterator *&n);
   double to_double() const;
   int64_t to_N() const;
   bool operator==(const Bihom &other) const;
@@ -36,23 +35,23 @@ struct Bihom {
 
 class BihomIterator : public Iterator {
 public:
-  explicit BihomIterator(Bihom B, Number* &a, Number* &b);
+  explicit BihomIterator(Bihom B, Number *a, Number *b);
   std::optional<Branch> next() override;
-  Iterator* clone() override;
+  Iterator *clone() override;
   int s;
 
 private:
   Bihom C;
-	Number* &m;
-	Number* &n;
-  std::optional<Iterator*> &hi;
+  Number *m;
+  Number *n;
+  std::optional<Iterator *> &hi;
 };
 
-int bihom_sign(Bihom &B, Iterator* &a, Iterator* &b);
+int bihom_sign(Bihom &B, Iterator *&a, Iterator *&b);
 
 std::ostream &operator<<(std::ostream &os, Bihom B);
 
-// Number bihom(Bihom B, Number &a, Number &b); 
-Number* bihom(Bihom B, Number* &a, Number* &b);
+// Number bihom(Bihom B, Number &a, Number &b);
+Number *bihom(Bihom B, Number *a, Number *b);
 
 #endif

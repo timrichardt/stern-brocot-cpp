@@ -42,7 +42,7 @@ std::optional<int64_t> lin_sign(int64_t a, int64_t b) {
 //   }
 // }
 
-int hom_sign(Hom &H, Iterator *&u) {
+int hom_sign(Hom &H, Iterator *u) {
   std::optional<Branch> next;
 
 absorb:
@@ -79,7 +79,7 @@ inline bool Hom::L_emittable() {
 
 std::optional<Iterator *> ni = std::nullopt;
 
-HomIterator::HomIterator(Hom H, Number *&n) : G(H), m(n), i(ni) {
+HomIterator::HomIterator(Hom H, Number *n) : G(H), m(n), i(ni) {
 
   i = std::nullopt;
 
@@ -157,7 +157,7 @@ hom_emit:
 
 Iterator *HomIterator::clone() { return new HomIterator(G, m); }
 
-Number *hom(Hom H, Number *&n) {
+Number *hom(Hom H, Number *n) {
 
   HomIterator *hi = new HomIterator(H, n);
 

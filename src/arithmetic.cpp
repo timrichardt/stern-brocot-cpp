@@ -24,7 +24,7 @@ Number *Number::operator+(Number *&other) {
 //   return bihom(Bihom{0, 1, 0, 0, 0, 0, 1, 0}, *this, other);
 // }
 
-Number *add(Number *&a, Number *&b) {
+Number *add(Number *a, Number *b) {
   return bihom(Bihom{0, 1, 1, 0, 0, 0, 0, 1}, a, b);
 }
 

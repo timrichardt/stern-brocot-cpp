@@ -197,7 +197,7 @@ absorb:
 
 std::optional<Iterator *> bhni = std::nullopt;
 
-BihomIterator::BihomIterator(Bihom B, Number *&a, Number *&b)
+BihomIterator::BihomIterator(Bihom B, Number *a, Number *b)
     : C(B), m(a), n(b), hi(bhni) {
 
   hi = std::nullopt;
@@ -373,7 +373,7 @@ std::ostream &operator<<(std::ostream &os, Bihom B) {
 //   // return Number{bi->s, bi->clone()};
 // }
 
-Number *bihom(Bihom B, Number *&a, Number *&b) {
+Number *bihom(Bihom B, Number *a, Number *b) {
   BihomIterator *bi = new BihomIterator(B, a, b);
 
   return new Number(bi->s, bi);

@@ -18,18 +18,26 @@ int main() {
   test_arithmetic_chained();
   std::cout << "-----------------------" << std::endl;
 
-  Number *e1 = new Number(1, make_e());
-  Number *e2 = new Number(1, make_e());
-  Number *e3 = new Number(1, make_e());
-  Number *phi = new Number(1, make_phi());
-  Number *r = add(e1, e2);
-  Number *s = add(r, phi);
-  Number *t = mul(s, e3);
+  // Number *e1 = new Number(1, make_e());
+  // Number *e2 = new Number(1, make_e());
+  // Number *e3 = new Number(1, make_e());
+  // Number *phi = new Number(1, make_phi());
+  // Number *r = add(e1, e2);
+  // Number *s = add(r, phi);
+  // Number *t = mul(s, e3);
 
-  Number *o = take(100, t);
-  Number *p = inv(o);
+  // Number *o = take(100, t);
+  // Number *p = inv(o);
 
-  std::cout << p->to_double() << std::endl;
+  // std::cout << p->to_double() << std::endl;
+
+  Number *foo1 = parse_SSB("RRL");
+  Number *foo2 = parse_SSB("");
+  Number *foo3 = add(foo1, foo2);
+
+  std::cout << foo3 << std::endl;
+
+  std::cout << "foo1:" << foo1 << std::endl;
 
   return 0;
 }
