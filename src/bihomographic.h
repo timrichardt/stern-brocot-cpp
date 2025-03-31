@@ -35,19 +35,20 @@ struct Bihom {
 
 class BihomIterator : public Iterator {
 public:
-  explicit BihomIterator(Bihom B, Number *a, Number *b);
+  explicit BihomIterator(Bihom B, Number *a, Number *b, bool clone = true);
   std::optional<Branch> next() override;
   Iterator *clone() override;
   int s;
 
 private:
+  Bihom C_init;
   Bihom C;
   Number *m;
   Number *n;
-  std::optional<Iterator *> &hi;
+  std::optional<Iterator *> hi;
 };
 
-int bihom_sign(Bihom &B, Iterator *&a, Iterator *&b);
+int bihom_sign(Bihom &B, Iterator *a, Iterator *b);
 
 std::ostream &operator<<(std::ostream &os, Bihom B);
 

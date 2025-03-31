@@ -128,32 +128,6 @@ std::optional<Branch> NullIterator::next() { return std::nullopt; }
 
 Iterator *NullIterator::clone() { return new NullIterator(); }
 
-bool operator==(const Number &lhs, const Number &rhs) {
-  if (lhs.sign != rhs.sign)
-    return false;
-
-  Iterator *lhs_c = lhs.seq->clone();
-  Iterator *rhs_c = rhs.seq->clone();
-
-  std::optional<Branch> a, b;
-
-get_branches:
-  a = lhs.seq->next();
-  b = rhs.seq->next();
-
-  if (a && b) {
-    if (*a != *b) {
-      return false;
-    }
-    goto get_branches;
-  }
-
-  if (a || b)
-    return false;
-
-  return true;
-}
-
 double Number::to_double() {
   Iterator *u = seq->clone();
   Hom H = I;
@@ -188,18 +162,44 @@ absorb:
 
 Number *Number::clone() { return new Number(sign, seq->clone()); }
 
-bool Number::operator!=(const Number &other) const {
-  if (sign != other.sign)
-    return true;
+bool operator==(const Number &lhs, const Number &rhs) {
+  if (lhs.sign != rhs.sign)
+    return false;
 
-  Iterator *seq_c = seq->clone();
-  Iterator *other_seq_c = other.seq->clone();
+  Iterator *lhs_c = lhs.seq->clone();
+  Iterator *rhs_c = rhs.seq->clone();
 
   std::optional<Branch> a, b;
 
 get_branches:
-  a = seq_c->next();
-  b = other_seq_c->next();
+  a = lhs_c->next();
+  b = rhs_c->next();
+
+  if (a && b) {
+    if (*a != *b) {
+      return false;
+    }
+    goto get_branches;
+  }
+
+  if (a || b)
+    return false;
+
+  return true;
+}
+
+bool operator!=(const Number &lhs, const Number &rhs) {
+  if (lhs.sign != rhs.sign)
+    return true;
+
+  Iterator *lhs_c = lhs.seq->clone();
+  Iterator *rhs_c = rhs.seq->clone();
+
+  std::optional<Branch> a, b;
+
+get_branches:
+  a = lhs_c->next();
+  b = rhs_c->next();
 
   if (a && b) {
     if (*a != *b) {
@@ -215,19 +215,19 @@ get_branches:
   return false;
 }
 
-bool Number::operator<(const Number &other) const {
-  if (sign > other.sign)
+bool operator<(const Number &lhs, const Number &rhs) {
+  if (lhs.sign > rhs.sign)
     return false;
 
-  Iterator *seq_c = seq->clone();
-  Iterator *other_seq_c = other.seq->clone();
+  Iterator *lhs_c = lhs.seq->clone();
+  Iterator *rhs_c = rhs.seq->clone();
 
-  if (sign == other.sign) {
+  if (lhs.sign == rhs.sign) {
     std::optional<Branch> a, b;
 
   get_branches:
-    a = seq_c->next();
-    b = other_seq_c->next();
+    a = lhs_c->next();
+    b = rhs_c->next();
 
     if (a && b) {
       if ((*a == Branch::R) && (*b == Branch::L))
@@ -249,23 +249,23 @@ bool Number::operator<(const Number &other) const {
   return false;
 }
 
-bool Number::operator<=(const Number &other) const {
-  if (sign != other.sign)
+bool operator<=(const Number &lhs, const Number &rhs) {
+  if (lhs.sign != rhs.sign)
     return true;
 
-  Iterator *seq_c = seq->clone();
-  Iterator *other_seq_c = other.seq->clone();
+  Iterator *lhs_c = lhs.seq->clone();
+  Iterator *rhs_c = rhs.seq->clone();
 
   std::optional<Branch> a, b;
 
-  a = seq->next();
-  b = other.seq->next();
+  a = lhs_c->next();
+  b = rhs_c->next();
 
   do {
     if ((*a == Branch::L) && (*b == Branch::R))
       return false;
-    a = seq_c->next();
-    b = other_seq_c->next();
+    a = lhs_c->next();
+    b = rhs_c->next();
   } while (a && b);
 
   if (a)
@@ -276,19 +276,19 @@ bool Number::operator<=(const Number &other) const {
   return false;
 }
 
-bool Number::operator>(const Number &other) const {
-  if (sign > other.sign)
+bool operator>(const Number &lhs, const Number &rhs) {
+  if (lhs.sign > rhs.sign)
     return true;
 
-  if (sign == other.sign) {
-    Iterator *seq_c = seq->clone();
-    Iterator *other_seq_c = other.seq->clone();
+  if (lhs.sign == rhs.sign) {
+    Iterator *lhs_c = lhs.seq->clone();
+    Iterator *rhs_c = rhs.seq->clone();
 
     std::optional<Branch> a, b;
 
   get_branches:
-    a = seq_c->next();
-    b = other_seq_c->next();
+    a = lhs_c->next();
+    b = rhs_c->next();
 
     if (a && b) {
       if ((a == Branch::L) && (b == Branch::R))
@@ -308,19 +308,19 @@ bool Number::operator>(const Number &other) const {
   return false;
 }
 
-bool Number::operator>=(const Number &other) const {
-  if (sign < other.sign)
+bool operator>=(const Number &lhs, const Number &rhs) {
+  if (lhs.sign < rhs.sign)
     return false;
 
-  if (sign == other.sign) {
-    Iterator *seq_c = seq->clone();
-    Iterator *other_seq_c = other.seq->clone();
+  if (lhs.sign == rhs.sign) {
+    Iterator *lhs_c = lhs.seq->clone();
+    Iterator *rhs_c = rhs.seq->clone();
 
     std::optional<Branch> a, b;
 
   get_branches:
-    a = seq_c->next();
-    b = other_seq_c->next();
+    a = lhs_c->next();
+    b = rhs_c->next();
 
     if (a && b) {
       if ((a == Branch::L) && (b == Branch::R))
@@ -364,33 +364,26 @@ std::ostream &operator<<(std::ostream &os, Hom H) {
   return os;
 }
 
-std::ostream &operator<<(std::ostream &os, Iterator *&u) {
+std::ostream &operator<<(std::ostream &os, Iterator *u) {
+  Iterator *v = u->clone();
+
   std::optional<Branch> branch;
 
-  branch = u->next();
+  branch = v->next();
 
   while (branch) {
     os << *branch;
-    branch = u->next();
+    branch = v->next();
   }
 
   return os;
 }
 
-std::ostream &operator<<(std::ostream &os, Iterator &u) {
-  std::optional<Branch> branch = u.next();
+std::ostream &operator<<(std::ostream &os, Number *n) {
+  Number *m = n->clone();
 
-  while (branch) {
-    os << *branch;
-    branch = u.next();
-  }
-
-  return os;
-}
-
-std::ostream &operator<<(std::ostream &os, Number *&n) {
-  os << ((n->sign == 1) ? '+' : (n->sign == -1) ? '-' : '0');
-  os << *n->seq;
+  os << ((m->sign == 1) ? '+' : (m->sign == -1) ? '-' : '0');
+  os << m->seq;
 
   return os;
 }

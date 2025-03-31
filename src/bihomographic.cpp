@@ -99,7 +99,7 @@ inline int8_t ssg(int64_t a, int64_t b, int64_t c, int64_t d) {
 
 inline int8_t ssg(int64_t a, int64_t b) { return sign(a) + sign(b); }
 
-int bihom_sign(Bihom &B, Iterator *&a, Iterator *&b) {
+int bihom_sign(Bihom &B, Iterator *a, Iterator *b) {
 
   int8_t nom_ssg, denom_ssg;
   std::optional<Branch> a_b, b_b;
@@ -153,6 +153,10 @@ absorb:
   a_b = a->next();
   b_b = b->next();
 
+  std::cout << "next sign" << "\n";
+  std::cout << "a: " << *a_b << "\n";
+  std::cout << "b: " << *b_b << "\n";
+
   if (!a_b && !b_b)
     return sign(B.a + B.b + B.c + B.d) * sign(B.e + B.f + B.g + B.h);
 
@@ -195,12 +199,9 @@ absorb:
   goto absorb;
 }
 
-std::optional<Iterator *> bhni = std::nullopt;
-
-BihomIterator::BihomIterator(Bihom B, Number *a, Number *b)
-    : C(B), m(a), n(b), hi(bhni) {
-
-  hi = std::nullopt;
+BihomIterator::BihomIterator(Bihom B, Number *a, Number *b, bool clone)
+    : C_init(B), C(B), m(clone ? a->clone() : a), n(clone ? b->clone() : b),
+      hi(std::nullopt) {
 
   if (m->sign == -1) {
     C.a = -C.a;
@@ -215,7 +216,7 @@ BihomIterator::BihomIterator(Bihom B, Number *a, Number *b)
     C.g = -C.g;
   }
 
-  s = bihom_sign(C, a->seq, b->seq);
+  s = bihom_sign(C, m->seq, b->seq);
 
   if (s == 0) {
     hi = new NullIterator();
@@ -303,6 +304,13 @@ absorb:
   b_m = m->seq->next();
   b_n = n->seq->next();
 
+  std::cout << "next" << "\n";
+  std::cout << "a: " << *b_m << "\n";
+  std::cout << "b: " << *b_n << "\n";
+  // std::cout << m << "\n";
+  // std::cout << n << "\n";
+  // std::cout << C << "\n";
+
   if (!b_m && !b_n) {
     int64_t n = C.a + C.b + C.c + C.d;
     int64_t d = C.e + C.f + C.g + C.h;
@@ -314,12 +322,13 @@ absorb:
 
   if (!b_n) {
     Hom h = {C.a + C.b, C.c + C.d, C.e + C.f, C.g + C.h};
+
     if (*b_m == Branch::R)
       h.right();
     if (*b_m == Branch::L)
       h.left();
 
-    hi = new HomIterator(h, m);
+    hi = new HomIterator(h, m, false);
 
     goto absorb;
   }
@@ -332,7 +341,7 @@ absorb:
     if (*b_n == Branch::L)
       h.left();
 
-    hi = new HomIterator(h, n);
+    hi = new HomIterator(h, n, false);
 
     goto absorb;
   }
@@ -353,7 +362,7 @@ absorb:
 }
 
 Iterator *BihomIterator::clone() {
-  return new BihomIterator(C, m->clone(), n->clone());
+  return new BihomIterator(C_init, m->clone(), n->clone());
 };
 
 std::ostream &operator<<(std::ostream &os, Bihom B) {
