@@ -238,17 +238,17 @@ void test_bihom_sign() {
 }
 
 void test_bihom() {
-  // Number *a1 = parse_SSB("LLLR");
-  // Number *b1 = parse_SSB("RRL");
-  // Bihom B1 = {1, 0, 0, -1, 1, 0, 0, 0};
-  // Number *c1 = parse_SSB("-LLR");
-  // Number *res1 = bihom(B1, a1, b1);
-  // assert(*res1 == *c1);
+  Number *a1 = parse_SSB("LLLR");
+  Number *b1 = parse_SSB("RRL");
+  Bihom B1 = {1, 0, 0, -1, 1, 0, 0, 0};
+  Number *c1 = parse_SSB("-LLR");
+  Number *res1 = bihom(B1, a1, b1);
+  assert(*res1 == *c1);
 
-  // delete a1;
-  // delete b1;
-  // delete c1;
-  // delete res1;
+  delete a1;
+  delete b1;
+  delete c1;
+  delete res1;
 
   Number *a2 = parse_SSB("");
   Number *b2 = parse_SSB("RRL");
@@ -262,81 +262,79 @@ void test_bihom() {
   delete c2;
   delete res2;
 
-  // Number *a3 = parse_SSB("LRLR");
-  // Number *b3 = parse_SSB("RRL");
-  // std::cout << a3 << "\n";
-  // std::cout << b3 << "\n";
-  // Bihom B3 = {0, 1, 0, 0, 0, 0, 1, 0};
-  // Number *c3 = parse_SSB("LLL");
-  // Number *res3 = bihom(B3, a3, b3);
-  // assert(*res3 == *c3);
+  Number *a3 = parse_SSB("LRLR");
+  Number *b3 = parse_SSB("RRL");
+  Bihom B3 = {0, 1, 0, 0, 0, 0, 1, 0};
+  Number *c3 = parse_SSB("LLL");
+  Number *res3 = bihom(B3, a3, b3);
+  assert(*res3 == *c3);
 
-  // delete a3;
-  // delete b3;
-  // delete c3;
-  // delete res3;
+  delete a3;
+  delete b3;
+  delete c3;
+  delete res3;
 
-  // Number *a4 = parse_SSB("LRLR");
-  // Number *b4 = parse_SSB("RRL");
-  // Bihom B4 = {0, 0, 0, 1, 0, 1, 0, 0};
-  // Number *c4 = parse_SSB("RLRL");
-  // Number *res4 = bihom(B4, a4, b4);
-  // assert(*res4 == *c4);
+  Number *a4 = parse_SSB("LRLR");
+  Number *b4 = parse_SSB("RRL");
+  Bihom B4 = {0, 0, 0, 1, 0, 1, 0, 0};
+  Number *c4 = parse_SSB("RLRL");
+  Number *res4 = bihom(B4, a4, b4);
+  assert(*res4 == *c4);
 
-  // delete a4;
-  // delete b4;
-  // delete c4;
-  // delete res4;
+  delete a4;
+  delete b4;
+  delete c4;
+  delete res4;
 
-  // Number *a5 = parse_SSB("RL");
-  // Number *b5 = parse_SSB("-R");
-  // Bihom B5 = {0, 1, 1, 0, 0, 0, 0, 1};
-  // Number *c5 = parse_SSB("-L");
-  // Number *res5 = bihom(B5, b5, a5);
-  // assert(*res5 == *c5);
+  Number *a5 = parse_SSB("RL");
+  Number *b5 = parse_SSB("-R");
+  Bihom B5 = {0, 1, 1, 0, 0, 0, 0, 1};
+  Number *c5 = parse_SSB("-L");
+  Number *res5 = bihom(B5, b5, a5);
+  assert(*res5 == *c5);
 
-  // delete a5;
-  // delete b5;
-  // delete c5;
-  // delete res5;
+  delete a5;
+  delete b5;
+  delete c5;
+  delete res5;
 
-  // Number *a6 = parse_SSB("RL");
-  // Number *b6 = parse_SSB("-R");
-  // Bihom B6 = {1, 0, 0, 0, 0, 0, 0, 1};
-  // Number *c6 = parse_SSB("-RR");
-  // Number *res6 = bihom(B6, b6, a6);
-  // assert(*res6 == *c6);
+  Number *a6 = parse_SSB("RL");
+  Number *b6 = parse_SSB("-R");
+  Bihom B6 = {1, 0, 0, 0, 0, 0, 0, 1};
+  Number *c6 = parse_SSB("-RR");
+  Number *res6 = bihom(B6, b6, a6);
+  assert(*res6 == *c6);
 
-  // delete a6;
-  // delete b6;
-  // delete c6;
-  // delete res6;
+  delete a6;
+  delete b6;
+  delete c6;
+  delete res6;
 
-  // Number *a7 = parse_SSB("RL");
-  // Number *b7 = parse_SSB("-R");
-  // Bihom B7 = {0, 0, 0, -3, 0, 0, 0, 1};
-  // Number *c7 = parse_SSB("-RR");
-  // Number *res7 = bihom(B7, b7, a7);
-  // assert(*res7 == *c7);
+  Number *a7 = parse_SSB("RL");
+  Number *b7 = parse_SSB("-R");
+  Bihom B7 = {0, 0, 0, -3, 0, 0, 0, 1};
+  Number *c7 = parse_SSB("-RR");
+  Number *res7 = bihom(B7, b7, a7);
+  assert(*res7 == *c7);
 
-  // delete a7;
-  // delete b7;
-  // delete c7;
-  // delete res7;
+  delete a7;
+  delete b7;
+  delete c7;
+  delete res7;
 
-  // Number *a8 = new Number(1, make_e());
-  // Number *b8 = new Number(1, make_phi());
-  // Bihom B8 = {0, 1, 1, 0, 0, 0, 0, 1};
-  // Number *c8 = parse_SSB("-RR");
-  // Number *res8 = bihom(B8, a8, b8);
-  // double res8_d = take(100, res8)->to_double();
-  // assert(res8_d < 4.33633);
-  // assert(res8_d >= 4.33631);
+  Number *a8 = new Number(1, make_e());
+  Number *b8 = new Number(1, make_phi());
+  Bihom B8 = {0, 1, 1, 0, 0, 0, 0, 1};
+  Number *c8 = parse_SSB("-RR");
+  Number *res8 = bihom(B8, a8, b8);
+  double res8_d = take(100, res8)->to_double();
+  assert(res8_d < 4.33633);
+  assert(res8_d >= 4.33631);
 
-  // delete a8;
-  // delete b8;
-  // delete c8;
-  // delete res8;
+  delete a8;
+  delete b8;
+  delete c8;
+  delete res8;
 
   std::cout << "Test passed: bihomographic algorithm\n";
 }

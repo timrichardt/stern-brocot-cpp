@@ -22,9 +22,11 @@ private:
   Hom G;
   Number *m;
   std::optional<Iterator *> i;
+  int hom_sign();
 };
 
 std::optional<int64_t> lin_sign(int64_t a, int64_t b);
+
 int hom_sign(Hom &H, Iterator *u);
 
 Number *hom(Hom, Number *);

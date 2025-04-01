@@ -152,10 +152,12 @@ absorb:
   // 2nd part, check how to modify the bihom map
   a_b = a->next();
   b_b = b->next();
+  // std::cout << "A: " << a << std::endl;
+  // std::cout << "B: " << b << std::endl;
 
-  std::cout << "next sign" << "\n";
-  std::cout << "a: " << *a_b << "\n";
-  std::cout << "b: " << *b_b << "\n";
+  // std::cout << "next sign" << "\n";
+  // std::cout << "a: " << *a_b << "\n";
+  // std::cout << "b: " << *b_b << "\n";
 
   if (!a_b && !b_b)
     return sign(B.a + B.b + B.c + B.d) * sign(B.e + B.f + B.g + B.h);
@@ -199,6 +201,108 @@ absorb:
   goto absorb;
 }
 
+int BihomIterator::bihom_sign() {
+
+  int8_t nom_ssg, denom_ssg;
+  std::optional<Branch> a_b, b_b;
+
+absorb:
+  // std::cout << "x" << std::endl;
+
+  // 1st part, check if sign determined
+  if (C.b == 0 && C.c == 0 && C.d == 0 && C.f == 0 && C.g == 0 && C.h == 0)
+    return sign(C.a) * sign(C.e);
+
+  nom_ssg = ssg(C.a, C.b, C.c, C.d);
+  denom_ssg = ssg(C.e, C.f, C.g, C.h);
+
+  if (C.b == 0 && C.c == 0 && C.d == 0) {
+    if (nom_ssg > 2)
+      return sign(C.a);
+    if (denom_ssg < -2)
+      return -sign(C.a);
+  }
+
+  if (C.f == 0 && C.g == 0 && C.d == 0) {
+    if (denom_ssg > 2)
+      return sign(C.e);
+    if (nom_ssg < -2)
+      return -sign(C.e);
+  }
+
+  if ((nom_ssg * denom_ssg) > 8)
+    return 1;
+  if ((nom_ssg * denom_ssg) < -8)
+    return -1;
+
+  if (C.a == 0 && C.c == 0 && C.e == 0 && C.g == 0) {
+    std::optional<int8_t> nom_lsg = lin_sign(C.b, C.d);
+    std::optional<int8_t> denom_lsg = lin_sign(C.f, C.h);
+    if (nom_lsg && denom_lsg) {
+      return (*nom_lsg) * (*denom_lsg);
+    }
+  }
+
+  if (C.a == 0 && C.b == 0 && C.e == 0 && C.f == 0) {
+    std::optional<int8_t> nom_lsg = lin_sign(C.c, C.d);
+    std::optional<int8_t> denom_lsg = lin_sign(C.g, C.h);
+    if (nom_lsg && denom_lsg) {
+      return (*nom_lsg) * (*denom_lsg);
+    }
+  }
+
+  // 2nd part, check how to modify the bihom map
+  a_b = m->seq->next();
+  b_b = n->seq->next();
+  // std::cout << "A: " << m << std::endl;
+  // std::cout << "B: " << n << std::endl;
+
+  // std::cout << "next sign" << "\n";
+  // std::cout << "a: " << *a_b << "\n";
+  // std::cout << "b: " << *b_b << "\n";
+
+  if (!a_b && !b_b)
+    return sign(C.a + C.b + C.c + C.d) * sign(C.e + C.f + C.g + C.h);
+
+  if (!a_b) {
+    C = {0, 0, C.c + C.a, C.b + C.d, 0, 0, C.e + C.g, C.f + C.h};
+
+    if (*b_b == Branch::R)
+      C.br();
+
+    if (*b_b == Branch::L)
+      C.bl();
+
+    goto absorb;
+  }
+
+  if (!b_b) {
+    C = {0, C.a + C.b, 0, C.c + C.d, 0, C.e + C.f, 0, C.g + C.h};
+
+    if (*a_b == Branch::R)
+      C.ar();
+
+    if (*a_b == Branch::L)
+      C.al();
+
+    goto absorb;
+  }
+
+  if (*a_b == Branch::R && *b_b == Branch::R)
+    C.rr();
+
+  if (*a_b == Branch::R && *b_b == Branch::L)
+    C.rl();
+
+  if (*a_b == Branch::L && *b_b == Branch::R)
+    C.lr();
+
+  if (*a_b == Branch::L && *b_b == Branch::L)
+    C.ll();
+
+  goto absorb;
+}
+
 BihomIterator::BihomIterator(Bihom B, Number *a, Number *b, bool clone)
     : C_init(B), C(B), m(clone ? a->clone() : a), n(clone ? b->clone() : b),
       hi(std::nullopt) {
@@ -216,7 +320,7 @@ BihomIterator::BihomIterator(Bihom B, Number *a, Number *b, bool clone)
     C.g = -C.g;
   }
 
-  s = bihom_sign(C, m->seq, b->seq);
+  s = this->bihom_sign();
 
   if (s == 0) {
     hi = new NullIterator();
@@ -304,9 +408,12 @@ absorb:
   b_m = m->seq->next();
   b_n = n->seq->next();
 
-  std::cout << "next" << "\n";
-  std::cout << "a: " << *b_m << "\n";
-  std::cout << "b: " << *b_n << "\n";
+  // std::cout << "next" << "\n";
+  // std::cout << "a: " << *b_m << "\n";
+  // std::cout << "b: " << *b_n << "\n";
+  // std::cout << "A: " << m << std::endl;
+  // std::cout << "B: " << n << std::endl;
+
   // std::cout << m << "\n";
   // std::cout << n << "\n";
   // std::cout << C << "\n";

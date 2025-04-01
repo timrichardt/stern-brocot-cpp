@@ -77,6 +77,41 @@ inline bool Hom::L_emittable() {
   return (a <= c && b < d) || (a < c && b <= d);
 }
 
+int HomIterator::hom_sign() {
+  std::optional<Branch> next;
+
+absorb:
+  auto nom_sign = lin_sign(G.a, G.b);
+  auto denom_sign = lin_sign(G.c, G.d);
+
+  if (nom_sign && denom_sign) {
+    return (*nom_sign) * (*denom_sign);
+  }
+
+  next = m->seq->next();
+
+  if (next) {
+    if (*next == Branch::R) {
+      G.right();
+    }
+
+    if (*next == Branch::L) {
+      G.left();
+    }
+    goto absorb;
+  } else {
+    return sign(G.a + G.b) * sign(G.c + G.d);
+  }
+}
+
+// inline bool Hom::R_emittable() {
+//   return (c <= a && d < b) || (c < a && d <= b);
+// }
+
+// inline bool Hom::L_emittable() {
+//   return (a <= c && b < d) || (a < c && b <= d);
+// }
+
 HomIterator::HomIterator(Hom H, Number *n, bool clone)
     : G_init(H), G(H), m(clone ? n->clone() : n), i(std::nullopt) {
 
@@ -85,7 +120,7 @@ HomIterator::HomIterator(Hom H, Number *n, bool clone)
     G.c = -G.c;
   }
 
-  s = hom_sign(G, m->seq);
+  s = hom_sign();
 
   if (s == 0) {
     i = new NullIterator();
