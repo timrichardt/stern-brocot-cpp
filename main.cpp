@@ -1,6 +1,7 @@
 #include "src/arithmetic.h"
 #include "src/bihomographic.h"
 #include "src/homographic.h"
+#include "src/shanks.h"
 #include "src/tests.h"
 #include "src/tree.h"
 #include <iostream>
@@ -19,6 +20,13 @@ int main() {
   test_arithmetic_binary();
   test_arithmetic_chained();
   std::cout << "-----------------------" << std::endl;
+
+  Number *a = parse_SSB("R");
+  Number *b = parse_SSB("RRR");
+
+  Iterator *foo = new LogIterator(a, b);
+
+  std::cout << foo << "\n";
 
   return 0;
 }
