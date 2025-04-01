@@ -414,5 +414,44 @@ void test_arithmetic_chained() {
   delete tmp1;
   delete res1;
 
+  Number *x2 = parse_SSB("R");
+  Number *y2 = parse_SSB("RRL");
+  Number *z2 = parse_SSB("RRRRL");
+  Number *u2 = parse_SSB("RRRRRRRRRRRRRRRRRRRRLLL");
+  Number *res2 = mul(add(x2, y2), z2);
+  assert(*res2 == *u2);
+
+  delete x2;
+  delete y2;
+  delete z2;
+  delete u2;
+  delete res2;
+
+  Number *x3 = parse_SSB("R");
+  Number *y3 = parse_SSB("RRL");
+  Number *z3 = parse_SSB("RRRRL");
+  Number *u3 = parse_SSB("LRRR");
+  Number *res3 = div(mul(div(x3, y3), z3), z3);
+  assert(*res3 == *u3);
+
+  delete x3;
+  delete y3;
+  delete z3;
+  delete u3;
+  delete res3;
+
+  Number *x4 = parse_SSB("R");
+  Number *y4 = parse_SSB("RRL");
+  Number *z4 = parse_SSB("RRRRL");
+  Number *u4 = parse_SSB("RLLL");
+  Number *res4 = inv(div(mul(div(x4, y4), z4), z4));
+  assert(*res4 == *u4);
+
+  delete x4;
+  delete y4;
+  delete z4;
+  delete u4;
+  delete res4;
+
   std::cout << "Test passed: chained arithmetic operations\n";
 }
