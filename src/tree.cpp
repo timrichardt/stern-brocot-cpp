@@ -388,7 +388,7 @@ std::ostream &operator<<(std::ostream &os, Number *n) {
   return os;
 }
 
-Iterator *take(uint64_t n, Iterator *&u) {
+Iterator *take(uint64_t n, Iterator *u) {
   // std::unique_ptr<Iterator> v = u->clone();
 
   std::vector<Branch> r = {};
@@ -408,13 +408,13 @@ Iterator *take(uint64_t n, Iterator *&u) {
   return new SingleChunkIterator(r);
 }
 
-Number *take(uint64_t n, Number *&x) {
+Number *take(uint64_t n, Number *x) {
   Iterator *u = take(n, x->seq);
 
   return new Number(x->sign, u);
 }
 
-Number take(uint64_t n, Number &x) { return Number{x.sign, take(n, x.seq)}; }
+// Number take(uint64_t n, Number &x) { return Number{x.sign, take(n, x.seq)}; }
 
 int8_t sign(int64_t a) {
   if (a == 0)

@@ -124,8 +124,8 @@ Iterator *make_e();
 Iterator *make_sqrt2();
 Iterator *make_phi();
 
-Iterator *take(uint64_t n, Iterator *&u);
-Number *take(uint64_t n, Number *&x);
+Iterator *take(uint64_t n, Iterator *u);
+Number *take(uint64_t n, Number *x);
 std::optional<Branch> take_one(Number &x);
 
 #endif

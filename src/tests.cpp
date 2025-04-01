@@ -453,5 +453,18 @@ void test_arithmetic_chained() {
   delete u4;
   delete res4;
 
+  Number *x5 = new Number(1, make_e());
+  Number *y5 = parse_SSB("RRL");
+  Number *z5 = parse_SSB("RRRRL");
+  Number *u5 = parse_SSB("LRRRRRRRRRRRLLRRRRLR");
+  Number *res5 = take(20, inv(div(mul(div(x5, y5), z5), z5)));
+  assert(*res5 == *u5);
+
+  delete x5;
+  delete y5;
+  delete z5;
+  delete u5;
+  delete res5;
+
   std::cout << "Test passed: chained arithmetic operations\n";
 }
