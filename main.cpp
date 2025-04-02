@@ -19,10 +19,11 @@ int main() {
   // test_bihom();
   // test_arithmetic_binary();
   // test_arithmetic_chained();
+  // test_shanks_log();
   std::cout << "-----------------------" << std::endl;
 
-  Number *a = parse_SSB("RR");
-  Number *b = parse_SSB("RRRRRRRLR");
+  Number *a = parse_SSB("R");
+  Number *b = parse_SSB("RRRR");
 
   Iterator *foo = new LogIterator(a, b);
 
@@ -30,7 +31,7 @@ int main() {
   std::cout << a->to_double() << "\n";
   std::cout << b->to_double() << "\n";
 
-  Number *bar = take(12, new Number(1, foo));
+  Number *bar = take(15, new Number(1, foo));
   std::cout << bar << "\n";
   std::cout << bar->to_double() << "\n";
   // std::cout << bar->to_double() << "\n";

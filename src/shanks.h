@@ -29,7 +29,7 @@ private:
   Branch dir;
   std::vector<Number *> as;
   std::vector<Number *> bs;
-  std::vector<Number *> tmp;
+  std::vector<Number *> mems;
 };
 
 Number *log(Number *a, Number *b);

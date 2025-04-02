@@ -47,32 +47,34 @@ Number *pow(Number *a, uint64_t n) {
 }
 
 LogIterator::LogIterator(Number *a, Number *b)
-    : as({a->clone()}), bs({b->clone()}), tmp({parse_SSB("")}) {
+    : as({a->clone()}), bs({b->clone()}), mems({parse_SSB("")}) {
   dir = Branch::R;
 }
 
 std::optional<Branch> LogIterator::next() {
 iter:
-  Number *ttmp = mul(tmp.back(), as.back());
+  Number *next_mem = mul(mems.back(), as.back());
 
-  // std::cout << tmp.size() << "\n";
+  // std::cout << mems.size() << "\n";
   // std::cout << "a:   " << as.back() << "\n";
   // std::cout << "b:   " << bs.back() << "\n";
-  // std::cout << "tmp: " << tmp.back() << "\n";
+  // std::cout << "mems: " << mems.back() << "\n";
 
-  if (*ttmp < *bs.back()) {
+  if (*next_mem < *bs.back()) {
     // std::cout << "<" << "\n";
-    tmp.push_back(mul(tmp.back(), as.back()));
+    mems.push_back(mul(mems.back(), as.back()));
+    delete next_mem;
     return dir;
   }
 
-  if (*ttmp > *bs.back()) {
+  if (*next_mem > *bs.back()) {
     // std::cout << ">" << "\n";
     // as.emplace_back(div(bs.back(), pow(as.back(), i)));
-    as.push_back(div(bs.back(), tmp.back()));
+    as.push_back(div(bs.back(), mems.back()));
     bs.push_back(as[as.size() - 2]);
-    tmp.push_back(tmp[0]);
+    mems.push_back(mems[0]);
     dir = flip(dir);
+    delete next_mem;
     goto iter;
   }
 
