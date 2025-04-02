@@ -21,20 +21,28 @@ int main() {
   // test_arithmetic_chained();
   std::cout << "-----------------------" << std::endl;
 
-  Number *a = parse_SSB("RL");
-  Number *b = parse_SSB("RRRRRRR");
+  Number *a = parse_SSB("RR");
+  Number *b = parse_SSB("RRRRRRRLR");
 
   Iterator *foo = new LogIterator(a, b);
 
-  std::cout << foo << "\n";
+  // std::cout << take(16, foo) << "\n";
+  std::cout << a->to_double() << "\n";
+  std::cout << b->to_double() << "\n";
 
-  Iterator *p = new PowIterator(a, 2);
+  Number *bar = take(12, new Number(1, foo));
+  std::cout << bar << "\n";
+  std::cout << bar->to_double() << "\n";
+  // std::cout << bar->to_double() << "\n";
 
-  Number *q = new Number(1, p);
+  // Iterator *p = new PowIterator(a, 1);
 
-  std::cout << "pow: " << p << std::endl;
-  std::cout << "a:   " << a->to_double() << std::endl;
-  std::cout << "pow: " << q->to_double() << std::endl;
+  // Number *q = pow(a, 2);
+
+  // std::cout << "a:   " << a->to_double() << std::endl;
+  // std::cout << "pow: " << q->to_double() << std::endl;
+
+  // std::cout << (parse_SSB("") < parse_SSB("RRR")) << std::endl;
 
   return 0;
 }

@@ -3,33 +3,33 @@
 
 #include "tree.h"
 
-Number *pow(Number *a, uint64_t n);
-
 class PowIterator : public Iterator {
 public:
   explicit PowIterator(Number *, uint64_t);
   std::optional<Branch> next() override;
   Iterator *clone() override;
+  ~PowIterator();
 
 private:
-  uint64_t n;
   Number *a;
+  uint64_t n;
   Number **mem;
 };
 
+Number *pow(Number *, uint64_t);
+
 class LogIterator : public Iterator {
 public:
-  explicit LogIterator(Number *a, Number *b);
+  explicit LogIterator(Number *, Number *);
   std::optional<Branch> next() override;
   Iterator *clone() override;
   int s;
 
 private:
   Branch dir;
-  uint64_t n;
-  std::vector<Number *> mem;
   std::vector<Number *> as;
   std::vector<Number *> bs;
+  std::vector<Number *> tmp;
 };
 
 Number *log(Number *a, Number *b);

@@ -90,6 +90,7 @@ public:
   // std::weak_ptr ?
   Iterator *seq;
   explicit Number(int sign, Iterator *seq);
+  Number(Number &a);
 
   double to_double();
   std::pair<int64_t, int64_t> to_fraction();
@@ -119,6 +120,7 @@ int sign(int x);
 
 Number *parse_SSB(const std::string &str);
 Number *fraction_to_SSB(int64_t n, int64_t d);
+Number *SSB_to_CF(const Number *a);
 
 Iterator *make_e();
 Iterator *make_sqrt2();
