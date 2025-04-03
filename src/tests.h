@@ -25,5 +25,6 @@ void test_bihom_sign();
 void test_bihom();
 void test_arithmetic_binary();
 void test_arithmetic_chained();
+void test_shanks_log();
 
 #endif

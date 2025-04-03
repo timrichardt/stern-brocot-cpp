@@ -30,6 +30,7 @@ private:
   std::vector<Number *> as;
   std::vector<Number *> bs;
   std::vector<Number *> mems;
+  std::optional<Iterator *> i;
 };
 
 Number *log(Number *a, Number *b);

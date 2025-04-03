@@ -2,6 +2,7 @@
 #include "arithmetic.h"
 #include "bihomographic.h"
 #include "homographic.h"
+#include "shanks.h"
 #include "tree.h"
 #include <cassert>
 #include <iostream>
@@ -467,4 +468,41 @@ void test_arithmetic_chained() {
   delete res5;
 
   std::cout << "Test passed: chained arithmetic operations\n";
+}
+
+void test_shanks_log() {
+  Number *a1 = parse_SSB("R");
+  Number *b1 = parse_SSB("RRRR");
+  Number *c1 = parse_SSB("RRLLLRRRRRRRRRL");
+  Number *res1 = take(15, log(a1, b1));
+  assert(*res1 == *c1);
+
+  delete a1;
+  delete b1;
+  delete c1;
+  delete res1;
+
+  Number *a2 = parse_SSB("R");
+  Number *b2 = parse_SSB("RRR");
+  Number *c2 = parse_SSB("R");
+  Number *res2 = log(a2, b2);
+  assert(*res2 == *c2);
+
+  delete a2;
+  delete b2;
+  delete c2;
+  delete res2;
+
+  Number *a3 = parse_SSB("RLR");
+  Number *b3 = parse_SSB("LLRR");
+  Number *c3 = parse_SSB("-RLRLRRRRRRRR");
+  Number *res3 = take(12, log(a3, b3));
+  assert(*res3 == *c3);
+
+  delete a3;
+  delete b3;
+  delete c3;
+  delete res3;
+
+  std::cout << "Test passed: shanks logarithm\n";
 }

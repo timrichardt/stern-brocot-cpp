@@ -47,11 +47,83 @@ Number *pow(Number *a, uint64_t n) {
 }
 
 LogIterator::LogIterator(Number *a, Number *b)
-    : as({a->clone()}), bs({b->clone()}), mems({parse_SSB("")}) {
-  dir = Branch::R;
+    : as({a->clone()}), bs({b->clone()}), mems({parse_SSB("")}),
+      i(std::nullopt) {
+
+  Number *one = parse_SSB("");
+
+  if (*a == *b) {
+    s = 1;
+    i = new NullIterator();
+    return;
+  }
+
+  if (*b == *one) {
+    s = 0;
+    i = new NullIterator();
+    return;
+  }
+
+  Number *a_inv = inv(a);
+  Number *b_inv = inv(b);
+
+  if (*a < *one) {
+    if (*b < *one) {
+      s = 1;
+      if (*a_inv < *b_inv) {
+        as = {inv(a)->clone()};
+        bs = {inv(b)->clone()};
+        dir = Branch::R;
+      } else {
+        as = {inv(b)->clone()};
+        bs = {inv(a)->clone()};
+        dir = Branch::L;
+      }
+    }
+    if (*b > *one) {
+      s = -1;
+      if (*a_inv < *b) {
+        as = {a_inv->clone()};
+        dir = Branch::R;
+      } else {
+        as = {b->clone()};
+        bs = {a_inv->clone()};
+        dir = Branch::L;
+      }
+    }
+  }
+  if (*a > *one) {
+    if (*b < *one) {
+      s = -1;
+      if (*a < *b_inv) {
+        bs = {b_inv->clone()};
+        dir = Branch::R;
+      } else {
+        as = {b_inv->clone()};
+        bs = {a->clone()};
+        dir = Branch::L;
+      }
+    }
+    if (*b > *one) {
+      s = 1;
+      if (*a < *b) {
+        dir = Branch::R;
+      } else {
+        as = {b->clone()};
+        bs = {a->clone()};
+        dir = Branch::L;
+      }
+    }
+  }
+
+  delete a_inv;
+  delete b_inv;
 }
 
 std::optional<Branch> LogIterator::next() {
+  if (i)
+    return (*i)->next();
+
 iter:
   Number *next_mem = mul(mems.back(), as.back());
 
@@ -83,4 +155,8 @@ iter:
 
 Iterator *LogIterator::clone() { return new LogIterator(as[0], bs[0]); }
 
-Number *log(Number *a, Number *b) {}
+Number *log(Number *a, Number *b) {
+  LogIterator *li = new LogIterator(a, b);
+
+  return new Number(li->s, li);
+}
