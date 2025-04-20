@@ -303,8 +303,8 @@ absorb:
   goto absorb;
 }
 
-BihomIterator::BihomIterator(Bihom B, Number *a, Number *b, bool clone)
-    : C_init(B), C(B), m(clone ? a->clone() : a), n(clone ? b->clone() : b),
+BihomIterator::BihomIterator(Bihom B, Number &a, Number &b, bool clone)
+    : C_init(B), C(B), m(clone ? a.clone() : &a), n(clone ? b.clone() : &b),
       hi(std::nullopt) {
 
   if (m->sign == -1) {
@@ -435,7 +435,7 @@ absorb:
     if (*b_m == Branch::L)
       h.left();
 
-    hi = new HomIterator(h, m, false);
+    hi = new HomIterator(h, *m, false);
 
     goto absorb;
   }
@@ -448,7 +448,7 @@ absorb:
     if (*b_n == Branch::L)
       h.left();
 
-    hi = new HomIterator(h, n, false);
+    hi = new HomIterator(h, *n, false);
 
     goto absorb;
   }
@@ -469,7 +469,7 @@ absorb:
 }
 
 Iterator *BihomIterator::clone() {
-  return new BihomIterator(C_init, m->clone(), n->clone());
+  return new BihomIterator(C_init, *m->clone(), *n->clone());
 };
 
 std::ostream &operator<<(std::ostream &os, Bihom B) {
@@ -492,7 +492,7 @@ std::ostream &operator<<(std::ostream &os, Bihom B) {
 // }
 
 Number *bihom(Bihom B, Number *a, Number *b) {
-  BihomIterator *bi = new BihomIterator(B, a, b);
+  BihomIterator *bi = new BihomIterator(B, *a, *b);
 
   return new Number(bi->s, bi);
 }

@@ -35,7 +35,7 @@ struct Bihom {
 
 class BihomIterator : public Iterator {
 public:
-  explicit BihomIterator(Bihom, Number *, Number *, bool = true);
+  explicit BihomIterator(Bihom, Number &, Number &, bool = true);
   std::optional<Branch> next() override;
   Iterator *clone() override;
   int s;

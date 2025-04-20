@@ -12,7 +12,8 @@
 class HomIterator : public Iterator {
 public:
   ~HomIterator();
-  explicit HomIterator(Hom H, Number *n, bool clone = true);
+  explicit HomIterator(Hom H, Number &n, bool clone = true);
+  explicit HomIterator(HomIterator &hi);
   std::optional<Branch> next() override;
   Iterator *clone() override;
   int s;

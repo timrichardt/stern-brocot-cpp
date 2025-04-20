@@ -112,8 +112,8 @@ absorb:
 //   return (a <= c && b < d) || (a < c && b <= d);
 // }
 
-HomIterator::HomIterator(Hom H, Number *n, bool clone)
-    : G_init(H), G(H), m(clone ? n->clone() : n), i(std::nullopt) {
+HomIterator::HomIterator(Hom H, Number &n, bool clone)
+    : G_init(H), G(H), m(clone ? n.clone() : &n), i(std::nullopt) {
 
   if (m->sign == -1) {
     G.a = -G.a;
@@ -187,10 +187,10 @@ hom_emit:
   }
 }
 
-Iterator *HomIterator::clone() { return new HomIterator(G_init, m->clone()); }
+Iterator *HomIterator::clone() { return new HomIterator(G_init, *m->clone()); }
 
 Number *hom(Hom H, Number *n) {
-  HomIterator *hi = new HomIterator(H, n);
+  HomIterator *hi = new HomIterator(H, *n);
 
   return new Number(hi->s, hi);
   // return Number{hi->s, res.seq->clone()};
