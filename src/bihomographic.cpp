@@ -99,7 +99,7 @@ inline int8_t ssg(int64_t a, int64_t b, int64_t c, int64_t d) {
 
 inline int8_t ssg(int64_t a, int64_t b) { return sign(a) + sign(b); }
 
-int bihom_sign(Bihom &B, Iterator *a, Iterator *b) {
+int bihom_sign(Bihom &B, Iterator &a, Iterator &b) {
 
   int8_t nom_ssg, denom_ssg;
   std::optional<Branch> a_b, b_b;
@@ -150,8 +150,8 @@ absorb:
   }
 
   // 2nd part, check how to modify the bihom map
-  a_b = a->next();
-  b_b = b->next();
+  a_b = a.next();
+  b_b = b.next();
   // std::cout << "A: " << a << std::endl;
   // std::cout << "B: " << b << std::endl;
 
@@ -491,8 +491,8 @@ std::ostream &operator<<(std::ostream &os, Bihom B) {
 //   // return Number{bi->s, bi->clone()};
 // }
 
-Number *bihom(Bihom B, Number *a, Number *b) {
-  BihomIterator *bi = new BihomIterator(B, *a, *b);
+Number *bihom(Bihom B, Number &a, Number &b) {
+  BihomIterator *bi = new BihomIterator(B, a, b);
 
   return new Number(bi->s, bi);
 }

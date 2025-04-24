@@ -218,22 +218,22 @@ void test_bihom_sign() {
   Bihom B1 = {0, 1, 0, -10'000'001, 0, 0, 0, 1};
   Number *a1 = fraction_to_SSB(10'000'002, 1);
   Number *b1 = fraction_to_SSB(1, 1);
-  assert(bihom_sign(B1, a1->seq, b1->seq) == 1);
+  assert(bihom_sign(B1, *a1->seq, *b1->seq) == 1);
 
   Bihom B2 = {0, 1, 0, -10'000'001, 0, 0, 0, 1};
   Number *a2 = fraction_to_SSB(10'000'000, 1);
   Number *b2 = fraction_to_SSB(1, 1);
-  assert(bihom_sign(B2, a2->seq, b2->seq) == -1);
+  assert(bihom_sign(B2, *a2->seq, *b2->seq) == -1);
 
   Bihom B3 = {1, -1, -2, 0, 0, 0, 0, 1};
   Number *a3 = fraction_to_SSB(4, 1);
   Number *b3 = fraction_to_SSB(2, 1);
-  assert(bihom_sign(B3, a3->seq, b3->seq) == 0);
+  assert(bihom_sign(B3, *a3->seq, *b3->seq) == 0);
 
   Bihom B4 = {0, 3, -2, 0, 1, 0, 0, 0};
   Number *a4 = fraction_to_SSB(2, 3);
   Number *b4 = fraction_to_SSB(1, 1);
-  assert(bihom_sign(B4, a4->seq, b4->seq) == 0);
+  assert(bihom_sign(B4, *a4->seq, *b4->seq) == 0);
 
   std::cout << "Test passed: bihomographic sign algorithm\n";
 }
@@ -243,7 +243,7 @@ void test_bihom() {
   Number *b1 = parse_SSB("RRL");
   Bihom B1 = {1, 0, 0, -1, 1, 0, 0, 0};
   Number *c1 = parse_SSB("-LLR");
-  Number *res1 = bihom(B1, a1, b1);
+  Number *res1 = bihom(B1, *a1, *b1);
   assert(*res1 == *c1);
 
   delete a1;
@@ -255,7 +255,7 @@ void test_bihom() {
   Number *b2 = parse_SSB("RRL");
   Bihom B2 = {0, 0, 0, 1, 1, 0, 0, 0};
   Number *c2 = parse_SSB("LLR");
-  Number *res2 = bihom(B2, b2, a2);
+  Number *res2 = bihom(B2, *b2, *a2);
   assert(*res2 == *c2);
 
   delete a2;
@@ -267,7 +267,7 @@ void test_bihom() {
   Number *b3 = parse_SSB("RRL");
   Bihom B3 = {0, 1, 0, 0, 0, 0, 1, 0};
   Number *c3 = parse_SSB("LLL");
-  Number *res3 = bihom(B3, a3, b3);
+  Number *res3 = bihom(B3, *a3, *b3);
   assert(*res3 == *c3);
 
   delete a3;
@@ -279,7 +279,7 @@ void test_bihom() {
   Number *b4 = parse_SSB("RRL");
   Bihom B4 = {0, 0, 0, 1, 0, 1, 0, 0};
   Number *c4 = parse_SSB("RLRL");
-  Number *res4 = bihom(B4, a4, b4);
+  Number *res4 = bihom(B4, *a4, *b4);
   assert(*res4 == *c4);
 
   delete a4;
@@ -291,7 +291,7 @@ void test_bihom() {
   Number *b5 = parse_SSB("-R");
   Bihom B5 = {0, 1, 1, 0, 0, 0, 0, 1};
   Number *c5 = parse_SSB("-L");
-  Number *res5 = bihom(B5, b5, a5);
+  Number *res5 = bihom(B5, *b5, *a5);
   assert(*res5 == *c5);
 
   delete a5;
@@ -303,7 +303,7 @@ void test_bihom() {
   Number *b6 = parse_SSB("-R");
   Bihom B6 = {1, 0, 0, 0, 0, 0, 0, 1};
   Number *c6 = parse_SSB("-RR");
-  Number *res6 = bihom(B6, b6, a6);
+  Number *res6 = bihom(B6, *b6, *a6);
   assert(*res6 == *c6);
 
   delete a6;
@@ -315,7 +315,7 @@ void test_bihom() {
   Number *b7 = parse_SSB("-R");
   Bihom B7 = {0, 0, 0, -3, 0, 0, 0, 1};
   Number *c7 = parse_SSB("-RR");
-  Number *res7 = bihom(B7, b7, a7);
+  Number *res7 = bihom(B7, *b7, *a7);
   assert(*res7 == *c7);
 
   delete a7;
@@ -327,7 +327,7 @@ void test_bihom() {
   Number *b8 = new Number(1, make_phi());
   Bihom B8 = {0, 1, 1, 0, 0, 0, 0, 1};
   Number *c8 = parse_SSB("-RR");
-  Number *res8 = bihom(B8, a8, b8);
+  Number *res8 = bihom(B8, *a8, *b8);
   double res8_d = take(100, res8)->to_double();
   assert(res8_d < 4.33633);
   assert(res8_d >= 4.33631);
@@ -344,7 +344,7 @@ void test_arithmetic_binary() {
   Number *x1 = parse_SSB("R");
   Number *y1 = parse_SSB("RRL");
   Number *z1 = parse_SSB("RRRRL");
-  Number *res1 = add(x1, y1);
+  Number *res1 = add(*x1, *y1);
   assert(*res1 == *z1);
 
   delete x1;
@@ -355,7 +355,7 @@ void test_arithmetic_binary() {
   Number *x2 = parse_SSB("R");
   Number *y2 = parse_SSB("RRL");
   Number *z2 = parse_SSB("-L");
-  Number *res2 = sub(x2, y2);
+  Number *res2 = sub(*x2, *y2);
   assert(*res2 == *z2);
 
   delete x2;
@@ -366,7 +366,7 @@ void test_arithmetic_binary() {
   Number *x3 = parse_SSB("R");
   Number *y3 = parse_SSB("RRL");
   Number *z3 = parse_SSB("RRRR");
-  Number *res3 = mul(x3, y3);
+  Number *res3 = mul(*x3, *y3);
   assert(*res3 == *z3);
 
   delete x3;
@@ -377,7 +377,7 @@ void test_arithmetic_binary() {
   Number *x4 = parse_SSB("RRRR");
   Number *y4 = parse_SSB("R");
   Number *z4 = parse_SSB("RRL");
-  Number *res4 = div(x4, y4);
+  Number *res4 = div(*x4, *y4);
   assert(*res4 == *z4);
 
   delete x4;
@@ -388,7 +388,7 @@ void test_arithmetic_binary() {
   Number *x5 = new Number(1, make_e());
   Number *y5 = parse_SSB("R");
   Number *z5 = parse_SSB("RLLRLLLLL");
-  Number *res5 = sub(x5, y5);
+  Number *res5 = sub(*x5, *y5);
   assert(*res5 < *z5);
 
   delete x5;
@@ -404,8 +404,8 @@ void test_arithmetic_chained() {
   Number *y1 = parse_SSB("RRL");
   Number *z1 = parse_SSB("RRRRL");
   Number *u1 = parse_SSB("0");
-  Number *tmp1 = add(x1, y1);
-  Number *res1 = sub(tmp1, z1);
+  Number *tmp1 = add(*x1, *y1);
+  Number *res1 = sub(*tmp1, *z1);
   assert(*res1 == *u1);
 
   delete x1;
@@ -419,7 +419,7 @@ void test_arithmetic_chained() {
   Number *y2 = parse_SSB("RRL");
   Number *z2 = parse_SSB("RRRRL");
   Number *u2 = parse_SSB("RRRRRRRRRRRRRRRRRRRRLLL");
-  Number *res2 = mul(add(x2, y2), z2);
+  Number *res2 = mul(*add(*x2, *y2), *z2);
   assert(*res2 == *u2);
 
   delete x2;
@@ -432,7 +432,7 @@ void test_arithmetic_chained() {
   Number *y3 = parse_SSB("RRL");
   Number *z3 = parse_SSB("RRRRL");
   Number *u3 = parse_SSB("LRRR");
-  Number *res3 = div(mul(div(x3, y3), z3), z3);
+  Number *res3 = div(*mul(*div(*x3, *y3), *z3), *z3);
   assert(*res3 == *u3);
 
   delete x3;
@@ -445,7 +445,7 @@ void test_arithmetic_chained() {
   Number *y4 = parse_SSB("RRL");
   Number *z4 = parse_SSB("RRRRL");
   Number *u4 = parse_SSB("RLLL");
-  Number *res4 = inv(div(mul(div(x4, y4), z4), z4));
+  Number *res4 = inv(*div(*mul(*div(*x4, *y4), *z4), *z4));
   assert(*res4 == *u4);
 
   delete x4;
@@ -458,7 +458,7 @@ void test_arithmetic_chained() {
   Number *y5 = parse_SSB("RRL");
   Number *z5 = parse_SSB("RRRRL");
   Number *u5 = parse_SSB("LRRRRRRRRRRRLLRRRRLR");
-  Number *res5 = take(20, inv(div(mul(div(x5, y5), z5), z5)));
+  Number *res5 = take(20, inv(*div(*mul(*div(*x5, *y5), *z5), *z5)));
   assert(*res5 == *u5);
 
   delete x5;

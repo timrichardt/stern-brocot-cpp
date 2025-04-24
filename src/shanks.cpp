@@ -17,7 +17,7 @@ PowIterator::PowIterator(Number *a, uint64_t n) : a(a->clone()), n(n) {
   mem[0] = new Number(1, new NullIterator());
 
   for (uint i = 1; i < n + 1; ++i) {
-    mem[i] = mul(mem[i - 1], a);
+    mem[i] = mul(*mem[i - 1], *a);
   }
 }
 
@@ -64,19 +64,19 @@ LogIterator::LogIterator(Number *a, Number *b)
     return;
   }
 
-  Number *a_inv = inv(a);
-  Number *b_inv = inv(b);
+  Number *a_inv = inv(*a);
+  Number *b_inv = inv(*b);
 
   if (*a < *one) {
     if (*b < *one) {
       s = 1;
       if (*a_inv < *b_inv) {
-        as = {inv(a)->clone()};
-        bs = {inv(b)->clone()};
+        as = {inv(*a)->clone()};
+        bs = {inv(*b)->clone()};
         dir = Branch::R;
       } else {
-        as = {inv(b)->clone()};
-        bs = {inv(a)->clone()};
+        as = {inv(*b)->clone()};
+        bs = {inv(*a)->clone()};
         dir = Branch::L;
       }
     }
@@ -125,7 +125,7 @@ std::optional<Branch> LogIterator::next() {
     return (*i)->next();
 
 iter:
-  Number *next_mem = mul(mems.back(), as.back());
+  Number *next_mem = mul(*mems.back(), *as.back());
 
   // std::cout << mems.size() << "\n";
   // std::cout << "a:   " << as.back() << "\n";
@@ -134,7 +134,7 @@ iter:
 
   if (*next_mem < *bs.back()) {
     // std::cout << "<" << "\n";
-    mems.push_back(mul(mems.back(), as.back()));
+    mems.push_back(mul(*mems.back(), *as.back()));
     delete next_mem;
     return dir;
   }
@@ -142,7 +142,7 @@ iter:
   if (*next_mem > *bs.back()) {
     // std::cout << ">" << "\n";
     // as.emplace_back(div(bs.back(), pow(as.back(), i)));
-    as.push_back(div(bs.back(), mems.back()));
+    as.push_back(div(*bs.back(), *mems.back()));
     bs.push_back(as[as.size() - 2]);
     mems.push_back(mems[0]);
     dir = flip(dir);
